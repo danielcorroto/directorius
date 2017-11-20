@@ -58,7 +58,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.danielcorroto.directorius.Directorius</mainClass>
+							<mainClass>com.danielcorroto.directorius.controller.MainWindow</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
