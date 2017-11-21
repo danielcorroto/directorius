@@ -12,8 +12,8 @@ import javafx.stage.Stage;
  *
  */
 @SuppressWarnings("restriction")
-public class MainWindow extends Application {
-	public MainWindow() {
+public class MainWindowController extends Application {
+	public MainWindowController() {
 	}
 
 	@Override
