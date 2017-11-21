@@ -1,0 +1,47 @@
+Images from
+Open Icon Library 0.11
+https://sourceforge.net/projects/openiconlibrary/
+source / license
+
+
+logo = actions/document-properties + actions/view_pimp_calendar + actions/view_pimp_contacts
+crystal / LGPL-2.1 + oxygen / CC-BY-SA 3.0 or LGPL + oxygen / CC-BY-SA 3.0 or LGPL
+
+
+menu_birthday_thismonth = actions/view-calendar-month
+crystal / LGPL-2.1
+
+menu_birthday_thisweek = actions/view-calendar-week
+crystal / LGPL-2.1
+
+menu_birthday_today = actions/view-calendar-day-2
+oxygen / CC-BY-SA 3.0 or LGPL
+
+menu_birthday_withinmonth = actions/view-calendar-month-2
+oxygen / CC-BY-SA 3.0 or LGPL
+
+menu_birthday_withinweek = actions/view-calendar-week-2
+oxygen / CC-BY-SA 3.0 or LGPL
+
+menu_contact_add = actions/user-new-3
+oxygen / CC-BY-SA 3.0 or LGPL
+
+menu_contact_edit = actions/user-properties
+oxygen / CC-BY-SA 3.0 or LGPL
+
+menu_contact_remove = actions/user-delete-2
+oxygen / CC-BY-SA 3.0 or LGPL
+
+
+menu_file_exit = actions/dialog-close-2
+oxygen / CC-BY-SA 3.0 or LGPL
+
+menu_file_new = actions/db-add-2
+crystal_clear / LGPL-2.1
+
+menu_file_open = actions/db-commit-2
+crystal_clear / LGPL-2.1
+
+
+menu_help_about = actions/document-properties
+crystal / LGPL-2.1

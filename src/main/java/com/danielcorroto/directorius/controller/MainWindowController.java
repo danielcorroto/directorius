@@ -1,8 +1,8 @@
 package com.danielcorroto.directorius.controller;
 
+import com.danielcorroto.directorius.view.MainWindow;
+
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -13,16 +13,15 @@ import javafx.stage.Stage;
  */
 @SuppressWarnings("restriction")
 public class MainWindowController extends Application {
-	public MainWindowController() {
-	}
+	/**
+	 * Clase de la vista
+	 */
+	private MainWindow window;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		StackPane root = new StackPane();
-		Scene scene = new Scene(root, 300, 250);
-		primaryStage.setScene(scene);
-		primaryStage.setMaximized(true);
-		primaryStage.show();
+		window = new MainWindow();
+		window.build(primaryStage);
 
 	}
 
