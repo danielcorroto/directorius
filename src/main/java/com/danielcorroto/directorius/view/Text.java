@@ -47,5 +47,19 @@ public interface Text {
 	public static final String I18N_MENU_HELP = "menu.help";
 
 	public static final String I18N_MENU_HELP_ABOUT = "menu.help.about";
+	
+	public static final String I18N_TOOLBAR_SEARCH = "toolbar.search";
+	
+	public static final String I18N_TOOLBAR_SEARCHTYPE_ALL = "toolbar.searchtype.all";
+	
+	public static final String I18N_TOOLBAR_SEARCHTYPE_CATEGORY = "toolbar.searchtype.category";
+	
+	public static final String I18N_TOOLBAR_SEARCHTYPE_NAME = "toolbar.searchtype.name";
+	
+	public static final String I18N_TOOLBAR_SEARCHTYPE_PHONE = "toolbar.searchtype.phone";
+	
+	public static final String I18N_TOOLBAR_SEARCHTYPE_TOOLTIP = "toolbar.searchtype.tooltip";
+	
+	public static final String I18N_TOOLBAR_CONTACTADD_TOOLTIP = "toolbar.contactadd.tooltip";
 
 }

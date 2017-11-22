@@ -3,19 +3,38 @@ package com.danielcorroto.directorius.view;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import com.danielcorroto.directorius.model.type.SearchTypeEnum;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCombination.Modifier;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  * Gestiona la creación de la ventana principal
@@ -29,6 +48,19 @@ public class MainWindow {
 	 * Tamaño (ancho y alto) de la imagen en el menú
 	 */
 	private static final int MENU_IMAGE_SIZE = 20;
+	/**
+	 * Tamaño (ancho y alto) de la imagen en la toolbar
+	 */
+	private static final int TOOLBAR_IMAGE_SIZE = 32;
+	/**
+	 * Porcentajes para la toolbar
+	 */
+	private static final int[] TOOLBAR_PERCENTAGES = new int[] { 70, 20, 10 };
+	/**
+	 * Margen para los elementos de la toolbar
+	 */
+	private static final Insets TOOLBAR_MARGIN = new Insets(0, 20, 0, 20);
+
 	/**
 	 * Para i18n
 	 */
@@ -49,9 +81,14 @@ public class MainWindow {
 	 *            Stage de la ventana
 	 */
 	public void build(Stage stage) {
+		// Crear borderpane
+		BorderPane borderPane = new BorderPane(null, createToolbar(), null, null, null);
+		VBox.setVgrow(borderPane, Priority.ALWAYS);
+
 		// Crear ventana principal
 		VBox main = new VBox();
 		main.getChildren().add(createMenuBar());
+		main.getChildren().add(borderPane);
 
 		// Crear scene y stage
 		Scene scene = new Scene(main);
@@ -78,7 +115,7 @@ public class MainWindow {
 	 *   |- MenuItem 2.D
 	 * </pre>
 	 * 
-	 * @return
+	 * @return Objeto MenuBar
 	 */
 	private MenuBar createMenuBar() {
 		MenuBar menuBar = new MenuBar();
@@ -147,5 +184,87 @@ public class MainWindow {
 		}
 
 		return item;
+	}
+
+	/**
+	 * Crea el objeto toolbar de la interfaz
+	 * 
+	 * @return Objeto ToolBar
+	 */
+	private ToolBar createToolbar() {
+		// Grid
+		GridPane gridPane = new GridPane();
+		ColumnConstraints[] columnConstraints = new ColumnConstraints[TOOLBAR_PERCENTAGES.length];
+		for (int i = 0; i < TOOLBAR_PERCENTAGES.length; i++) {
+			columnConstraints[i] = new ColumnConstraints();
+			columnConstraints[i].setPercentWidth(TOOLBAR_PERCENTAGES[i]);
+		}
+		gridPane.getColumnConstraints().addAll(columnConstraints);
+		HBox.setHgrow(gridPane, Priority.ALWAYS);
+		ToolBar toolbar = new ToolBar(gridPane);
+
+		// Buscador
+		TextField searchTextField = new TextField();
+		searchTextField.setPromptText(rb.getString(Text.I18N_TOOLBAR_SEARCH));
+		searchTextField.setTooltip(new Tooltip(rb.getString(Text.I18N_TOOLBAR_SEARCH)));
+		gridPane.add(searchTextField, 0, 0);
+		GridPane.setMargin(searchTextField, TOOLBAR_MARGIN);
+		GridPane.setHalignment(searchTextField, HPos.CENTER);
+		HBox.setHgrow(searchTextField, Priority.ALWAYS);
+
+		// Combo tipo de búsqueda
+		ObservableList<SearchTypeEnum> searchTypeOptions = FXCollections.observableArrayList();
+		for (SearchTypeEnum searchType : SearchTypeEnum.values()) {
+			searchTypeOptions.add(searchType);
+		}
+		final ComboBox<SearchTypeEnum> searchTypeComboBox = new ComboBox<>(searchTypeOptions);
+		searchTypeComboBox.setButtonCell(createSearchTypeComboBoxCellFactory().call(null));
+		searchTypeComboBox.setCellFactory(createSearchTypeComboBoxCellFactory());
+		searchTypeComboBox.setValue(SearchTypeEnum.getDefault());
+		searchTypeComboBox.setTooltip(new Tooltip(rb.getString(Text.I18N_TOOLBAR_SEARCHTYPE_TOOLTIP)));
+		gridPane.add(searchTypeComboBox, 1, 0);
+		GridPane.setMargin(searchTypeComboBox, TOOLBAR_MARGIN);
+		GridPane.setHalignment(searchTypeComboBox, HPos.CENTER);
+		HBox.setHgrow(searchTypeComboBox, Priority.ALWAYS);
+
+		// Botón añadir contacto
+		Button addButton = new Button();
+		ImageView addButtonImage = new ImageView(new Image(MainWindow.class.getResourceAsStream(Path.RESOURCE_IMG + Path.IMG_MENU_CONTACT_ADD)));
+		addButtonImage.setFitWidth(TOOLBAR_IMAGE_SIZE);
+		addButtonImage.setFitHeight(TOOLBAR_IMAGE_SIZE);
+		addButton.setGraphic(addButtonImage);
+		addButton.setTooltip(new Tooltip(rb.getString(Text.I18N_TOOLBAR_CONTACTADD_TOOLTIP)));
+		gridPane.add(addButton, 2, 0);
+		GridPane.setMargin(addButton, TOOLBAR_MARGIN);
+		GridPane.setHalignment(addButton, HPos.RIGHT);
+		HBox.setHgrow(addButton, Priority.ALWAYS);
+
+		return toolbar;
+	}
+
+	/**
+	 * Crea la visualización para el combobox
+	 * 
+	 * @return Objeto que implementa la visualización del texto del combobox
+	 */
+	private Callback<ListView<SearchTypeEnum>, ListCell<SearchTypeEnum>> createSearchTypeComboBoxCellFactory() {
+		Callback<ListView<SearchTypeEnum>, ListCell<SearchTypeEnum>> cellFactory = new Callback<ListView<SearchTypeEnum>, ListCell<SearchTypeEnum>>() {
+			@Override
+			public ListCell<SearchTypeEnum> call(ListView<SearchTypeEnum> l) {
+				return new ListCell<SearchTypeEnum>() {
+					@Override
+					protected void updateItem(SearchTypeEnum item, boolean empty) {
+						super.updateItem(item, empty);
+						if (item == null || empty) {
+							setGraphic(null);
+						} else {
+							setText(rb.getString(item.getI18n()));
+						}
+					}
+				};
+			}
+		};
+
+		return cellFactory;
 	}
 }
