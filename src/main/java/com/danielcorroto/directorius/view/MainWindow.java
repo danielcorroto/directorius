@@ -3,6 +3,7 @@ package com.danielcorroto.directorius.view;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import com.danielcorroto.directorius.model.SimpleVCard;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 
 import javafx.collections.FXCollections;
@@ -27,7 +28,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCombination.Modifier;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -53,13 +53,21 @@ public class MainWindow {
 	 */
 	private static final int TOOLBAR_IMAGE_SIZE = 32;
 	/**
-	 * Porcentajes para la toolbar
+	 * Porcentajes para los elementos de la toolbar
 	 */
 	private static final int[] TOOLBAR_PERCENTAGES = new int[] { 70, 20, 10 };
 	/**
 	 * Margen para los elementos de la toolbar
 	 */
 	private static final Insets TOOLBAR_MARGIN = new Insets(0, 20, 0, 20);
+	/**
+	 * Porcentajes para los elementos del panel principal
+	 */
+	private static final int[] MAINPANE_PERCENTAGE = new int[] {30, 70};
+	/**
+	 * Ancho mínimo para los elementos el panel principal
+	 */
+	private static final Integer[] MAINPANE_MINWIDTH = new Integer[] {350, null};
 
 	/**
 	 * Para i18n
@@ -82,13 +90,27 @@ public class MainWindow {
 	 */
 	public void build(Stage stage) {
 		// Crear borderpane
-		BorderPane borderPane = new BorderPane(null, createToolbar(), null, null, null);
-		VBox.setVgrow(borderPane, Priority.ALWAYS);
-
+		GridPane gridPane = new GridPane();
+		ColumnConstraints[] columnConstraints = new ColumnConstraints[MAINPANE_PERCENTAGE.length];
+		for (int i=0; i<MAINPANE_PERCENTAGE.length; i++) {
+			columnConstraints[i] = new ColumnConstraints();
+			columnConstraints[i].setPercentWidth(MAINPANE_PERCENTAGE[i]);
+			if (MAINPANE_MINWIDTH[i] != null) {
+				columnConstraints[i].setMinWidth(MAINPANE_MINWIDTH[i]);
+			}
+		}
+		gridPane.getColumnConstraints().addAll(columnConstraints);
+		
+		ListView<?> listView = createListView();
+		gridPane.add(listView, 0, 0);
+		GridPane.setVgrow(listView, Priority.ALWAYS);
+		VBox.setVgrow(gridPane, Priority.ALWAYS);
+		
 		// Crear ventana principal
 		VBox main = new VBox();
 		main.getChildren().add(createMenuBar());
-		main.getChildren().add(borderPane);
+		main.getChildren().add(createToolbar());
+		main.getChildren().add(gridPane);
 
 		// Crear scene y stage
 		Scene scene = new Scene(main);
@@ -259,6 +281,46 @@ public class MainWindow {
 							setGraphic(null);
 						} else {
 							setText(rb.getString(item.getI18n()));
+						}
+					}
+				};
+			}
+		};
+
+		return cellFactory;
+	}
+
+	/**
+	 * Crea el objeto listview de la interfaz
+	 * 
+	 * @return Objeto ListView
+	 */
+	private ListView<SimpleVCard> createListView() {
+		ListView<SimpleVCard> listView = new ListView<>();
+		listView.setCellFactory(createContactListViewCellFactory());
+
+		return listView;
+	}
+
+	/**
+	 * Crea la visualización para el listview
+	 * 
+	 * @return Objeto que implementa la visualización del texto del listview
+	 */
+	private Callback<ListView<SimpleVCard>, ListCell<SimpleVCard>> createContactListViewCellFactory() {
+		Callback<ListView<SimpleVCard>, ListCell<SimpleVCard>> cellFactory = new Callback<ListView<SimpleVCard>, ListCell<SimpleVCard>>() {
+
+			@Override
+			public ListCell<SimpleVCard> call(ListView<SimpleVCard> param) {
+				return new ListCell<SimpleVCard>() {
+					@Override
+					protected void updateItem(SimpleVCard item, boolean empty) {
+						super.updateItem(item, empty);
+
+						if (empty || item == null || item.getFormattedName() == null) {
+							setText(null);
+						} else {
+							setText(item.getFormattedName().getValue());
 						}
 					}
 				};
