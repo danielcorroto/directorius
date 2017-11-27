@@ -1,10 +1,14 @@
 package com.danielcorroto.directorius.model;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -19,6 +23,15 @@ import ezvcard.property.Uid;
  *
  */
 public class ContactManager {
+	/**
+	 * Fichero que contiene el fichero para cargar la agenda por defecto
+	 */
+	private static final String CONFIG_FILE = "config.info";
+	/**
+	 * Clave de la propiedad de la ruta fichero que contiene la agenda
+	 */
+	private static final String PROPERTIES_FILE = "file";
+
 	/**
 	 * Ruta del fichero VCard
 	 */
@@ -119,10 +132,44 @@ public class ContactManager {
 		saveFile();
 	}
 
+	/**
+	 * Obtiene la información sencilla de todos los contactos
+	 * 
+	 * @return Información sencilla (nombre+uid) de todos los contactos
+	 */
 	public Set<SimpleVCard> getAllSimpleVCard() {
 		Set<SimpleVCard> set = new TreeSet<>(new FullNameSimpleVCardComparator());
 		set.addAll(simpleVcardMap.values());
 		return set;
+	}
+
+	/**
+	 * Busca el fichero de configuración e intenta cargar el fichero por defecto
+	 * 
+	 * @return ContactManager con la información cargada o null si no se ha
+	 *         podido cargar
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static ContactManager autoLoadFile() throws FileNotFoundException, IOException {
+		// Comprueba existencia del fichero de configuración
+		String currentPath = System.getProperty("user.dir");
+		File configFile = new File(currentPath + File.separator + CONFIG_FILE);
+		if (!configFile.exists()) {
+			return null;
+		}
+
+		// Carga los datos del fichero de configuración
+		Properties properties = new Properties();
+		InputStream is = new FileInputStream(configFile);
+		properties.load(is);
+		is.close();
+		String filePath = properties.getProperty(PROPERTIES_FILE);
+		if (filePath == null) {
+			return null;
+		}
+		
+		return loadFile(filePath);
 	}
 
 	/**

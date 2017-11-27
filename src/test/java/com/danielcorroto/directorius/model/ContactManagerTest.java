@@ -1,7 +1,10 @@
 package com.danielcorroto.directorius.model;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -246,7 +249,8 @@ public class ContactManagerTest extends TestCase {
 	/**
 	 * Prueba la creación, la carga del fichero, actualización y lectura de los
 	 * registros SimpleVCard
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public void testCreateLoadUpdateGetAll() throws IOException {
 		File file = createTempFile();
@@ -265,6 +269,78 @@ public class ContactManagerTest extends TestCase {
 		assertEquals(vcard1.getFormattedName().getValue(), iterator.next().getFormattedName().getValue());
 		assertEquals(vcard2.getFormattedName().getValue(), iterator.next().getFormattedName().getValue());
 		// TODO
+	}
+
+	/**
+	 * Carga automática del fichero de propiedades inexistente
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void testAutoLoadFileNull() throws FileNotFoundException, IOException {
+		File configFile = new File(System.getProperty("user.dir") + File.separator + "config.info");
+		configFile.delete();
+
+		ContactManager manager;
+
+		manager = ContactManager.autoLoadFile();
+		assertNull(manager);
+	}
+
+	/**
+	 * Carga automática del fichero de propiedades existente pero el fichero
+	 * vcard no existe
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void testAutoLoadFileNotExist() throws FileNotFoundException, IOException {
+		File configFile = new File(System.getProperty("user.dir") + File.separator + "config.info");
+		configFile.delete();
+
+		ContactManager manager = null;
+
+		File tempFile = createTempFile();
+		tempFile.delete();
+
+		try (BufferedWriter writer = Files.newBufferedWriter(configFile.toPath())) {
+			writer.write("file=" + tempFile.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\"));
+			writer.close();
+		}
+
+		try {
+			manager = ContactManager.autoLoadFile();
+			fail();
+		} catch (FileNotFoundException e) {
+			boolean deleted = configFile.delete();
+			assertTrue(deleted);
+			assertNull(manager);
+		}
+	}
+
+	/**
+	 * Carga automática del fichero de propiedades existente pero el fichero
+	 * vcard no existe
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void testAutoLoadFile() throws FileNotFoundException, IOException {
+		File configFile = new File(System.getProperty("user.dir") + File.separator + "config.info");
+
+		ContactManager manager = null;
+
+		File tempFile = createTempFile();
+
+		try (BufferedWriter writer = Files.newBufferedWriter(configFile.toPath())) {
+			writer.write("file=" + tempFile.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\"));
+			writer.close();
+		}
+
+		manager = ContactManager.autoLoadFile();
+		boolean deleted = configFile.delete();
+		assertNotNull(manager);
+		assertTrue(deleted);
 	}
 
 	/**
@@ -291,4 +367,5 @@ public class ContactManagerTest extends TestCase {
 		vcard.setUid(Uid.random());
 		return vcard;
 	}
+
 }
