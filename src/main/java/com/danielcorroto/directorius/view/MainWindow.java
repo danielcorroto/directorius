@@ -1,6 +1,7 @@
 package com.danielcorroto.directorius.view;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -66,11 +67,16 @@ public class MainWindow {
 	/**
 	 * Porcentajes para los elementos del panel principal
 	 */
-	private static final int[] MAINPANE_PERCENTAGE = new int[] {30, 70};
+	private static final int[] MAINPANE_PERCENTAGE = new int[] { 30, 70 };
 	/**
 	 * Ancho mínimo para los elementos el panel principal
 	 */
-	private static final Integer[] MAINPANE_MINWIDTH = new Integer[] {350, null};
+	private static final Integer[] MAINPANE_MINWIDTH = new Integer[] { 350, null };
+
+	/**
+	 * Vista de la lista de los contactos
+	 */
+	private ListView<SimpleVCard> listView;
 
 	/**
 	 * Para i18n
@@ -86,6 +92,17 @@ public class MainWindow {
 	}
 
 	/**
+	 * Setea la colección de contactos en la listView
+	 * 
+	 * @param list
+	 *            Colección de contactos a mostrar
+	 */
+	public void setListViewItems(Collection<SimpleVCard> list) {
+		ObservableList<SimpleVCard> elementList = FXCollections.observableArrayList(list);
+		listView.setItems(elementList);
+	}
+
+	/**
 	 * Construcción de la ventana principal
 	 * 
 	 * @param stage
@@ -95,7 +112,7 @@ public class MainWindow {
 		// Crear borderpane
 		GridPane gridPane = new GridPane();
 		ColumnConstraints[] columnConstraints = new ColumnConstraints[MAINPANE_PERCENTAGE.length];
-		for (int i=0; i<MAINPANE_PERCENTAGE.length; i++) {
+		for (int i = 0; i < MAINPANE_PERCENTAGE.length; i++) {
 			columnConstraints[i] = new ColumnConstraints();
 			columnConstraints[i].setPercentWidth(MAINPANE_PERCENTAGE[i]);
 			if (MAINPANE_MINWIDTH[i] != null) {
@@ -103,15 +120,15 @@ public class MainWindow {
 			}
 		}
 		gridPane.getColumnConstraints().addAll(columnConstraints);
-		
-		ListView<?> listView = createListView();
+
+		listView = createListView();
 		gridPane.add(listView, 0, 0);
 		GridPane.setVgrow(listView, Priority.ALWAYS);
 		WebView webView = createWebView();
 		gridPane.add(webView, 1, 0);
 		GridPane.setVgrow(webView, Priority.ALWAYS);
 		VBox.setVgrow(gridPane, Priority.ALWAYS);
-		
+
 		// Crear ventana principal
 		VBox main = new VBox();
 		main.getChildren().add(createMenuBar());
@@ -335,21 +352,26 @@ public class MainWindow {
 
 		return cellFactory;
 	}
-	
+
+	/**
+	 * Crea la visualización para el webview
+	 * 
+	 * @return Objeto que implementa la visualización del listview
+	 */
 	private WebView createWebView() {
 		WebView webView = new WebView();
 		WebEngine webEngine = webView.getEngine();
-		
+
 		// HTML
-		//webEngine.loadContent("<b>asdf</b>");
-		
+		// webEngine.loadContent("<b>asdf</b>");
+
 		// Recurso
 		URL urlHello = getClass().getResource("/web/vcard.html");
 		webEngine.load(urlHello.toExternalForm());
 		webEngine.setUserStyleSheetLocation(getClass().getResource("/web/css/bootstrap.min.css").toString());
 		webEngine.setUserStyleSheetLocation(getClass().getResource("/web/css/vcard.css").toString());
 		webEngine.setJavaScriptEnabled(true);
-		
+
 		return webView;
 	}
 }

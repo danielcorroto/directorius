@@ -28,6 +28,9 @@ public class MainWindowController extends Application {
 		window = new MainWindow();
 		window.build(primaryStage);
 		manager = ContactManager.autoLoadFile();
+		if (manager != null) {
+			window.setListViewItems(manager.getAllSimpleVCard());
+		}
 	}
 
 	public static void main(String[] args) {
