@@ -1,5 +1,6 @@
 package com.danielcorroto.directorius.view;
 
+import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -33,6 +34,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -104,6 +107,9 @@ public class MainWindow {
 		ListView<?> listView = createListView();
 		gridPane.add(listView, 0, 0);
 		GridPane.setVgrow(listView, Priority.ALWAYS);
+		WebView webView = createWebView();
+		gridPane.add(webView, 1, 0);
+		GridPane.setVgrow(webView, Priority.ALWAYS);
 		VBox.setVgrow(gridPane, Priority.ALWAYS);
 		
 		// Crear ventana principal
@@ -328,5 +334,22 @@ public class MainWindow {
 		};
 
 		return cellFactory;
+	}
+	
+	private WebView createWebView() {
+		WebView webView = new WebView();
+		WebEngine webEngine = webView.getEngine();
+		
+		// HTML
+		//webEngine.loadContent("<b>asdf</b>");
+		
+		// Recurso
+		URL urlHello = getClass().getResource("/web/vcard.html");
+		webEngine.load(urlHello.toExternalForm());
+		webEngine.setUserStyleSheetLocation(getClass().getResource("/web/css/bootstrap.min.css").toString());
+		webEngine.setUserStyleSheetLocation(getClass().getResource("/web/css/vcard.css").toString());
+		webEngine.setJavaScriptEnabled(true);
+		
+		return webView;
 	}
 }

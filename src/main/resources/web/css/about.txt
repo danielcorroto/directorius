@@ -1,0 +1,5 @@
+Bootstrap v4.0.0-beta.2
+https://getbootstrap.com/
+
+People card with Tabs
+https://bootsnipp.com/snippets/featured/people-card-with-tabs
