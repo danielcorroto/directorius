@@ -1,7 +1,6 @@
 package com.danielcorroto.directorius.view;
 
 import java.net.URL;
-import java.util.Collection;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -92,17 +91,6 @@ public class MainWindow {
 	}
 
 	/**
-	 * Setea la colección de contactos en la listView
-	 * 
-	 * @param list
-	 *            Colección de contactos a mostrar
-	 */
-	public void setListViewItems(Collection<SimpleVCard> list) {
-		ObservableList<SimpleVCard> elementList = FXCollections.observableArrayList(list);
-		listView.setItems(elementList);
-	}
-
-	/**
 	 * Construcción de la ventana principal
 	 * 
 	 * @param stage
@@ -145,6 +133,15 @@ public class MainWindow {
 		Image logo = new Image(MainWindow.class.getResourceAsStream(Path.RESOURCE_IMG + Path.IMG_LOGO));
 		stage.getIcons().add(logo);
 		stage.show();
+	}
+
+	/**
+	 * Obtiene el componente ListView para listar contactos
+	 * 
+	 * @return Componente de listar contactos
+	 */
+	public ListView<SimpleVCard> getListView() {
+		return listView;
 	}
 
 	/**
