@@ -1,5 +1,7 @@
 package com.danielcorroto.directorius.model.type;
 
+import com.danielcorroto.directorius.model.searchalgorithm.SearchAlgorithm;
+import com.danielcorroto.directorius.model.searchalgorithm.SearchAlgorithmFactory;
 import com.danielcorroto.directorius.view.Text;
 
 /**
@@ -12,33 +14,40 @@ public enum SearchTypeEnum {
 	/**
 	 * Búsqueda sobre todos los campos
 	 */
-	ALL(Text.I18N_TOOLBAR_SEARCHTYPE_ALL),
+	ALL(Text.I18N_TOOLBAR_SEARCHTYPE_ALL, SearchAlgorithmFactory.buildSearchAlgorithmByAll()),
 	/**
 	 * Búsqueda a partir de la categoría/tag
 	 */
-	CATEGORY(Text.I18N_TOOLBAR_SEARCHTYPE_CATEGORY),
+	CATEGORY(Text.I18N_TOOLBAR_SEARCHTYPE_CATEGORY, SearchAlgorithmFactory.buildSearchAlgorithmByCategory()),
 	/**
 	 * Búsqueda a partir del nombre
 	 */
-	NAME(Text.I18N_TOOLBAR_SEARCHTYPE_NAME),
+	NAME(Text.I18N_TOOLBAR_SEARCHTYPE_NAME, SearchAlgorithmFactory.buildSearchAlgorithmByName()),
 	/**
 	 * Búsqueda a partir del número de teléfono
 	 */
-	PHONE(Text.I18N_TOOLBAR_SEARCHTYPE_PHONE),;
+	PHONE(Text.I18N_TOOLBAR_SEARCHTYPE_PHONE, SearchAlgorithmFactory.buildSearchAlgorithmByPhone()),;
 
 	/**
 	 * Cadena para realizar i18n del tipo de búsqueda
 	 */
 	private String i18n;
+	/**
+	 * Algoritmo de búsqueda
+	 */
+	private SearchAlgorithm searchAlgorithm;
 
 	/**
 	 * Constructor por defecto
 	 * 
 	 * @param i18n
 	 *            Cadena para realizar i18n del tipo de búsqueda
+	 * @param searchAlgorithm
+	 *            Algoritmo que realiza búsquedas sobre un conjunto de contactos
 	 */
-	private SearchTypeEnum(String i18n) {
+	private SearchTypeEnum(String i18n, SearchAlgorithm searchAlgorithm) {
 		this.i18n = i18n;
+		this.searchAlgorithm = searchAlgorithm;
 	}
 
 	/**
@@ -48,6 +57,17 @@ public enum SearchTypeEnum {
 	 */
 	public String getI18n() {
 		return i18n;
+	}
+
+	/**
+	 * Obtiene el algoritmo encargado de realizar la búsqueda
+	 * 
+	 * @return Objeto que contiene la lógica de búsqueda para el tipo indicado
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 */
+	public SearchAlgorithm getSearchAlgorithm() {
+		return searchAlgorithm;
 	}
 
 	/**

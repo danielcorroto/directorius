@@ -6,11 +6,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.danielcorroto.directorius.model.searchalgorithm.SearchAlgorithm;
+import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
@@ -31,6 +37,11 @@ public class ContactManager {
 	 * Clave de la propiedad de la ruta fichero que contiene la agenda
 	 */
 	private static final String PROPERTIES_FILE = "file";
+	/**
+	 * Patrón para cortar una cadena a partir del espacio pero sin incluir las
+	 * comillas
+	 */
+	private static final Pattern searchPattern = Pattern.compile("\"([^\"]*)\"|(\\S+)"); // Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 
 	/**
 	 * Ruta del fichero VCard
@@ -144,6 +155,53 @@ public class ContactManager {
 	}
 
 	/**
+	 * Realiza una búsqueda en los contactos
+	 * 
+	 * @param text
+	 *            Texto a buscar. Los literales pueden ir entre comillas dobles.
+	 *            Busca los contatos que coinciden con todas las búsqudas
+	 * @param type
+	 *            Tipo de búsqueda: nombre, todo el texto, etc
+	 * @return Lista de contactos encontrados
+	 */
+	public Set<SimpleVCard> search(String text, SearchTypeEnum type) {
+		Set<String> searchTexts = splitSearchText(text);
+		SearchAlgorithm searchAlgorithm = type.getSearchAlgorithm();
+		Set<SimpleVCard> result = searchAlgorithm.search(vcardMap.values(), searchTexts);
+		Set<SimpleVCard> sorted = new TreeSet<>(new FullNameSimpleVCardComparator());
+		sorted.addAll(result);
+		return sorted;
+	}
+
+	/**
+	 * Separa en cadenas la cadena separada por espacios pero agrupando cadenas
+	 * rodeadas por comillas dobles. Por ejemplo:
+	 * <ul>
+	 * <li>qwerty -> [querty]
+	 * <li>qwerty "asdf ñlkj" -> [qwerty, asdf ñlkj]
+	 * <li>qwerty "asdf ñlkj" "zxcv mnb" -> [qwerty, asdf ñlkj, zxcv mnb]
+	 * </ul>
+	 * 
+	 * @param text
+	 *            Texto a trocear
+	 * @return
+	 */
+	public Set<String> splitSearchText(String text) {
+		Set<String> res = new HashSet<>();
+
+		Matcher m = searchPattern.matcher(text);
+		while (m.find()) {
+			if (m.group(1) != null) {
+				res.add(m.group(1));
+			} else {
+				res.add(m.group(2));
+			}
+		}
+
+		return res;
+	}
+
+	/**
 	 * Busca el fichero de configuración e intenta cargar el fichero por defecto
 	 * 
 	 * @return ContactManager con la información cargada o null si no se ha
@@ -168,7 +226,7 @@ public class ContactManager {
 		if (filePath == null) {
 			return null;
 		}
-		
+
 		return loadFile(filePath);
 	}
 

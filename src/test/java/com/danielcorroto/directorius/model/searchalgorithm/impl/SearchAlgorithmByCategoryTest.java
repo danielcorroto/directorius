@@ -9,8 +9,6 @@ import com.danielcorroto.directorius.model.SimpleVCard;
 import com.danielcorroto.directorius.model.searchalgorithm.SearchAlgorithm;
 
 import ezvcard.VCard;
-import ezvcard.VCardVersion;
-import ezvcard.property.Categories;
 import junit.framework.TestCase;
 
 /**
@@ -35,7 +33,7 @@ public class SearchAlgorithmByCategoryTest extends TestCase {
 	 */
 	public void testEmptySearch() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwe", "cat1"));
+		cards.add(TestUtil.createVCardCategories("qwe", "cat1"));
 		SearchAlgorithm search = new SearchAlgorithmByCategory();
 		Set<SimpleVCard> result = search.search(cards, new HashSet<>());
 
@@ -47,9 +45,9 @@ public class SearchAlgorithmByCategoryTest extends TestCase {
 	 */
 	public void testSearchSimple() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwe rty", "abc"));
-		cards.add(createVCard("asd fgh", " aqwea"));
-		cards.add(createVCard("zxc vbn", "def", "qwe"));
+		cards.add(TestUtil.createVCardCategories("qwe rty", "abc"));
+		cards.add(TestUtil.createVCardCategories("asd fgh", " aqwea"));
+		cards.add(TestUtil.createVCardCategories("zxc vbn", "def", "qwe"));
 		SearchAlgorithm search = new SearchAlgorithmByCategory();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe"));
 
@@ -65,9 +63,9 @@ public class SearchAlgorithmByCategoryTest extends TestCase {
 	 */
 	public void testSearchNormalize() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwe rty", "abc"));
-		cards.add(createVCard("asd fgh", " aqwèa"));
-		cards.add(createVCard("zxc vbn", "def", "qwe"));
+		cards.add(TestUtil.createVCardCategories("qwe rty", "abc"));
+		cards.add(TestUtil.createVCardCategories("asd fgh", " aqwèa"));
+		cards.add(TestUtil.createVCardCategories("zxc vbn", "def", "qwe"));
 		SearchAlgorithm search = new SearchAlgorithmByCategory();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwÉ"));
 
@@ -83,9 +81,9 @@ public class SearchAlgorithmByCategoryTest extends TestCase {
 	 */
 	public void testSearchMultiple() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwer rty", "qwe"));
-		cards.add(createVCard("qwe fgh", "fdasf", "fasdqwer rtr"));
-		cards.add(createVCard("errte rqwet", "fsdar rtqwe"));
+		cards.add(TestUtil.createVCardCategories("qwer rty", "qwe"));
+		cards.add(TestUtil.createVCardCategories("qwe fgh", "fdasf", "fasdqwer rtr"));
+		cards.add(TestUtil.createVCardCategories("errte rqwet", "fsdar rtqwe"));
 		SearchAlgorithm search = new SearchAlgorithmByCategory();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe", "r rt"));
 
@@ -96,27 +94,4 @@ public class SearchAlgorithmByCategoryTest extends TestCase {
 		assertTrue(names.contains("errte rqwet"));
 	}
 
-	/**
-	 * Construye una VCard v 4.0 con el nombre y categorías
-	 * 
-	 * @param name
-	 *            Nombre asignado
-	 * @param categs
-	 *            Lista de categorias
-	 * @return Objeto VCard con el nombre y categorías indicadas
-	 */
-	private VCard createVCard(String name, String... categs) {
-		VCard vcard = new VCard(VCardVersion.V4_0);
-		vcard.setFormattedName(name);
-
-		if (categs.length > 0) {
-			Categories categories = new Categories();
-			vcard.setCategories(categories);
-			for (String categ : categs) {
-				categories.getValues().add(categ);
-			}
-		}
-
-		return vcard;
-	}
 }

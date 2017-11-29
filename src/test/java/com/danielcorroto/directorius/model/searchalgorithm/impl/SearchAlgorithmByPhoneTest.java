@@ -9,8 +9,6 @@ import com.danielcorroto.directorius.model.SimpleVCard;
 import com.danielcorroto.directorius.model.searchalgorithm.SearchAlgorithm;
 
 import ezvcard.VCard;
-import ezvcard.VCardVersion;
-import ezvcard.property.Telephone;
 import junit.framework.TestCase;
 
 /**
@@ -35,7 +33,7 @@ public class SearchAlgorithmByPhoneTest extends TestCase {
 	 */
 	public void testEmptySearch() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwe", "915 9"));
+		cards.add(TestUtil.createVCardPhones("qwe", "915 9"));
 		SearchAlgorithm search = new SearchAlgorithmByPhone();
 		Set<SimpleVCard> result = search.search(cards, new HashSet<>());
 
@@ -47,9 +45,9 @@ public class SearchAlgorithmByPhoneTest extends TestCase {
 	 */
 	public void testSearchSimple() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwe rty", "856"));
-		cards.add(createVCard("asd fgh", "9 10 9"));
-		cards.add(createVCard("zxc vbn", "45678", "910 4"));
+		cards.add(TestUtil.createVCardPhones("qwe rty", "856"));
+		cards.add(TestUtil.createVCardPhones("asd fgh", "9 10 9"));
+		cards.add(TestUtil.createVCardPhones("zxc vbn", "45678", "910 4"));
 		SearchAlgorithm search = new SearchAlgorithmByPhone();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("91 0"));
 
@@ -65,9 +63,9 @@ public class SearchAlgorithmByPhoneTest extends TestCase {
 	 */
 	public void testSearchMultiple() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwe rty", "8856"));
-		cards.add(createVCard("asd fgh", "9 10 88"));
-		cards.add(createVCard("zxc vbn", "45678", "910 49 8 80"));
+		cards.add(TestUtil.createVCardPhones("qwe rty", "8856"));
+		cards.add(TestUtil.createVCardPhones("asd fgh", "9 10 88"));
+		cards.add(TestUtil.createVCardPhones("zxc vbn", "45678", "910 49 8 80"));
 		SearchAlgorithm search = new SearchAlgorithmByPhone();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("91 0", "88"));
 
@@ -78,26 +76,4 @@ public class SearchAlgorithmByPhoneTest extends TestCase {
 		assertTrue(names.contains("zxc vbn"));
 	}
 
-	/**
-	 * Construye una VCard v 4.0 con el nombre y teléfonos
-	 * 
-	 * @param name
-	 *            Nombre asignado
-	 * @param phones
-	 *            Lista de teléfonos
-	 * @return Objeto VCard con el nombre y teléfonos indicados
-	 */
-	private VCard createVCard(String name, String... phones) {
-		VCard vcard = new VCard(VCardVersion.V4_0);
-		vcard.setFormattedName(name);
-
-		if (phones.length > 0) {
-			for (String phone : phones) {
-				Telephone telephone = new Telephone(phone);
-				vcard.getTelephoneNumbers().add(telephone);
-			}
-		}
-
-		return vcard;
-	}
 }

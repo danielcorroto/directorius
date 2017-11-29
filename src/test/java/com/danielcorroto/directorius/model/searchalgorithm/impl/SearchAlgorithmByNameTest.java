@@ -9,7 +9,6 @@ import com.danielcorroto.directorius.model.SimpleVCard;
 import com.danielcorroto.directorius.model.searchalgorithm.SearchAlgorithm;
 
 import ezvcard.VCard;
-import ezvcard.VCardVersion;
 import junit.framework.TestCase;
 
 /**
@@ -34,7 +33,7 @@ public class SearchAlgorithmByNameTest extends TestCase {
 	 */
 	public void testEmptySearch() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwe"));
+		cards.add(TestUtil.createVCard("qwe"));
 		SearchAlgorithm search = new SearchAlgorithmByName();
 		Set<SimpleVCard> result = search.search(cards, new HashSet<>());
 
@@ -46,9 +45,9 @@ public class SearchAlgorithmByNameTest extends TestCase {
 	 */
 	public void testSearchSimple() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwe rty"));
-		cards.add(createVCard("asd fgh"));
-		cards.add(createVCard("zxc vbn"));
+		cards.add(TestUtil.createVCard("qwe rty"));
+		cards.add(TestUtil.createVCard("asd fgh"));
+		cards.add(TestUtil.createVCard("zxc vbn"));
 		SearchAlgorithm search = new SearchAlgorithmByName();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe"));
 
@@ -61,9 +60,9 @@ public class SearchAlgorithmByNameTest extends TestCase {
 	 */
 	public void testSearchNormalize() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwè rty"));
-		cards.add(createVCard("asd fgh"));
-		cards.add(createVCard("zxc vbn"));
+		cards.add(TestUtil.createVCard("qwè rty"));
+		cards.add(TestUtil.createVCard("asd fgh"));
+		cards.add(TestUtil.createVCard("zxc vbn"));
 		SearchAlgorithm search = new SearchAlgorithmByName();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwÉ"));
 
@@ -76,9 +75,9 @@ public class SearchAlgorithmByNameTest extends TestCase {
 	 */
 	public void testSearchMultiple() {
 		Set<VCard> cards = new HashSet<>();
-		cards.add(createVCard("qwer rty"));
-		cards.add(createVCard("qwe fgh"));
-		cards.add(createVCard("er rte rqwet"));
+		cards.add(TestUtil.createVCard("qwer rty"));
+		cards.add(TestUtil.createVCard("qwe fgh"));
+		cards.add(TestUtil.createVCard("er rte rqwet"));
 		SearchAlgorithm search = new SearchAlgorithmByName();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe", "r rt"));
 
@@ -89,16 +88,4 @@ public class SearchAlgorithmByNameTest extends TestCase {
 		assertTrue(names.contains("er rte rqwet"));
 	}
 
-	/**
-	 * Construye una VCard v 4.0 con el nombre
-	 * 
-	 * @param name
-	 *            Nombre asignado
-	 * @return Objeto VCard con el nombre indicado
-	 */
-	private VCard createVCard(String name) {
-		VCard vcard = new VCard(VCardVersion.V4_0);
-		vcard.setFormattedName(name);
-		return vcard;
-	}
 }
