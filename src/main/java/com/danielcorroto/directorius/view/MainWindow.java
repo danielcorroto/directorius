@@ -76,6 +76,14 @@ public class MainWindow {
 	 * Vista de la lista de los contactos
 	 */
 	private ListView<SimpleVCard> listView;
+	/**
+	 * Caja de texto para realizar búsqueda de contactos
+	 */
+	private TextField searchTextField;
+	/**
+	 * Combo para el tipo de búsqueda
+	 */
+	private ComboBox<SearchTypeEnum> searchTypeComboBox;
 
 	/**
 	 * Para i18n
@@ -142,6 +150,24 @@ public class MainWindow {
 	 */
 	public ListView<SimpleVCard> getListView() {
 		return listView;
+	}
+
+	/**
+	 * Obtiene el componente TextField para realizar búsquedas
+	 * 
+	 * @return Componente para realizar búsquedas
+	 */
+	public TextField getSearchTextField() {
+		return searchTextField;
+	}
+
+	/**
+	 * Obtiene el componente ComboBox para el tipo de búsqueda
+	 * 
+	 * @return Componente para el tipo de búsqueda
+	 */
+	public ComboBox<SearchTypeEnum> getSearchTypeComboBox() {
+		return searchTypeComboBox;
 	}
 
 	/**
@@ -246,7 +272,7 @@ public class MainWindow {
 		ToolBar toolbar = new ToolBar(gridPane);
 
 		// Buscador
-		TextField searchTextField = new TextField();
+		searchTextField = new TextField();
 		searchTextField.setPromptText(rb.getString(Text.I18N_TOOLBAR_SEARCH));
 		searchTextField.setTooltip(new Tooltip(rb.getString(Text.I18N_TOOLBAR_SEARCH)));
 		gridPane.add(searchTextField, 0, 0);
@@ -259,7 +285,7 @@ public class MainWindow {
 		for (SearchTypeEnum searchType : SearchTypeEnum.values()) {
 			searchTypeOptions.add(searchType);
 		}
-		final ComboBox<SearchTypeEnum> searchTypeComboBox = new ComboBox<>(searchTypeOptions);
+		searchTypeComboBox = new ComboBox<>(searchTypeOptions);
 		searchTypeComboBox.setButtonCell(createSearchTypeComboBoxCellFactory().call(null));
 		searchTypeComboBox.setCellFactory(createSearchTypeComboBoxCellFactory());
 		searchTypeComboBox.setValue(SearchTypeEnum.getDefault());
