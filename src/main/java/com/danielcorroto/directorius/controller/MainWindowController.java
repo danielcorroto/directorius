@@ -102,12 +102,8 @@ public class MainWindowController extends Application {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				Set<SimpleVCard> list;
-				if (newValue.trim().isEmpty()) {
-					list = manager.getAllSimpleVCard();
-				} else {
-					SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
-					list = manager.search(newValue.trim(), type);
-				}
+				SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
+				list = manager.search(newValue.trim(), type);
 				setListViewItems(list);
 			}
 		});

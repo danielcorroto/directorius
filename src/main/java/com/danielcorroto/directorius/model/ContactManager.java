@@ -172,6 +172,9 @@ public class ContactManager {
 	 * @return Lista de contactos encontrados
 	 */
 	public Set<SimpleVCard> search(String text, SearchTypeEnum type) {
+		if (text == null || text.trim().isEmpty()) {
+			return getAllSimpleVCard();
+		}
 		Set<String> searchTexts = splitSearchText(text);
 		SearchAlgorithm searchAlgorithm = type.getSearchAlgorithm();
 		Set<SimpleVCard> result = searchAlgorithm.search(vcardMap.values(), searchTexts);
@@ -201,7 +204,7 @@ public class ContactManager {
 			if (m.group(1) != null) {
 				res.add(m.group(1));
 			} else {
-				res.add(m.group(2));
+				res.add(m.group(2).replace("\"", ""));
 			}
 		}
 
