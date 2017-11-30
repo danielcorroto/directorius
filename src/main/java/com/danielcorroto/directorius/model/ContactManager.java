@@ -96,11 +96,18 @@ public class ContactManager {
 	 * @throws IOException
 	 */
 	public void createContact(VCard vcard) throws IOException {
+		loadMemoryContact(vcard);
+		saveFile();
+	}
+	
+	/**
+	 * Carga el contacto en memoria
+	 * @param vcard Información del contacto
+	 */
+	private void loadMemoryContact(VCard vcard) {
 		VCard copy = new VCard(vcard);
 		vcardMap.put(copy.getUid(), copy);
 		simpleVcardMap.put(copy.getUid(), new SimpleVCard(copy));
-
-		saveFile();
 	}
 
 	/**
@@ -231,6 +238,16 @@ public class ContactManager {
 	}
 
 	/**
+	 * Obtiene el directorio de fotografías
+	 * 
+	 * @return Ruta absoluta del directorio de fotografías
+	 */
+	public String getPhotoDir() {
+		String path = file.getAbsolutePath();
+		return path.substring(0, path.lastIndexOf('.')) + ".photo" + File.separator;
+	}
+
+	/**
 	 * Crea una instancia del administrador de contactos y carga el fichero
 	 * VCard en memoria
 	 * 
@@ -247,7 +264,7 @@ public class ContactManager {
 		cm.init();
 
 		for (VCard vcard : vcards) {
-			cm.createContact(vcard);
+			cm.loadMemoryContact(vcard);
 		}
 		return cm;
 	}

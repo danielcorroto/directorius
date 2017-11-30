@@ -1,0 +1,10 @@
+vcard.html // Página general
+|- vcard_group_*.html // Contiene toda la cabecera e información del grupo. Se genera si hay secciones. Por ejemplo, se crea el grupo teléfono si hay algún teléfono en el contacto
+  |- vcard_section_*.html // Contiene la información de una sección. Al menos 1. Por ejemplo un teléfono
+  |- vcard_section_*.html // Contiene la información de una sección. Al menos 1. Por ejemplo un teléfono
+
+* Puede ser:
+- Dirección
+- Categoría
+- Correo electrónico
+- Número de teléfono

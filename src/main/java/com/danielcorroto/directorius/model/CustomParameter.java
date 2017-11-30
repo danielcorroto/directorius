@@ -15,4 +15,8 @@ public interface CustomParameter {
 	 * TAG para el número de teléfono
 	 */
 	public static final String TELEPHONE_TAG = "X-TAG";
+	/**
+	 * TAG para el número la direcci'on
+	 */
+	public static final String ADDRESS_TAG = "X-TAG";
 }

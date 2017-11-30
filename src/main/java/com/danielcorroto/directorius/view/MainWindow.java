@@ -1,6 +1,5 @@
 package com.danielcorroto.directorius.view;
 
-import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -34,7 +33,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -84,6 +82,10 @@ public class MainWindow {
 	 * Combo para el tipo de búsqueda
 	 */
 	private ComboBox<SearchTypeEnum> searchTypeComboBox;
+	/**
+	 * Vista de la información del contacto
+	 */
+	private WebView webView;
 
 	/**
 	 * Para i18n
@@ -138,7 +140,7 @@ public class MainWindow {
 		// Setea propiedades
 		stage.setMaximized(true);
 		stage.setTitle(Text.APP_NAME);
-		Image logo = new Image(MainWindow.class.getResourceAsStream(Path.RESOURCE_IMG + Path.IMG_LOGO));
+		Image logo = new Image(MainWindow.class.getResourceAsStream(ResourcePath.RESOURCE_IMG + ResourcePath.IMG_LOGO));
 		stage.getIcons().add(logo);
 		stage.show();
 	}
@@ -171,6 +173,15 @@ public class MainWindow {
 	}
 
 	/**
+	 * Obtiene el componente WebView para mostrar la información del contacto
+	 * 
+	 * @return Componente para mostrar información del contacto
+	 */
+	public WebView getWebView() {
+		return webView;
+	}
+
+	/**
 	 * Crea el objeto menu bar de la interfaz.
 	 * 
 	 * <pre>
@@ -189,34 +200,34 @@ public class MainWindow {
 		MenuBar menuBar = new MenuBar();
 
 		// Crea menú File
-		MenuItem menuFileNew = createMenuItem(Text.I18N_MENU_FILE_NEW, Path.IMG_MENU_FILE_NEW, KeyCode.N, KeyCombination.CONTROL_DOWN);
-		MenuItem menuFileOpen = createMenuItem(Text.I18N_MENU_FILE_OPEN, Path.IMG_MENU_FILE_OPEN, KeyCode.O, KeyCombination.CONTROL_DOWN);
-		MenuItem menuFileExit = createMenuItem(Text.I18N_MENU_FILE_EXIT, Path.IMG_MENU_FILE_EXIT, null);
+		MenuItem menuFileNew = createMenuItem(Text.I18N_MENU_FILE_NEW, ResourcePath.IMG_MENU_FILE_NEW, KeyCode.N, KeyCombination.CONTROL_DOWN);
+		MenuItem menuFileOpen = createMenuItem(Text.I18N_MENU_FILE_OPEN, ResourcePath.IMG_MENU_FILE_OPEN, KeyCode.O, KeyCombination.CONTROL_DOWN);
+		MenuItem menuFileExit = createMenuItem(Text.I18N_MENU_FILE_EXIT, ResourcePath.IMG_MENU_FILE_EXIT, null);
 		Menu menuFile = new Menu(rb.getString(Text.I18N_MENU_FILE));
 		menuFile.getItems().addAll(menuFileNew, menuFileOpen, new SeparatorMenuItem(), menuFileExit);
 		menuBar.getMenus().addAll(menuFile);
 
 		// Crea menú Contact
-		MenuItem menuContactAdd = createMenuItem(Text.I18N_MENU_CONTACT_ADD, Path.IMG_MENU_CONTACT_ADD, KeyCode.A, KeyCombination.CONTROL_DOWN);
-		MenuItem menuContactEdit = createMenuItem(Text.I18N_MENU_CONTACT_EDIT, Path.IMG_MENU_CONTACT_EDIT, KeyCode.E, KeyCombination.CONTROL_DOWN);
-		MenuItem menuContactRemove = createMenuItem(Text.I18N_MENU_CONTACT_REMOVE, Path.IMG_MENU_CONTACT_REMOVE, KeyCode.R, KeyCombination.CONTROL_DOWN);
+		MenuItem menuContactAdd = createMenuItem(Text.I18N_MENU_CONTACT_ADD, ResourcePath.IMG_MENU_CONTACT_ADD, KeyCode.A, KeyCombination.CONTROL_DOWN);
+		MenuItem menuContactEdit = createMenuItem(Text.I18N_MENU_CONTACT_EDIT, ResourcePath.IMG_MENU_CONTACT_EDIT, KeyCode.E, KeyCombination.CONTROL_DOWN);
+		MenuItem menuContactRemove = createMenuItem(Text.I18N_MENU_CONTACT_REMOVE, ResourcePath.IMG_MENU_CONTACT_REMOVE, KeyCode.R, KeyCombination.CONTROL_DOWN);
 		Menu menuContact = new Menu(rb.getString(Text.I18N_MENU_CONTACT));
 		menuContact.getItems().addAll(menuContactAdd, menuContactEdit, menuContactRemove);
 		menuBar.getMenus().addAll(menuContact);
 
 		// Crea menú Birthday
-		MenuItem menuBirthdayToday = createMenuItem(Text.I18N_MENU_BIRTHDAY_TODAY, Path.IMG_MENU_BIRTHDAY_TODAY, null);
-		MenuItem menuBirthdayWithinWeek = createMenuItem(Text.I18N_MENU_BIRTHDAY_WITHINWEEK, Path.IMG_MENU_BIRTHDAY_WITHINWEEK, KeyCode.B, KeyCombination.CONTROL_DOWN);
-		MenuItem menuBirthdayWithinMonth = createMenuItem(Text.I18N_MENU_BIRTHDAY_WITHINMONTH, Path.IMG_MENU_BIRTHDAY_WITHINMONTH, null);
-		MenuItem menuBirthdayThisWeek = createMenuItem(Text.I18N_MENU_BIRTHDAY_THISWEEK, Path.IMG_MENU_BIRTHDAY_THISWEEK, null);
-		MenuItem menuBirthdayThisMonth = createMenuItem(Text.I18N_MENU_BIRTHDAY_THISMONTH, Path.IMG_MENU_BIRTHDAY_THISMONTH, null);
+		MenuItem menuBirthdayToday = createMenuItem(Text.I18N_MENU_BIRTHDAY_TODAY, ResourcePath.IMG_MENU_BIRTHDAY_TODAY, null);
+		MenuItem menuBirthdayWithinWeek = createMenuItem(Text.I18N_MENU_BIRTHDAY_WITHINWEEK, ResourcePath.IMG_MENU_BIRTHDAY_WITHINWEEK, KeyCode.B, KeyCombination.CONTROL_DOWN);
+		MenuItem menuBirthdayWithinMonth = createMenuItem(Text.I18N_MENU_BIRTHDAY_WITHINMONTH, ResourcePath.IMG_MENU_BIRTHDAY_WITHINMONTH, null);
+		MenuItem menuBirthdayThisWeek = createMenuItem(Text.I18N_MENU_BIRTHDAY_THISWEEK, ResourcePath.IMG_MENU_BIRTHDAY_THISWEEK, null);
+		MenuItem menuBirthdayThisMonth = createMenuItem(Text.I18N_MENU_BIRTHDAY_THISMONTH, ResourcePath.IMG_MENU_BIRTHDAY_THISMONTH, null);
 		Menu menuBirthday = new Menu(rb.getString(Text.I18N_MENU_BIRTHDAY));
 		menuBirthday.getItems().addAll(menuBirthdayToday, new SeparatorMenuItem(), menuBirthdayWithinWeek, menuBirthdayWithinMonth, new SeparatorMenuItem(), menuBirthdayThisWeek,
 				menuBirthdayThisMonth);
 		menuBar.getMenus().addAll(menuBirthday);
 
 		// Crea menú Help
-		MenuItem menuHelpAbout = createMenuItem(Text.I18N_MENU_HELP_ABOUT, Path.IMG_MENU_HELP_ABOUT, KeyCode.F1);
+		MenuItem menuHelpAbout = createMenuItem(Text.I18N_MENU_HELP_ABOUT, ResourcePath.IMG_MENU_HELP_ABOUT, KeyCode.F1);
 		Menu menuHelp = new Menu(rb.getString(Text.I18N_MENU_HELP));
 		menuHelp.getItems().addAll(menuHelpAbout);
 		menuBar.getMenus().addAll(menuHelp);
@@ -242,7 +253,7 @@ public class MainWindow {
 		MenuItem item = new MenuItem(rb.getString(i18n));
 
 		if (pathImage != null) {
-			ImageView iview = new ImageView(new Image(MainWindow.class.getResourceAsStream(Path.RESOURCE_IMG + pathImage)));
+			ImageView iview = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.RESOURCE_IMG + pathImage)));
 			iview.setFitWidth(MENU_IMAGE_SIZE);
 			iview.setFitHeight(MENU_IMAGE_SIZE);
 			item.setGraphic(iview);
@@ -297,7 +308,7 @@ public class MainWindow {
 
 		// Botón añadir contacto
 		Button addButton = new Button();
-		ImageView addButtonImage = new ImageView(new Image(MainWindow.class.getResourceAsStream(Path.RESOURCE_IMG + Path.IMG_MENU_CONTACT_ADD)));
+		ImageView addButtonImage = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.RESOURCE_IMG + ResourcePath.IMG_MENU_CONTACT_ADD)));
 		addButtonImage.setFitWidth(TOOLBAR_IMAGE_SIZE);
 		addButtonImage.setFitHeight(TOOLBAR_IMAGE_SIZE);
 		addButton.setGraphic(addButtonImage);
@@ -382,19 +393,7 @@ public class MainWindow {
 	 * @return Objeto que implementa la visualización del listview
 	 */
 	private WebView createWebView() {
-		WebView webView = new WebView();
-		WebEngine webEngine = webView.getEngine();
-
-		// HTML
-		// webEngine.loadContent("<b>asdf</b>");
-
-		// Recurso
-		URL urlHello = getClass().getResource("/web/vcard.html");
-		webEngine.load(urlHello.toExternalForm());
-		webEngine.setUserStyleSheetLocation(getClass().getResource("/web/css/bootstrap.min.css").toString());
-		webEngine.setUserStyleSheetLocation(getClass().getResource("/web/css/vcard.css").toString());
-		webEngine.setJavaScriptEnabled(true);
-
+		webView = new WebView();
 		return webView;
 	}
 }

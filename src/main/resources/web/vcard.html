@@ -1,14 +1,10 @@
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<!-- Bootstrap core CSS -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/font-awesome.min.css" rel="stylesheet">
-<link href="css/vcard.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="##CSS_BOOTSTRAP##" rel="stylesheet">
+<link href="##CSS_VCARD##" rel="stylesheet">
 <title>##FULL_NAME##</title>
 </head>
 
@@ -20,11 +16,10 @@
 			<div class="col-sm-4">
 				<div class="card hovercard">
 					<div class="card-background">
-						<img alt="" src="##PHOTO##">
-						<!-- http://lorempixel.com/850/280/people/9/ -->
+						<img alt="" src='##SECTION_PHOTO##'>
 					</div>
 					<div class="useravatar">
-						<img alt="" src="##PHOTO##">
+						<img alt="" src='##SECTION_PHOTO##'>
 					</div>
 				</div>
 			</div>
@@ -32,82 +27,16 @@
 				<h2>##FULL_NAME##</h2>
 				##BIRTHDAY##
 				<blockquote class="blockquote">##NOTES##</blockquote>
-				<p>
-					<span class="badge badge-dark">##CATEGORY##</span>
-				</p>
+				##GROUP_CATEGORY##
 			</div>
 		</div>
 	</div>
-	<!-- /container --> <!-- TELEFONO -->
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-				<div class="card">
-					<div class="card-body">
-						<ul class="list-group">
-							<li class="list-group-item">
-								<div class="row">
-									<div class="col-sm-4 text-right">
-										<span class="badge badge-danger">##PHONE_TYPE##</span>
-									</div>
-									<div class="col-sm-4">##PHONE##</div>
-									<div class="col-sm-4">##PHONE_TEXT##</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	
+	##GROUP_PHONE##
 
-	<!-- CORREO -->
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-				<div class="card">
-					<div class="card-body">
-						<ul class="list-group">
-							<li class="list-group-item">
-								<div class="row">
-									<div class="col-sm-4 text-right">
-										<span class="badge badge-danger">##EMAIL_TYPE##</span>
-									</div>
-									<div class="col-sm-4">##EMAIL##</div>
-									<div class="col-sm-4">##EMAIL_TEXT##</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	##GROUP_EMAIL##
 
-	<!-- DIRECCION -->
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-				<div class="card">
-					<div class="card-body">
-						<ul class="list-group">
-							<li class="list-group-item">
-								<div class="row">
-									<div class="col-sm-4 text-right">
-										<span class="badge badge-danger">##ADDRESS_TYPE##</span>
-									</div>
-									<div class="col-sm-4">
-										<address>##ADDRESS##</address>
-									</div>
-									<div class="col-sm-4">##ADDRESS_TEXT##</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	##GROUP_ADDRESS##
 
 	</main>
 
