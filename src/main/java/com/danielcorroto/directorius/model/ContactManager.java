@@ -5,6 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -102,7 +106,9 @@ public class ContactManager {
 	
 	/**
 	 * Carga el contacto en memoria
-	 * @param vcard Información del contacto
+	 * 
+	 * @param vcard
+	 *            Información del contacto
 	 */
 	private void loadMemoryContact(VCard vcard) {
 		VCard copy = new VCard(vcard);
@@ -218,12 +224,18 @@ public class ContactManager {
 	 *         podido cargar
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws URISyntaxException 
 	 */
-	public static ContactManager autoLoadFile() throws FileNotFoundException, IOException {
+	public static ContactManager autoLoadFile() throws FileNotFoundException, IOException, URISyntaxException {
 		// Comprueba existencia del fichero de configuración
-		String currentPath = System.getProperty("user.dir");
-		File configFile = new File(currentPath + File.separator + CONFIG_FILE);
-		if (!configFile.exists()) {
+		String currentPath = ContactManager.class.getProtectionDomain().getCodeSource().getLocation().toString();
+		if (currentPath.lastIndexOf('/') + 1 < currentPath.length()) {
+			currentPath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+		}
+		String filename = currentPath + CONFIG_FILE;
+		File configFile = new File(new URL(filename).toURI());
+		
+		if (configFile == null || !configFile.exists()) {
 			return null;
 		}
 
@@ -262,7 +274,8 @@ public class ContactManager {
 	public static ContactManager loadFile(String path) throws IOException {
 		ContactManager cm = new ContactManager();
 		cm.file = new File(path);
-		List<VCard> vcards = Ezvcard.parse(cm.file).all();
+		FileInputStream fis = new FileInputStream(cm.file);
+		List<VCard> vcards = Ezvcard.parse(new InputStreamReader(fis, Charset.forName("UTF-8"))).all();
 
 		cm.init();
 

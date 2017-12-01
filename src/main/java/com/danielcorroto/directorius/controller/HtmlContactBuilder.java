@@ -1,12 +1,10 @@
 package com.danielcorroto.directorius.controller;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Calendar;
-import java.util.stream.Stream;
 
 import com.danielcorroto.directorius.model.CustomParameter;
 import com.danielcorroto.directorius.view.ResourcePath;
@@ -385,15 +383,24 @@ public class HtmlContactBuilder {
 	 * @return Contenido del fichero
 	 */
 	private static String loadFileFromResource(String resourcePath) {
-		StringBuilder sb = new StringBuilder();
+		try {
+			InputStream is = HtmlContactBuilder.class.getResourceAsStream(resourcePath);
 
-		try (Stream<String> stream = Files.lines(Paths.get(MainWindowController.class.getResource(resourcePath).toURI()))) {
-			stream.forEach(line -> sb.append(line));
-		} catch (IOException | URISyntaxException e) {
-			e.printStackTrace();
+			final int bufferSize = 8192;
+			final char[] buffer = new char[bufferSize];
+			final StringBuilder out = new StringBuilder();
+			Reader in = new InputStreamReader(is, "UTF-8");
+			for (;;) {
+				int rsz = in.read(buffer, 0, buffer.length);
+				if (rsz < 0)
+					break;
+				out.append(buffer, 0, rsz);
+			}
+			return out.toString();
+		} catch (Exception e) {
 		}
 
-		return sb.toString();
+		return "";
 	}
 
 }

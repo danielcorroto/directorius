@@ -6,6 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.Set;
@@ -284,9 +287,10 @@ public class ContactManagerTest extends TestCase {
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void testAutoLoadFileNull() throws FileNotFoundException, IOException {
-		File configFile = new File(System.getProperty("user.dir") + File.separator + "config.info");
+	public void testAutoLoadFileNull() throws FileNotFoundException, IOException, URISyntaxException {
+		File configFile = getConfigFile();
 		configFile.delete();
 
 		ContactManager manager;
@@ -301,9 +305,10 @@ public class ContactManagerTest extends TestCase {
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void testAutoLoadFileNotExist() throws FileNotFoundException, IOException {
-		File configFile = new File(System.getProperty("user.dir") + File.separator + "config.info");
+	public void testAutoLoadFileNotExist() throws FileNotFoundException, IOException, URISyntaxException {
+		File configFile = getConfigFile();
 		configFile.delete();
 
 		ContactManager manager = null;
@@ -332,9 +337,10 @@ public class ContactManagerTest extends TestCase {
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void testAutoLoadFile() throws FileNotFoundException, IOException {
-		File configFile = new File(System.getProperty("user.dir") + File.separator + "config.info");
+	public void testAutoLoadFile() throws FileNotFoundException, IOException, URISyntaxException {
+		File configFile = getConfigFile();
 
 		ContactManager manager = null;
 
@@ -529,4 +535,20 @@ public class ContactManagerTest extends TestCase {
 		return temp;
 	}
 
+	/**
+	 * Obtiene el fichero de configuración
+	 * 
+	 * @return Fichero de configuración
+	 * @throws MalformedURLException
+	 * @throws URISyntaxException
+	 */
+	private File getConfigFile() throws MalformedURLException, URISyntaxException {
+		String currentPath = ContactManager.class.getProtectionDomain().getCodeSource().getLocation().toString();
+		if (currentPath.lastIndexOf('/') + 1 < currentPath.length()) {
+			currentPath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+		}
+		String filename = currentPath + "config.info";
+		File configFile = new File(new URL(filename).toURI());
+		return configFile;
+	}
 }
