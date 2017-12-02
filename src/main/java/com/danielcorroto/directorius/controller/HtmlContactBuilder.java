@@ -5,11 +5,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import com.danielcorroto.directorius.model.CustomParameter;
+import com.danielcorroto.directorius.model.type.AddressTypeEnum;
+import com.danielcorroto.directorius.model.type.EmailTypeEnum;
+import com.danielcorroto.directorius.model.type.PhoneTypeEnum;
 import com.danielcorroto.directorius.view.ResourcePath;
+import com.danielcorroto.directorius.view.Text;
 
 import ezvcard.VCard;
+import ezvcard.parameter.AddressType;
+import ezvcard.parameter.EmailType;
+import ezvcard.parameter.TelephoneType;
 import ezvcard.property.Address;
 import ezvcard.property.Email;
 import ezvcard.property.Telephone;
@@ -41,6 +50,7 @@ public class HtmlContactBuilder {
 	 */
 	public static String build(VCard vcard, String photoDir) {
 		String html = loadFileFromResource(ResourcePath.HTML);
+		ResourceBundle rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
 
 		// CSS
 		html = html.replace(HtmlTemplate.CSS_BOOTSTRAP, MainWindowController.class.getResource(ResourcePath.CSS_BOOTSTRAP).toString());
@@ -56,13 +66,13 @@ public class HtmlContactBuilder {
 		html = html.replace(HtmlTemplate.GROUP_CATEGORY, buildGroupCategory(vcard));
 
 		// Teléfono
-		html = html.replace(HtmlTemplate.GROUP_PHONE, buildGroupPhone(vcard));
+		html = html.replace(HtmlTemplate.GROUP_PHONE, buildGroupPhone(vcard, rb));
 
 		// Correo
-		html = html.replace(HtmlTemplate.GROUP_EMAIL, buildGroupEmail(vcard));
+		html = html.replace(HtmlTemplate.GROUP_EMAIL, buildGroupEmail(vcard, rb));
 
 		// Dirección
-		html = html.replace(HtmlTemplate.GROUP_ADDRESS, buildGroupAddress(vcard));
+		html = html.replace(HtmlTemplate.GROUP_ADDRESS, buildGroupAddress(vcard, rb));
 
 		return html;
 	}
@@ -223,9 +233,11 @@ public class HtmlContactBuilder {
 	 * 
 	 * @param vcard
 	 *            Información del contacto
+	 * @param rb
+	 *            Recurso para i18n
 	 * @return Código HTML de los teléfonos del contacto
 	 */
-	private static String buildGroupPhone(VCard vcard) {
+	private static String buildGroupPhone(VCard vcard, ResourceBundle rb) {
 		if (vcard.getTelephoneNumbers() == null || vcard.getTelephoneNumbers().isEmpty()) {
 			return "";
 		}
@@ -243,7 +255,8 @@ public class HtmlContactBuilder {
 				phoneTemplate = phoneTemplate.replace(HtmlTemplate.PHONE_TEXT, "");
 			}
 			if (phone.getTypes() != null && phone.getTypes().get(0) != null && phone.getTypes().get(0).getValue() != null) {
-				phoneTemplate = phoneTemplate.replace(HtmlTemplate.PHONE_TYPE, phone.getTypes().get(0).getValue());
+				TelephoneType type = phone.getTypes().get(0);
+				phoneTemplate = phoneTemplate.replace(HtmlTemplate.PHONE_TYPE, rb.getString(PhoneTypeEnum.getI18n(type)));
 			} else {
 				phoneTemplate = phoneTemplate.replace(HtmlTemplate.PHONE_TYPE, "");
 			}
@@ -259,9 +272,11 @@ public class HtmlContactBuilder {
 	 * 
 	 * @param vcard
 	 *            Información del contacto
+	 * @param rb
+	 *            Recurso para i18n
 	 * @return Código HTML de los correos del contacto
 	 */
-	private static String buildGroupEmail(VCard vcard) {
+	private static String buildGroupEmail(VCard vcard, ResourceBundle rb) {
 		if (vcard.getEmails() == null || vcard.getEmails().isEmpty()) {
 			return "";
 		}
@@ -279,7 +294,8 @@ public class HtmlContactBuilder {
 				emailTemplate = emailTemplate.replace(HtmlTemplate.EMAIL_TEXT, "");
 			}
 			if (email.getTypes() != null && email.getTypes().get(0) != null && email.getTypes().get(0).getValue() != null) {
-				emailTemplate = emailTemplate.replace(HtmlTemplate.EMAIL_TYPE, email.getTypes().get(0).getValue());
+				EmailType type = email.getTypes().get(0);
+				emailTemplate = emailTemplate.replace(HtmlTemplate.EMAIL_TYPE, rb.getString(EmailTypeEnum.getI18n(type)));
 			} else {
 				emailTemplate = emailTemplate.replace(HtmlTemplate.EMAIL_TYPE, "");
 			}
@@ -295,9 +311,11 @@ public class HtmlContactBuilder {
 	 * 
 	 * @param vcard
 	 *            Información del contacto
+	 * @param rb
+	 *            Recurso para i18n
 	 * @return Código HTML de las direcciones del contacto
 	 */
-	private static String buildGroupAddress(VCard vcard) {
+	private static String buildGroupAddress(VCard vcard, ResourceBundle rb) {
 		if (vcard.getAddresses() == null || vcard.getAddresses().isEmpty()) {
 			return "";
 		}
@@ -315,7 +333,8 @@ public class HtmlContactBuilder {
 				addressTemplate = addressTemplate.replace(HtmlTemplate.ADDRESS_TEXT, "");
 			}
 			if (address.getTypes() != null && address.getTypes().get(0) != null && address.getTypes().get(0).getValue() != null) {
-				addressTemplate = addressTemplate.replace(HtmlTemplate.ADDRESS_TYPE, address.getTypes().get(0).getValue());
+				AddressType type = address.getTypes().get(0);
+				addressTemplate = addressTemplate.replace(HtmlTemplate.ADDRESS_TYPE, rb.getString(AddressTypeEnum.getI18n(type)));
 			} else {
 				addressTemplate = addressTemplate.replace(HtmlTemplate.ADDRESS_TYPE, "");
 			}

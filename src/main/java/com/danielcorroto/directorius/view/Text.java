@@ -61,5 +61,31 @@ public interface Text {
 	public static final String I18N_TOOLBAR_SEARCHTYPE_TOOLTIP = "toolbar.searchtype.tooltip";
 	
 	public static final String I18N_TOOLBAR_CONTACTADD_TOOLTIP = "toolbar.contactadd.tooltip";
+	
+	public static final String I18N_INFORMATION_PHONE_TYPE_CELL = "information.phone.type.cell";
+	
+	public static final String I18N_INFORMATION_PHONE_TYPE_FAX = "information.phone.type.fax";
+	
+	public static final String I18N_INFORMATION_PHONE_TYPE_HOME = "information.phone.type.home";
+	
+	public static final String I18N_INFORMATION_PHONE_TYPE_PAGER = "information.phone.type.pager";
+	
+	public static final String I18N_INFORMATION_PHONE_TYPE_TEXT = "information.phone.type.text";
+	
+	public static final String I18N_INFORMATION_PHONE_TYPE_TEXTPHONE = "information.phone.type.textphone";
+	
+	public static final String I18N_INFORMATION_PHONE_TYPE_VICEO = "information.phone.type.video";
+	
+	public static final String I18N_INFORMATION_PHONE_TYPE_VOICE = "information.phone.type.voice";
+	
+	public static final String I18N_INFORMATION_PHONE_TYPE_WORK = "information.phone.type.work";
+	
+	public static final String I18N_INFORMATION_EMAIL_TYPE_HOME = "information.email.type.home";
+	
+	public static final String I18N_INFORMATION_EMAIL_TYPE_WORK = "information.email.type.work";
+	
+	public static final String I18N_INFORMATION_ADDRESS_TYPE_HOME = "information.address.type.home";
+	
+	public static final String I18N_INFORMATION_ADDRESS_TYPE_WORK = "information.address.type.work";
 
 }
