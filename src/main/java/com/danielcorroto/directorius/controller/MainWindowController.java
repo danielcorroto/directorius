@@ -43,6 +43,7 @@ public class MainWindowController extends Application {
 
 		listViewFunction();
 		searchTextFieldFunction();
+		searchTypeComboBoxFunction();
 
 		manager = ContactManager.autoLoadFile();
 		if (manager != null) {
@@ -104,6 +105,27 @@ public class MainWindowController extends Application {
 				Set<SimpleVCard> list;
 				SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
 				list = manager.search(newValue.trim(), type);
+				setListViewItems(list);
+			}
+		});
+	}
+
+	/**
+	 * Setea la funcionalidad del combo de tipo de búsqueda: busca contactos y
+	 * los muestre en el ListView
+	 */
+	private void searchTypeComboBoxFunction() {
+		window.getSearchTypeComboBox().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SearchTypeEnum>() {
+
+			@Override
+			public void changed(ObservableValue<? extends SearchTypeEnum> observable, SearchTypeEnum oldValue, SearchTypeEnum newValue) {
+				String text = window.getSearchTextField().getText();
+				// Si no hay texto que buscar el resultado siempre es la lista completa
+				if (text.trim().isEmpty()) {
+					return;
+				}
+
+				Set<SimpleVCard> list = manager.search(text.trim(), newValue);
 				setListViewItems(list);
 			}
 		});
