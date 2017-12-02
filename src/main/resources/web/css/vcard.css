@@ -1,6 +1,9 @@
 .container {
 	margin-top: 20px;
 }
+.badge {
+	margin-right: 5px;
+}
 
 /* FOTO */
 .card {
