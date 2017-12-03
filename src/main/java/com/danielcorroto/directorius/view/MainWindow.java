@@ -144,7 +144,7 @@ public class MainWindow {
 		// Setea propiedades
 		stage.setMaximized(true);
 		stage.setTitle(Text.APP_NAME);
-		Image logo = new Image(MainWindow.class.getResourceAsStream(ResourcePath.RESOURCE_IMG + ResourcePath.IMG_LOGO));
+		Image logo = new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO));
 		stage.getIcons().add(logo);
 		stage.show();
 	}
@@ -278,7 +278,7 @@ public class MainWindow {
 		MenuItem item = new MenuItem(rb.getString(i18n));
 
 		if (pathImage != null) {
-			ImageView iview = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.RESOURCE_IMG + pathImage)));
+			ImageView iview = new ImageView(new Image(MainWindow.class.getResourceAsStream(pathImage)));
 			iview.setFitWidth(MENU_IMAGE_SIZE);
 			iview.setFitHeight(MENU_IMAGE_SIZE);
 			item.setGraphic(iview);
@@ -333,7 +333,7 @@ public class MainWindow {
 
 		// Botón añadir contacto
 		Button addButton = new Button();
-		ImageView addButtonImage = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.RESOURCE_IMG + ResourcePath.IMG_MENU_CONTACT_ADD)));
+		ImageView addButtonImage = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_MENU_CONTACT_ADD)));
 		addButtonImage.setFitWidth(TOOLBAR_IMAGE_SIZE);
 		addButtonImage.setFitHeight(TOOLBAR_IMAGE_SIZE);
 		addButton.setGraphic(addButtonImage);
