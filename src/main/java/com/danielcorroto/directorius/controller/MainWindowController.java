@@ -6,6 +6,7 @@ import java.util.Set;
 import com.danielcorroto.directorius.model.ContactManager;
 import com.danielcorroto.directorius.model.SimpleVCard;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
+import com.danielcorroto.directorius.view.AboutWindow;
 import com.danielcorroto.directorius.view.MainWindow;
 
 import ezvcard.VCard;
@@ -14,6 +15,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -41,6 +43,7 @@ public class MainWindowController extends Application {
 		window = new MainWindow();
 		window.build(primaryStage);
 
+		menuItemFunction();
 		listViewFunction();
 		searchTextFieldFunction();
 		searchTypeComboBoxFunction();
@@ -57,7 +60,7 @@ public class MainWindowController extends Application {
 	 * @param list
 	 *            Colección de contactos a mostrar
 	 */
-	public void setListViewItems(Collection<SimpleVCard> list) {
+	private void setListViewItems(Collection<SimpleVCard> list) {
 		ObservableList<SimpleVCard> elementList = FXCollections.observableArrayList(list);
 		window.getListView().setItems(elementList);
 	}
@@ -69,12 +72,29 @@ public class MainWindowController extends Application {
 	 * @param simpleVCard
 	 *            Información sencilal del contacto
 	 */
-	public void setWebViewInfo(SimpleVCard simpleVCard) {
+	private void setWebViewInfo(SimpleVCard simpleVCard) {
 		VCard vcard = manager.readContact(simpleVCard.getUid());
 		String html = HtmlContactBuilder.build(vcard, manager.getPhotoDir());
 
 		window.getWebView().getEngine().loadContent(html);
 		window.getWebView().getEngine().setJavaScriptEnabled(true);
+	}
+	
+	/**
+	 * Setea la funcionalidad de los items del menú
+	 */
+	private void menuItemFunction() {
+		window.getMenuItems().getHelpAbout().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					new AboutWindow().start(new Stage());
+				} catch (Exception e) {
+					e.printStackTrace();
+				};
+			}
+		});
 	}
 
 	/**

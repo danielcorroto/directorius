@@ -86,6 +86,10 @@ public class MainWindow {
 	 * Vista de la información del contacto
 	 */
 	private WebView webView;
+	/**
+	 * Lista de todos los items del menú
+	 */
+	private MenuItems menuItems;
 
 	/**
 	 * Para i18n
@@ -182,6 +186,15 @@ public class MainWindow {
 	}
 
 	/**
+	 * Obtiene los componentes MenuItem
+	 * 
+	 * @return Componente que contiene todos los items del menú
+	 */
+	public MenuItems getMenuItems() {
+		return menuItems;
+	}
+
+	/**
 	 * Crea el objeto menu bar de la interfaz.
 	 * 
 	 * <pre>
@@ -198,6 +211,7 @@ public class MainWindow {
 	 */
 	private MenuBar createMenuBar() {
 		MenuBar menuBar = new MenuBar();
+		menuItems = new MenuItems();
 
 		// Crea menú File
 		MenuItem menuFileNew = createMenuItem(Text.I18N_MENU_FILE_NEW, ResourcePath.IMG_MENU_FILE_NEW, KeyCode.N, KeyCombination.CONTROL_DOWN);
@@ -206,6 +220,9 @@ public class MainWindow {
 		Menu menuFile = new Menu(rb.getString(Text.I18N_MENU_FILE));
 		menuFile.getItems().addAll(menuFileNew, menuFileOpen, new SeparatorMenuItem(), menuFileExit);
 		menuBar.getMenus().addAll(menuFile);
+		menuItems.setFileNew(menuFileNew);
+		menuItems.setFileOpen(menuFileOpen);
+		menuItems.setFileExit(menuFileExit);
 
 		// Crea menú Contact
 		MenuItem menuContactAdd = createMenuItem(Text.I18N_MENU_CONTACT_ADD, ResourcePath.IMG_MENU_CONTACT_ADD, KeyCode.A, KeyCombination.CONTROL_DOWN);
@@ -214,6 +231,9 @@ public class MainWindow {
 		Menu menuContact = new Menu(rb.getString(Text.I18N_MENU_CONTACT));
 		menuContact.getItems().addAll(menuContactAdd, menuContactEdit, menuContactRemove);
 		menuBar.getMenus().addAll(menuContact);
+		menuItems.setContactAdd(menuContactAdd);
+		menuItems.setContactEdit(menuContactEdit);
+		menuItems.setContactRemove(menuContactRemove);
 
 		// Crea menú Birthday
 		MenuItem menuBirthdayToday = createMenuItem(Text.I18N_MENU_BIRTHDAY_TODAY, ResourcePath.IMG_MENU_BIRTHDAY_TODAY, null);
@@ -225,13 +245,18 @@ public class MainWindow {
 		menuBirthday.getItems().addAll(menuBirthdayToday, new SeparatorMenuItem(), menuBirthdayWithinWeek, menuBirthdayWithinMonth, new SeparatorMenuItem(), menuBirthdayThisWeek,
 				menuBirthdayThisMonth);
 		menuBar.getMenus().addAll(menuBirthday);
+		menuItems.setBirthdayToday(menuBirthdayToday);
+		menuItems.setBirthdayWithinWeek(menuBirthdayWithinWeek);
+		menuItems.setBirthdayWithinMonth(menuBirthdayWithinMonth);
+		menuItems.setBirthdayThisWeek(menuBirthdayThisWeek);
+		menuItems.setBirthdayThisMonth(menuBirthdayThisMonth);
 
 		// Crea menú Help
 		MenuItem menuHelpAbout = createMenuItem(Text.I18N_MENU_HELP_ABOUT, ResourcePath.IMG_MENU_HELP_ABOUT, KeyCode.F1);
 		Menu menuHelp = new Menu(rb.getString(Text.I18N_MENU_HELP));
 		menuHelp.getItems().addAll(menuHelpAbout);
 		menuBar.getMenus().addAll(menuHelp);
-
+		menuItems.setHelpAbout(menuHelpAbout);
 		return menuBar;
 	}
 
