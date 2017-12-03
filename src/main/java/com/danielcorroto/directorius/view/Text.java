@@ -87,5 +87,9 @@ public interface Text {
 	public static final String I18N_INFORMATION_ADDRESS_TYPE_HOME = "information.address.type.home";
 	
 	public static final String I18N_INFORMATION_ADDRESS_TYPE_WORK = "information.address.type.work";
+	
+	public static final String I18N_INFORMATION_DATEFORMAT  = "information.dateformat";
+	
+	public static final String I18N_INFORMATION_AGEFORMAT  = "information.ageformat";
 
 }

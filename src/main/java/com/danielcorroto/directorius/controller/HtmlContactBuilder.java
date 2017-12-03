@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.DateFormatSymbols;
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -38,6 +40,10 @@ public class HtmlContactBuilder {
 	 * Salto de línea HTML
 	 */
 	private static final String NEW_LINE = "<br/>";
+	/**
+	 * Campo de fecha desconocido
+	 */
+	private static final String UNKNOWN_DATE_DATA = "??";
 
 	/**
 	 * Construye el código HTML de la información del contacto
@@ -61,7 +67,7 @@ public class HtmlContactBuilder {
 
 		// Personal
 		html = html.replace(HtmlTemplate.FULL_NAME, vcard.getFormattedName().getValue());
-		html = html.replace(HtmlTemplate.BIRTHDAY, buildBirthday(vcard));
+		html = html.replace(HtmlTemplate.BIRTHDAY, buildBirthday(vcard, rb));
 		html = html.replace(HtmlTemplate.NOTES, buildNotes(vcard));
 		html = html.replace(HtmlTemplate.GROUP_CATEGORY, buildGroupCategory(vcard));
 
@@ -113,9 +119,11 @@ public class HtmlContactBuilder {
 	 * 
 	 * @param vcard
 	 *            Información del contacto
+	 * @param rb
+	 *            Recurso para i18n
 	 * @return Código HTML de la fecha de nacimiento del contacto
 	 */
-	private static String buildBirthday(VCard vcard) {
+	private static String buildBirthday(VCard vcard, ResourceBundle rb) {
 		if (vcard.getBirthday() == null) {
 			return "";
 		}
@@ -143,10 +151,33 @@ public class HtmlContactBuilder {
 			day = vcard.getBirthday().getPartialDate().getDate();
 		}
 
-		String result = day + " / " + month + " / " + year;
+		String datePattern = rb.getString(Text.I18N_INFORMATION_DATEFORMAT);
+		String result = formatDate(datePattern, year, month, day);
 		if (age != null) {
-			result += " ( " + age + " )";
+			String agePattern = rb.getString(Text.I18N_INFORMATION_AGEFORMAT);
+			result += " ( " + MessageFormat.format(agePattern, age) + " )";
 		}
+		return result;
+	}
+
+	/**
+	 * Formatea una fecha en formato texto según el idioma
+	 * 
+	 * @param datePattern
+	 *            Patrón para formatear. {0} es año, {1} es mes y {2} es día
+	 * @param year
+	 *            Año de nacimiento
+	 * @param month
+	 *            Mes de nacimiento (1-12)
+	 * @param day
+	 *            Día de nacimiento (1-31)
+	 * @return Fecha en formato texto
+	 */
+	private static String formatDate(String datePattern, Integer year, Integer month, Integer day) {
+		String syear = year != null ? year.toString() : UNKNOWN_DATE_DATA;
+		String smonth = month != null ? DateFormatSymbols.getInstance().getMonths()[month - 1] : UNKNOWN_DATE_DATA;
+		String sday = day != null ? day.toString() : UNKNOWN_DATE_DATA;
+		String result = MessageFormat.format(datePattern, syear, smonth, sday);
 		return result;
 	}
 
