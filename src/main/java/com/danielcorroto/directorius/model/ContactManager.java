@@ -100,6 +100,11 @@ public class ContactManager {
 	 * @throws IOException
 	 */
 	public void createContact(VCard vcard) throws IOException {
+		if (vcardMap.containsKey(vcard.getUid())) {
+			vcard.setUid(Uid.random());
+			return;
+		}
+		
 		loadMemoryContact(vcard);
 		saveFile();
 	}
