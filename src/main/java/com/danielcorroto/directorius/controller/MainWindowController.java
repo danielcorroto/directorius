@@ -17,8 +17,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 /**
@@ -79,7 +77,7 @@ public class MainWindowController extends Application {
 		window.getWebView().getEngine().loadContent(html);
 		window.getWebView().getEngine().setJavaScriptEnabled(true);
 	}
-	
+
 	/**
 	 * Setea la funcionalidad de los items del menú
 	 */
@@ -92,7 +90,8 @@ public class MainWindowController extends Application {
 					new AboutWindow().start(new Stage());
 				} catch (Exception e) {
 					e.printStackTrace();
-				};
+				}
+				;
 			}
 		});
 	}
@@ -101,14 +100,11 @@ public class MainWindowController extends Application {
 	 * Setea la funcionalidad de la lista de contactos
 	 */
 	private void listViewFunction() {
-		window.getListView().setOnMouseClicked(new EventHandler<MouseEvent>() {
+		window.getListView().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SimpleVCard>() {
 
 			@Override
-			public void handle(MouseEvent event) {
-				SimpleVCard element = window.getListView().getSelectionModel().getSelectedItem();
-				if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1) {
-					setWebViewInfo(element);
-				}
+			public void changed(ObservableValue<? extends SimpleVCard> observable, SimpleVCard oldValue, SimpleVCard newValue) {
+				setWebViewInfo(newValue);
 			}
 		});
 	}
@@ -140,7 +136,8 @@ public class MainWindowController extends Application {
 			@Override
 			public void changed(ObservableValue<? extends SearchTypeEnum> observable, SearchTypeEnum oldValue, SearchTypeEnum newValue) {
 				String text = window.getSearchTextField().getText();
-				// Si no hay texto que buscar el resultado siempre es la lista completa
+				// Si no hay texto que buscar el resultado siempre es la lista
+				// completa
 				if (text.trim().isEmpty()) {
 					return;
 				}
