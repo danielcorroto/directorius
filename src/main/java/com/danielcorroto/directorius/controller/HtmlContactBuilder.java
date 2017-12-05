@@ -108,10 +108,10 @@ public class HtmlContactBuilder {
 			result = loadFileFromResource(ResourcePath.HTML_SECTION_PHOTO_DEFAULT);
 			result = result.replace(HtmlTemplate.PHOTO_COLOR, createColor(vcard));
 			StringBuilder initial = new StringBuilder();
-			if (vcard.getStructuredName() != null && vcard.getStructuredName().getGiven() != null) {
+			if (vcard.getStructuredName() != null && vcard.getStructuredName().getGiven() != null && !vcard.getStructuredName().getGiven().isEmpty()) {
 				initial.append(vcard.getStructuredName().getGiven().substring(0, 1));
 			}
-			if (vcard.getStructuredName() != null && vcard.getStructuredName().getFamily() != null) {
+			if (vcard.getStructuredName() != null && vcard.getStructuredName().getFamily() != null && !vcard.getStructuredName().getFamily().isEmpty()) {
 				initial.append(vcard.getStructuredName().getFamily().substring(0, 1));
 			}
 			result = result.replace(HtmlTemplate.PHOTO_INITIAL, initial);
