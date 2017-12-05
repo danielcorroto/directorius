@@ -525,6 +525,32 @@ public class ContactManagerTest extends TestCase {
 	}
 
 	/**
+	 * Prueba el listado de categorías
+	 * 
+	 * @throws IOException
+	 */
+	public void testGetCategories() throws IOException {
+		ContactManager cm = new ContactManager(createTempFile().getAbsolutePath());
+		VCard vcard1 = TestUtil.createVCardCategories("abc", "aa", "bb", "cc");
+		cm.createContact(vcard1);
+		VCard vcard2 = TestUtil.createVCardCategories("abc", "bb", "dd", "ff");
+		cm.createContact(vcard2);
+		VCard vcard3 = TestUtil.createVCardCategories("abc", "bb", "ee", "hh");
+		cm.createContact(vcard3);
+		VCard vcard4 = TestUtil.createVCard("abc");
+		cm.createContact(vcard4);
+
+		assertEquals(7, cm.getCategories().size());
+		assertTrue(cm.getCategories().contains("aa"));
+		assertTrue(cm.getCategories().contains("bb"));
+		assertTrue(cm.getCategories().contains("cc"));
+		assertTrue(cm.getCategories().contains("dd"));
+		assertTrue(cm.getCategories().contains("ee"));
+		assertTrue(cm.getCategories().contains("ff"));
+		assertTrue(cm.getCategories().contains("hh"));
+	}
+
+	/**
 	 * Crea un fichero temporal
 	 * 
 	 * @return Descriptor del fichero temporal

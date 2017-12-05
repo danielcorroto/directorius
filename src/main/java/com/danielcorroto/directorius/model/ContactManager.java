@@ -61,6 +61,11 @@ public class ContactManager {
 	 * Colección sencilla de contactos ordenados por nombre
 	 */
 	private Map<Uid, SimpleVCard> simpleVcardMap;
+	
+	/**
+	 * Colección de categorías
+	 */
+	private Set<String> categoriesSet;
 
 	/**
 	 * Constructor vacío. Utilizar {@link #loadFile(String)} para cargar datos
@@ -86,9 +91,12 @@ public class ContactManager {
 	 * Inicia las variables del manager (si no están vacías)
 	 */
 	private void init() {
-		if (vcardMap == null || !vcardMap.isEmpty() || simpleVcardMap == null || !simpleVcardMap.isEmpty()) {
+		if (vcardMap == null || !vcardMap.isEmpty() ||
+				simpleVcardMap == null || !simpleVcardMap.isEmpty() ||
+				categoriesSet == null || categoriesSet.isEmpty()) {
 			vcardMap = new HashMap<>();
 			simpleVcardMap = new HashMap<>();
+			categoriesSet = new TreeSet<>();
 		}
 	}
 
@@ -119,6 +127,11 @@ public class ContactManager {
 		VCard copy = new VCard(vcard);
 		vcardMap.put(copy.getUid(), copy);
 		simpleVcardMap.put(copy.getUid(), new SimpleVCard(copy));
+		if (vcard.getCategories() != null && vcard.getCategories().getValues() != null) {
+			for (String category : vcard.getCategories().getValues()) {
+				categoriesSet.add(category);
+			}
+		}
 	}
 
 	/**
@@ -220,6 +233,10 @@ public class ContactManager {
 		}
 
 		return res;
+	}
+	
+	public Set<String> getCategories() {
+		return categoriesSet;
 	}
 
 	/**
