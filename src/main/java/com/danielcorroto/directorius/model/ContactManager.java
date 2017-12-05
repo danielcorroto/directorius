@@ -3,9 +3,11 @@ package com.danielcorroto.directorius.model;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -46,7 +48,10 @@ public class ContactManager {
 	 * comillas
 	 */
 	private static final Pattern searchPattern = Pattern.compile("\"([^\"]*)\"|(\\S+)"); // Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
-
+	/**
+	 * Charset para la lectura/escritura de fichero
+	 */
+	private static final Charset CHARSET_DEFAULT = Charset.forName("UTF-8");
 	/**
 	 * Ruta del fichero VCard
 	 */
@@ -61,7 +66,7 @@ public class ContactManager {
 	 * Colección sencilla de contactos ordenados por nombre
 	 */
 	private Map<Uid, SimpleVCard> simpleVcardMap;
-	
+
 	/**
 	 * Colección de categorías
 	 */
@@ -91,9 +96,7 @@ public class ContactManager {
 	 * Inicia las variables del manager (si no están vacías)
 	 */
 	private void init() {
-		if (vcardMap == null || !vcardMap.isEmpty() ||
-				simpleVcardMap == null || !simpleVcardMap.isEmpty() ||
-				categoriesSet == null || categoriesSet.isEmpty()) {
+		if (vcardMap == null || !vcardMap.isEmpty() || simpleVcardMap == null || !simpleVcardMap.isEmpty() || categoriesSet == null || categoriesSet.isEmpty()) {
 			vcardMap = new HashMap<>();
 			simpleVcardMap = new HashMap<>();
 			categoriesSet = new TreeSet<>();
@@ -112,11 +115,11 @@ public class ContactManager {
 			vcard.setUid(Uid.random());
 			return;
 		}
-		
+
 		loadMemoryContact(vcard);
 		saveFile();
 	}
-	
+
 	/**
 	 * Carga el contacto en memoria
 	 * 
@@ -234,7 +237,7 @@ public class ContactManager {
 
 		return res;
 	}
-	
+
 	public Set<String> getCategories() {
 		return new TreeSet<>(categoriesSet);
 	}
@@ -246,7 +249,7 @@ public class ContactManager {
 	 *         podido cargar
 	 * @throws FileNotFoundException
 	 * @throws IOException
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException
 	 */
 	public static ContactManager autoLoadFile() throws FileNotFoundException, IOException, URISyntaxException {
 		// Comprueba existencia del fichero de configuración
@@ -256,7 +259,7 @@ public class ContactManager {
 		}
 		String filename = currentPath + CONFIG_FILE;
 		File configFile = new File(new URL(filename).toURI());
-		
+
 		if (configFile == null || !configFile.exists()) {
 			return null;
 		}
@@ -297,7 +300,8 @@ public class ContactManager {
 		ContactManager cm = new ContactManager();
 		cm.file = new File(path);
 		FileInputStream fis = new FileInputStream(cm.file);
-		List<VCard> vcards = Ezvcard.parse(new InputStreamReader(fis, Charset.forName("UTF-8"))).all();
+		List<VCard> vcards = Ezvcard.parse(new InputStreamReader(fis, CHARSET_DEFAULT)).all();
+		fis.close();
 
 		cm.init();
 
@@ -313,6 +317,7 @@ public class ContactManager {
 	 * @throws IOException
 	 */
 	private void saveFile() throws IOException {
-		Ezvcard.write(vcardMap.values()).go(file);
+		FileOutputStream fos = new FileOutputStream(file);
+		Ezvcard.write(vcardMap.values()).go(new OutputStreamWriter(fos, CHARSET_DEFAULT));
 	}
 }
