@@ -236,7 +236,7 @@ public class ContactManager {
 	}
 	
 	public Set<String> getCategories() {
-		return categoriesSet;
+		return new TreeSet<>(categoriesSet);
 	}
 
 	/**

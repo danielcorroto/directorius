@@ -42,6 +42,7 @@ public class MainWindowController extends Application {
 		window.build(primaryStage);
 
 		menuItemFunction();
+		addContactButtonFunction();
 		listViewFunction();
 		searchTextFieldFunction();
 		searchTypeComboBoxFunction();
@@ -82,6 +83,24 @@ public class MainWindowController extends Application {
 	 * Setea la funcionalidad de los items del menú
 	 */
 	private void menuItemFunction() {
+		window.getMenuItems().getContactAdd().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				try {
+					new ContactWindowController(manager, null).start(new Stage());
+					
+					// Carga la nueva lista
+					String text = window.getSearchTextField().getText();
+					SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
+					Set<SimpleVCard> list = manager.search(text.trim(), type);
+					setListViewItems(list);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
 		window.getMenuItems().getHelpAbout().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -91,9 +110,12 @@ public class MainWindowController extends Application {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				;
 			}
 		});
+	}
+	
+	private void addContactButtonFunction() {
+		window.getAddContactButton().setOnAction(window.getMenuItems().getContactAdd().getOnAction());
 	}
 
 	/**

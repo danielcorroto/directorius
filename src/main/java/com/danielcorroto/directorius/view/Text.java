@@ -47,49 +47,69 @@ public interface Text {
 	public static final String I18N_MENU_HELP = "menu.help";
 
 	public static final String I18N_MENU_HELP_ABOUT = "menu.help.about";
-	
+
 	public static final String I18N_TOOLBAR_SEARCH = "toolbar.search";
-	
+
 	public static final String I18N_TOOLBAR_SEARCHTYPE_ALL = "toolbar.searchtype.all";
-	
+
 	public static final String I18N_TOOLBAR_SEARCHTYPE_CATEGORY = "toolbar.searchtype.category";
-	
+
 	public static final String I18N_TOOLBAR_SEARCHTYPE_NAME = "toolbar.searchtype.name";
-	
+
 	public static final String I18N_TOOLBAR_SEARCHTYPE_PHONE = "toolbar.searchtype.phone";
-	
+
 	public static final String I18N_TOOLBAR_SEARCHTYPE_TOOLTIP = "toolbar.searchtype.tooltip";
-	
+
 	public static final String I18N_TOOLBAR_CONTACTADD_TOOLTIP = "toolbar.contactadd.tooltip";
-	
+
+	public static final String I18N_INFORMATION_PERSONAL_NAME = "information.personal.name";
+
+	public static final String I18N_INFORMATION_PERSONAL_SURNAME = "information.personal.surname";
+
+	public static final String I18N_INFORMATION_PERSONAL_FULLNAME = "information.personal.fullname";
+
+	public static final String I18N_INFORMATION_PERSONAL_BIRTHDAY = "information.personal.birthday";
+
+	public static final String I18N_INFORMATION_PERSONAL_CATEGORIES = "information.personal.categories";
+
+	public static final String I18N_INFORMATION_PERSONAL_NOTES = "information.personal.notes";
+
 	public static final String I18N_INFORMATION_PHONE_TYPE_CELL = "information.phone.type.cell";
-	
+
 	public static final String I18N_INFORMATION_PHONE_TYPE_FAX = "information.phone.type.fax";
-	
+
 	public static final String I18N_INFORMATION_PHONE_TYPE_HOME = "information.phone.type.home";
-	
+
 	public static final String I18N_INFORMATION_PHONE_TYPE_PAGER = "information.phone.type.pager";
-	
+
 	public static final String I18N_INFORMATION_PHONE_TYPE_TEXT = "information.phone.type.text";
-	
+
 	public static final String I18N_INFORMATION_PHONE_TYPE_TEXTPHONE = "information.phone.type.textphone";
-	
+
 	public static final String I18N_INFORMATION_PHONE_TYPE_VICEO = "information.phone.type.video";
-	
+
 	public static final String I18N_INFORMATION_PHONE_TYPE_VOICE = "information.phone.type.voice";
-	
+
 	public static final String I18N_INFORMATION_PHONE_TYPE_WORK = "information.phone.type.work";
-	
+
 	public static final String I18N_INFORMATION_EMAIL_TYPE_HOME = "information.email.type.home";
-	
+
 	public static final String I18N_INFORMATION_EMAIL_TYPE_WORK = "information.email.type.work";
-	
+
 	public static final String I18N_INFORMATION_ADDRESS_TYPE_HOME = "information.address.type.home";
-	
+
 	public static final String I18N_INFORMATION_ADDRESS_TYPE_WORK = "information.address.type.work";
-	
-	public static final String I18N_INFORMATION_DATEFORMAT  = "information.dateformat";
-	
-	public static final String I18N_INFORMATION_AGEFORMAT  = "information.ageformat";
+
+	public static final String I18N_INFORMATION_DATEFORMAT = "information.dateformat";
+
+	public static final String I18N_INFORMATION_AGEFORMAT = "information.ageformat";
+
+	public static final String I18N_EDITCONTACT_PHOTO_CLEAN = "editcontact.photo.clean";
+
+	public static final String I18N_EDITCONTACT_PHOTO_SEARCH = "editcontact.photo.search";
+
+	public static final String I18N_EDITCONTACT_CANCEL = "editcontact.cancel";
+
+	public static final String I18N_EDITCONTACT_SAVE = "editcontact.save";
 
 }

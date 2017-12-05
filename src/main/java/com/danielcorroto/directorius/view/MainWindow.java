@@ -75,6 +75,10 @@ public class MainWindow {
 	 */
 	private ListView<SimpleVCard> listView;
 	/**
+	 * Botón añadir contacto
+	 */
+	private Button addContactButton;
+	/**
 	 * Caja de texto para realizar búsqueda de contactos
 	 */
 	private TextField searchTextField;
@@ -156,6 +160,15 @@ public class MainWindow {
 	 */
 	public ListView<SimpleVCard> getListView() {
 		return listView;
+	}
+
+	/**
+	 * Obtiene el componente Button para añadir un contacto
+	 * 
+	 * @return Componente para añadir contacto
+	 */
+	public Button getAddContactButton() {
+		return addContactButton;
 	}
 
 	/**
@@ -332,16 +345,16 @@ public class MainWindow {
 		HBox.setHgrow(searchTypeComboBox, Priority.ALWAYS);
 
 		// Botón añadir contacto
-		Button addButton = new Button();
+		addContactButton = new Button();
 		ImageView addButtonImage = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_MENU_CONTACT_ADD)));
 		addButtonImage.setFitWidth(TOOLBAR_IMAGE_SIZE);
 		addButtonImage.setFitHeight(TOOLBAR_IMAGE_SIZE);
-		addButton.setGraphic(addButtonImage);
-		addButton.setTooltip(new Tooltip(rb.getString(Text.I18N_TOOLBAR_CONTACTADD_TOOLTIP)));
-		gridPane.add(addButton, 2, 0);
-		GridPane.setMargin(addButton, TOOLBAR_MARGIN);
-		GridPane.setHalignment(addButton, HPos.RIGHT);
-		HBox.setHgrow(addButton, Priority.ALWAYS);
+		addContactButton.setGraphic(addButtonImage);
+		addContactButton.setTooltip(new Tooltip(rb.getString(Text.I18N_TOOLBAR_CONTACTADD_TOOLTIP)));
+		gridPane.add(addContactButton, 2, 0);
+		GridPane.setMargin(addContactButton, TOOLBAR_MARGIN);
+		GridPane.setHalignment(addContactButton, HPos.RIGHT);
+		HBox.setHgrow(addContactButton, Priority.ALWAYS);
 
 		return toolbar;
 	}
