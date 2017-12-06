@@ -83,6 +83,10 @@ public class ContactWindow {
 	 */
 	private Button photoSearch;
 	/**
+	 * Contenedor de la foto
+	 */
+	private ImageView imageView;
+	/**
 	 * Botón para cerrar el diálogo
 	 */
 	private Button cancel;
@@ -147,9 +151,7 @@ public class ContactWindow {
 		notesTextArea.setMaxHeight(100);
 		gridPane.add(notesTextArea, 1, 5);
 
-		ImageView imageView = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO)));
-		imageView.minHeight(200);
-		imageView.maxHeight(200);
+		imageView = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO)));
 		gridPane.add(imageView, 2, 0);
 		GridPane.setRowSpan(imageView, 5);
 		GridPane.setHalignment(imageView, HPos.CENTER);
@@ -336,6 +338,15 @@ public class ContactWindow {
 	}
 
 	/**
+	 * Obtiene el componente ImageView para mostrar la imagen
+	 * 
+	 * @return Componente para mostrar la imagen
+	 */
+	public ImageView getImageView() {
+		return imageView;
+	}
+
+	/**
 	 * Obtiene el componente Button para cancelar la edición
 	 * 
 	 * @return Componente para cancelar la edición
@@ -353,7 +364,22 @@ public class ContactWindow {
 		return save;
 	}
 
+	/**
+	 * Obtiene el componente Stage
+	 * 
+	 * @return Componente base de la ventana
+	 */
+	public Stage getStage() {
+		return stage;
+	}
+
+	/**
+	 * Obtiene el componente Button para cerrar la ventana
+	 * 
+	 * @return Componente para cerrar la ventana
+	 */
 	public void close() {
 		stage.close();
 	}
+
 }

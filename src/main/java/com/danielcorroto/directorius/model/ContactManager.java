@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -285,6 +286,44 @@ public class ContactManager {
 	public String getPhotoDir() {
 		String path = file.getAbsolutePath();
 		return path.substring(0, path.lastIndexOf('.')) + ".photo" + File.separator;
+	}
+
+	/**
+	 * Copia el fichero indicado en el directorio de fotografías con el nombre
+	 * indicado
+	 * 
+	 * @param source
+	 *            Fichero de origen
+	 * @param dest
+	 *            Nombre del fichero (sin ruta ni extensión)
+	 * @return Nombre del fichero con extensión
+	 * @throws IOException
+	 */
+	public String savePhotoFile(File source, String dest) throws IOException {
+		FileChannel sourceChannel = null;
+		FileChannel destChannel = null;
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		String result = null;
+		try {
+			fis = new FileInputStream(source);
+			sourceChannel = fis.getChannel();
+
+			String extension = source.getName().substring(source.getName().lastIndexOf('.'));
+			result = dest + extension;
+			String fullDestPath = getPhotoDir() + result;
+			fos = new FileOutputStream(fullDestPath);
+			destChannel = fos.getChannel();
+
+			destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+		} finally {
+			fis.close();
+			fos.close();
+			sourceChannel.close();
+			destChannel.close();
+		}
+		
+		return result;
 	}
 
 	/**
