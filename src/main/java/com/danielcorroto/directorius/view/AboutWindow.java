@@ -1,5 +1,9 @@
 package com.danielcorroto.directorius.view;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -33,17 +37,26 @@ public class AboutWindow extends Application {
 	 * Propiedad de la versión del proyecto
 	 */
 	private static final String PROPERTY_VERSION = "project.version";
+	/**
+	 * Propiedad de la fecha de compilación del proyecto
+	 */
+	private static final String PROPERTY_TIMESTAMP = "project.timestamp";
+	/**
+	 * Formato de entrada de la fecha de compilación del proyecto
+	 */
+	private static final String TIMESTAMP_INPUT_FORMAT = "yyyy-MM-dd'T'HH':'mm':'ss'Z'";
+	/**
+	 * Formato de salida de la fecha de compilación del proyecto
+	 */
+	private static final String TIMESTAMP_OUTPUT_FORMAT = "yyyy/MM/dd";
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Properties properties = new Properties();
-		properties.load(MainWindow.class.getResourceAsStream(PROPERTIES_FILE));
-		String version = properties.getProperty(PROPERTY_VERSION);
 		ResourceBundle rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
-		
+
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setHeaderText(null);
-		alert.setContentText(Text.APP_NAME + " " + version);
+		alert.setContentText(buildContentText());
 
 		// Gestión de Alert a través de DialogPane
 		DialogPane pane = alert.getDialogPane();
@@ -68,6 +81,29 @@ public class AboutWindow extends Application {
 
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		dialog.showAndWait();
+	}
+
+	/**
+	 * Devuelve el texto que se muestra en la ventana
+	 * 
+	 * @return Texto a mostrar
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	private String buildContentText() throws IOException, ParseException {
+		// Versión
+		Properties properties = new Properties();
+		properties.load(MainWindow.class.getResourceAsStream(PROPERTIES_FILE));
+		String version = properties.getProperty(PROPERTY_VERSION);
+
+		// Fecha
+		String stringDateIn = properties.getProperty(PROPERTY_TIMESTAMP);
+		SimpleDateFormat sdfIn = new SimpleDateFormat(TIMESTAMP_INPUT_FORMAT);
+		Date date = sdfIn.parse(stringDateIn);
+		SimpleDateFormat sdfOut = new SimpleDateFormat(TIMESTAMP_OUTPUT_FORMAT);
+		String stringDateOut = sdfOut.format(date);
+
+		return Text.APP_NAME + " " + version + System.getProperty("line.separator") + stringDateOut;
 	}
 
 }

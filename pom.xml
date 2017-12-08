@@ -10,7 +10,9 @@
 	<name>directorius</name>
 
 	<properties>
+		<!-- Propiedades del proyecto visibles en aplicación -->
 		<project.version>0.1</project.version>
+		<project.timestamp>${maven.build.timestamp}</project.timestamp>
 	
 		<!-- Propiedades del proyecto -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
