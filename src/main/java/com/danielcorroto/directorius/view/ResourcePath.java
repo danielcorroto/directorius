@@ -107,4 +107,24 @@ public interface ResourcePath {
 	 * Imagen de menú Help / About
 	 */
 	public static final String IMG_MENU_HELP_ABOUT = "/img/menu_help_about.png";
+	/**
+	 * Imagen de editar contacto / Añadir teléfono
+	 */
+	public static final String IMG_EDIT_CONTACT_PHONE_ADD = "/img/edit_contact_phone_add.png";
+	/**
+	 * Imagen de editar contacto / Añadir email
+	 */
+	public static final String IMG_EDIT_CONTACT_EMAIL_ADD = "/img/edit_contact_email_add.png";
+	/**
+	 * Imagen de editar contacto / Añadir dirección
+	 */
+	public static final String IMG_EDIT_CONTACT_ADDRESS_ADD = "/img/edit_contact_address_add.png";
+	/**
+	 * Imagen de editar contacto / Editar
+	 */
+	public static final String IMG_EDIT_CONTACT_EDIT = "/img/edit_contact_edit.png";
+	/**
+	 * Imagen de editar contacto / Eliminar
+	 */
+	public static final String IMG_EDIT_CONTACT_REMOVE = "/img/edit_contact_remove.png";
 }

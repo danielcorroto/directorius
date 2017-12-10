@@ -74,6 +74,14 @@ public interface Text {
 
 	public static final String I18N_INFORMATION_PERSONAL_NOTES = "information.personal.notes";
 
+	public static final String I18N_INFORMATION_PHONE = "information.phone";
+
+	public static final String I18N_INFORMATION_PHONE_ADD = "information.phone.add";
+
+	public static final String I18N_INFORMATION_PHONE_EDIT = "information.phone.edit";
+
+	public static final String I18N_INFORMATION_PHONE_REMOVE = "information.phone.remove";
+
 	public static final String I18N_INFORMATION_PHONE_TYPE_CELL = "information.phone.type.cell";
 
 	public static final String I18N_INFORMATION_PHONE_TYPE_FAX = "information.phone.type.fax";
@@ -92,9 +100,25 @@ public interface Text {
 
 	public static final String I18N_INFORMATION_PHONE_TYPE_WORK = "information.phone.type.work";
 
+	public static final String I18N_INFORMATION_EMAIL = "information.email";
+
+	public static final String I18N_INFORMATION_EMAIL_ADD = "information.email.add";
+
+	public static final String I18N_INFORMATION_EMAIL_EDIT = "information.email.edit";
+
+	public static final String I18N_INFORMATION_EMAIL_REMOVE = "information.email.remove";
+
 	public static final String I18N_INFORMATION_EMAIL_TYPE_HOME = "information.email.type.home";
 
 	public static final String I18N_INFORMATION_EMAIL_TYPE_WORK = "information.email.type.work";
+
+	public static final String I18N_INFORMATION_ADDRESS = "information.address";
+
+	public static final String I18N_INFORMATION_ADDRESS_ADD = "information.address.add";
+
+	public static final String I18N_INFORMATION_ADDRESS_EDIT = "information.address.edit";
+
+	public static final String I18N_INFORMATION_ADDRESS_REMOVE = "information.address.remove";
 
 	public static final String I18N_INFORMATION_ADDRESS_TYPE_HOME = "information.address.type.home";
 
@@ -111,5 +135,49 @@ public interface Text {
 	public static final String I18N_EDITCONTACT_CANCEL = "editcontact.cancel";
 
 	public static final String I18N_EDITCONTACT_SAVE = "editcontact.save";
+	
+	public static final String I18N_EDITCONTACT_PHONE_ADD = "editcontact.phone.add";
+
+	public static final String I18N_EDITCONTACT_PHONE_EDIT = "editcontact.phone.edit";
+	
+	public static final String I18N_EDITCONTACT_PHONE_REMOVE = "editcontact.phone.remove";
+	
+	public static final String I18N_EDITCONTACT_PHONE_NUMBER = "editcontact.phone.number";
+	
+	public static final String I18N_EDITCONTACT_PHONE_TYPE = "editcontact.phone.type";
+	
+	public static final String I18N_EDITCONTACT_PHONE_TAG = "editcontact.phone.tag";
+	
+	public static final String I18N_EDITCONTACT_EMAIL_ADD = "editcontact.email.add";
+	
+	public static final String I18N_EDITCONTACT_EMAIL_EDIT = "editcontact.email.edit";
+	
+	public static final String I18N_EDITCONTACT_EMAIL_REMOVE = "editcontact.email.remove";
+	
+	public static final String I18N_EDITCONTACT_EMAIL_EMAIL = "editcontact.email.email";
+	
+	public static final String I18N_EDITCONTACT_EMAIL_TYPE = "editcontact.email.type";
+	
+	public static final String I18N_EDITCONTACT_EMAIL_TAG = "editcontact.email.tag";
+	
+	public static final String I18N_EDITCONTACT_ADDRESS_ADD = "editcontact.address.add";
+	
+	public static final String I18N_EDITCONTACT_ADDRESS_EDIT = "editcontact.address.edit";
+	
+	public static final String I18N_EDITCONTACT_ADDRESS_REMOVE = "editcontact.address.remove";
+	
+	public static final String I18N_EDITCONTACT_ADDRESS_STREET = "editcontact.address.street";
+	
+	public static final String I18N_EDITCONTACT_ADDRESS_LOCALITY = "editcontact.address.locality";
+	
+	public static final String I18N_EDITCONTACT_ADDRESS_REGION = "editcontact.address.region";
+	
+	public static final String I18N_EDITCONTACT_ADDRESS_POSTALCODE = "editcontact.address.postalcode";
+	
+	public static final String I18N_EDITCONTACT_ADDRESS_COUNTRY = "editcontact.address.country";
+	
+	public static final String I18N_EDITCONTACT_ADDRESS_TYPE = "editcontact.address.type";
+	
+	public static final String I18N_EDITCONTACT_ADDRESS_TAG = "editcontact.address.tag";
 
 }

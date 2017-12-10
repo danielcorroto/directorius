@@ -4,6 +4,11 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import com.danielcorroto.directorius.controller.data.AddressInfo;
+import com.danielcorroto.directorius.controller.data.DisplayUtil;
+import com.danielcorroto.directorius.controller.data.EmailInfo;
+import com.danielcorroto.directorius.controller.data.PhoneInfo;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -14,8 +19,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -25,6 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  * Gestiona la creación de la ventana de creación/edición de contactos
@@ -37,6 +46,8 @@ public class ContactWindow {
 	 * Porcentajes para los elementos del panel principal
 	 */
 	private static final int[] PERSONALPANE_PERCENTAGE = new int[] { 25, 45, 30 };
+
+	private static final int BUTTON_IMAGE_SIZE = 24;
 
 	/**
 	 * Stage de la ventana
@@ -87,6 +98,54 @@ public class ContactWindow {
 	 */
 	private ImageView imageView;
 	/**
+	 * Botón para añadir teléfono
+	 */
+	private Button addPhone;
+	/**
+	 * Botón para editar teléfono
+	 */
+	private Button editPhone;
+	/**
+	 * Botón para eliminar teléfono
+	 */
+	private Button removePhone;
+	/**
+	 * Botón para añadir email
+	 */
+	private Button addEmail;
+	/**
+	 * Botón para editar email
+	 */
+	private Button editEmail;
+	/**
+	 * Botón para eliminar email
+	 */
+	private Button removeEmail;
+	/**
+	 * Botón para añadir dirección
+	 */
+	private Button addAddress;
+	/**
+	 * Botón para editar dirección
+	 */
+	private Button editAddress;
+	/**
+	 * Botón para eliminar dirección
+	 */
+	private Button removeAddress;
+	/**
+	 * Contenedor de teléfonos
+	 */
+	private ListView<PhoneInfo> listViewPhone;
+	/**
+	 * Contenedor de emails
+	 */
+	private ListView<EmailInfo> listViewEmail;
+	/**
+	 * Contenedor de direcciones
+	 */
+	private ListView<AddressInfo> listViewAddress;
+	/**
 	 * Botón para cerrar el diálogo
 	 */
 	private Button cancel;
@@ -126,6 +185,7 @@ public class ContactWindow {
 		gridPane.setVgap(10);
 		gridPane.setPadding(new Insets(25, 25, 25, 25));
 
+		// Datos personales
 		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_NAME), 0);
 		nameTextField = new TextField();
 		gridPane.add(nameTextField, 1, 0);
@@ -151,6 +211,7 @@ public class ContactWindow {
 		notesTextArea.setMaxHeight(100);
 		gridPane.add(notesTextArea, 1, 5);
 
+		// Fotografía
 		imageView = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO)));
 		gridPane.add(imageView, 2, 0);
 		GridPane.setRowSpan(imageView, 5);
@@ -165,6 +226,66 @@ public class ContactWindow {
 		photoButtons.getChildren().add(photoSearch);
 		gridPane.add(photoButtons, 2, 5);
 
+		// Teléfono
+		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PHONE), 6);
+		addPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_PHONE_ADD, Text.I18N_INFORMATION_PHONE_ADD);
+		gridPane.add(addPhone, 0, 6);
+		listViewPhone = new ListView<>();
+		listViewPhone.setMaxHeight(100);
+		listViewPhone.setCellFactory(createPhoneListViewCellFactory());
+		gridPane.add(listViewPhone, 1, 6);
+		
+		HBox phoneButtons = new HBox();
+		phoneButtons.setAlignment(Pos.CENTER);
+		phoneButtons.setSpacing(20);
+		editPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_INFORMATION_PHONE_EDIT);
+		editPhone.setDisable(true);
+		phoneButtons.getChildren().add(editPhone);
+		removePhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_INFORMATION_PHONE_REMOVE);
+		removePhone.setDisable(true);
+		phoneButtons.getChildren().add(removePhone);
+		gridPane.add(phoneButtons, 2, 6);
+
+		// Email
+		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_EMAIL), 7);
+		addEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EMAIL_ADD, Text.I18N_INFORMATION_EMAIL_ADD);
+		gridPane.add(addEmail, 0, 7);
+		listViewEmail = new ListView<>();
+		listViewEmail.setMaxHeight(100);
+		listViewEmail.setCellFactory(createEmailListViewCellFactory());
+		gridPane.add(listViewEmail, 1, 7);
+		
+		HBox emailButtons = new HBox();
+		emailButtons.setAlignment(Pos.CENTER);
+		emailButtons.setSpacing(20);
+		editEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_INFORMATION_EMAIL_EDIT);
+		editEmail.setDisable(true);
+		emailButtons.getChildren().add(editEmail);
+		removeEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_INFORMATION_EMAIL_REMOVE);
+		removeEmail.setDisable(true);
+		emailButtons.getChildren().add(removeEmail);
+		gridPane.add(emailButtons, 2, 7);
+
+		// Dirección
+		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_ADDRESS), 8);
+		addAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ADDRESS_ADD, Text.I18N_INFORMATION_ADDRESS_ADD);
+		gridPane.add(addAddress, 0, 8);
+		listViewAddress = new ListView<>();
+		listViewAddress.setMaxHeight(100);
+		listViewAddress.setCellFactory(createAddressListViewCellFactory());
+		gridPane.add(listViewAddress, 1, 8);
+		
+		HBox addressButtons = new HBox();
+		addressButtons.setAlignment(Pos.CENTER);
+		addressButtons.setSpacing(20);
+		editAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_INFORMATION_ADDRESS_EDIT);
+		editAddress.setDisable(true);
+		addressButtons.getChildren().add(editAddress);
+		removeAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_INFORMATION_ADDRESS_REMOVE);
+		removeAddress.setDisable(true);
+		addressButtons.getChildren().add(removeAddress);
+		gridPane.add(addressButtons, 2, 8);
+
 		// Botones de cancelar y guardar
 		HBox buttons = new HBox();
 		buttons.setAlignment(Pos.CENTER);
@@ -172,6 +293,7 @@ public class ContactWindow {
 		cancel = new Button(rb.getString(Text.I18N_EDITCONTACT_CANCEL));
 		buttons.getChildren().add(cancel);
 		save = new Button(rb.getString(Text.I18N_EDITCONTACT_SAVE));
+		save.setDisable(true);
 		buttons.getChildren().add(save);
 
 		// Crear ventana
@@ -245,6 +367,112 @@ public class ContactWindow {
 		result.getChildren().add(comboBoxDay);
 
 		return result;
+	}
+
+	/**
+	 * Construye el botón añadir elemento (teléfono/email/dirección)
+	 * 
+	 * @param resourcePathRuta
+	 *            de la imagen del botón
+	 * @param i18n
+	 *            I18n tooltip del botón
+	 * @return Botón añadir
+	 */
+	private Button buildElementButton(String resourcePath, String i18n) {
+		ImageView addImage = new ImageView(new Image(MainWindow.class.getResourceAsStream(resourcePath)));
+		addImage.setFitWidth(BUTTON_IMAGE_SIZE);
+		addImage.setFitHeight(BUTTON_IMAGE_SIZE);
+		Button button = new Button();
+		button.setGraphic(addImage);
+		button.setTooltip(new Tooltip(rb.getString(i18n)));
+		return button;
+	}
+
+	/**
+	 * Crea la visualización para el listview de teléfonos
+	 * 
+	 * @return Objeto que implementa la visualización del texto del listview de
+	 *         teléfonos
+	 */
+	private Callback<ListView<PhoneInfo>, ListCell<PhoneInfo>> createPhoneListViewCellFactory() {
+		Callback<ListView<PhoneInfo>, ListCell<PhoneInfo>> cellFactory = new Callback<ListView<PhoneInfo>, ListCell<PhoneInfo>>() {
+
+			@Override
+			public ListCell<PhoneInfo> call(ListView<PhoneInfo> param) {
+				return new ListCell<PhoneInfo>() {
+					@Override
+					protected void updateItem(PhoneInfo item, boolean empty) {
+						super.updateItem(item, empty);
+
+						if (empty || item == null || item.getNumber() == null) {
+							setText(null);
+						} else {
+							setText(DisplayUtil.getPhoneInfo(item, rb));
+						}
+					}
+				};
+			}
+		};
+
+		return cellFactory;
+	}
+
+	/**
+	 * Crea la visualización para el listview de emails
+	 * 
+	 * @return Objeto que implementa la visualización del texto del listview de
+	 *         emails
+	 */
+	private Callback<ListView<EmailInfo>, ListCell<EmailInfo>> createEmailListViewCellFactory() {
+		Callback<ListView<EmailInfo>, ListCell<EmailInfo>> cellFactory = new Callback<ListView<EmailInfo>, ListCell<EmailInfo>>() {
+
+			@Override
+			public ListCell<EmailInfo> call(ListView<EmailInfo> param) {
+				return new ListCell<EmailInfo>() {
+					@Override
+					protected void updateItem(EmailInfo item, boolean empty) {
+						super.updateItem(item, empty);
+
+						if (empty || item == null || item.getEmail() == null) {
+							setText(null);
+						} else {
+							setText(DisplayUtil.getEmailInfo(item, rb));
+						}
+					}
+				};
+			}
+		};
+
+		return cellFactory;
+	}
+
+	/**
+	 * Crea la visualización para el listview de direcciones
+	 * 
+	 * @return Objeto que implementa la visualización del texto del listview de
+	 *         direcciones
+	 */
+	private Callback<ListView<AddressInfo>, ListCell<AddressInfo>> createAddressListViewCellFactory() {
+		Callback<ListView<AddressInfo>, ListCell<AddressInfo>> cellFactory = new Callback<ListView<AddressInfo>, ListCell<AddressInfo>>() {
+
+			@Override
+			public ListCell<AddressInfo> call(ListView<AddressInfo> param) {
+				return new ListCell<AddressInfo>() {
+					@Override
+					protected void updateItem(AddressInfo item, boolean empty) {
+						super.updateItem(item, empty);
+
+						if (empty || item == null) {
+							setText(null);
+						} else {
+							setText(DisplayUtil.getAddressInfo(item, rb));
+						}
+					}
+				};
+			}
+		};
+
+		return cellFactory;
 	}
 
 	/**
@@ -344,6 +572,114 @@ public class ContactWindow {
 	 */
 	public ImageView getImageView() {
 		return imageView;
+	}
+
+	/**
+	 * Obtiene el componente Button para añadir un teléfono
+	 * 
+	 * @return Componente para añadir un teléfono
+	 */
+	public Button getAddPhone() {
+		return addPhone;
+	}
+
+	/**
+	 * Obtiene el componente Button para editar un teléfono
+	 * 
+	 * @return Componente para editar un teléfono
+	 */
+	public Button getEditPhone() {
+		return editPhone;
+	}
+
+	/**
+	 * Obtiene el componente Button para eliminar un teléfono
+	 * 
+	 * @return Componente para eliminar un teléfono
+	 */
+	public Button getRemovePhone() {
+		return removePhone;
+	}
+
+	/**
+	 * Obtiene el componente Button para añadir un email
+	 * 
+	 * @return Componente para añadir un email
+	 */
+	public Button getAddEmail() {
+		return addEmail;
+	}
+
+	/**
+	 * Obtiene el componente Button para editar un email
+	 * 
+	 * @return Componente para editar un email
+	 */
+	public Button getEditEmail() {
+		return editEmail;
+	}
+
+	/**
+	 * Obtiene el componente Button para eliminar un email
+	 * 
+	 * @return Componente para eliminar un email
+	 */
+	public Button getRemoveEmail() {
+		return removeEmail;
+	}
+
+	/**
+	 * Obtiene el componente Button para añadir una dirección
+	 * 
+	 * @return Componente para añadir una dirección
+	 */
+	public Button getAddAddress() {
+		return addAddress;
+	}
+
+	/**
+	 * Obtiene el componente Button para editar una dirección
+	 * 
+	 * @return Componente para editar una dirección
+	 */
+	public Button getEditAddress() {
+		return editAddress;
+	}
+
+	/**
+	 * Obtiene el componente Button para eliminar una dirección
+	 * 
+	 * @return Componente para eliminar una dirección
+	 */
+	public Button getRemoveAddress() {
+		return removeAddress;
+	}
+
+	/**
+	 * Obtiene el componente ListView que contiene los teléfonos
+	 * 
+	 * @return Componente que contiene los teléfonos
+	 */
+	public ListView<PhoneInfo> getListViewPhone() {
+		return listViewPhone;
+	}
+
+	/**
+	 * Obtiene el componente ListView que contiene los emails
+	 * 
+	 * @return Componente que contiene los emails
+	 */
+	public ListView<EmailInfo> getListViewEmail() {
+		return listViewEmail;
+	}
+
+	/**
+	 * Obtiene el componente ListView que contiene las direcciones
+	 * 
+	 * @return Componente que contiene las direcciones
+	 */
+	public ListView<AddressInfo> getListViewAddress() {
+		return listViewAddress;
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package com.danielcorroto.directorius.model.type;
+package com.danielcorroto.directorius.controller.type;
 
 import com.danielcorroto.directorius.view.Text;
 
@@ -40,6 +40,33 @@ public enum AddressTypeEnum {
 	private AddressTypeEnum(String i18n, AddressType type) {
 		this.i18n = i18n;
 		this.type = type;
+	}
+
+	/**
+	 * Indica el tipo de dirección por defecto
+	 * 
+	 * @return Tipo de dirección por defecto
+	 */
+	public static AddressTypeEnum getDefault() {
+		return AddressTypeEnum.HOME;
+	}
+
+	/**
+	 * Obtiene cadena para realizar i18n
+	 * 
+	 * @return Cadena para realizar i18n
+	 */
+	public String getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * Obtiene el tipo VCard
+	 * 
+	 * @return Tipo VCard
+	 */
+	public AddressType getAddressType() {
+		return type;
 	}
 
 	/**

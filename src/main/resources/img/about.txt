@@ -45,3 +45,19 @@ crystal_clear / LGPL-2.1
 
 menu_help_about = actions/document-properties
 crystal / LGPL-2.1
+
+
+edit_contact_add_phone = devices/phone + actions/edit-add-4.png
+intrigue / GPLv2 + crystal_clear / LGPL-2.1
+
+edit_contact_add_email = actions/mail-queue + actions/edit-add-4.png
+crystal / LGPL-2.1 + crystal_clear / LGPL-2.1
+
+edit_contact_add_address = actions/go-home-3 +  actions/edit-add-4.png
+crystal / LGPL-2.1 + crystal_clear / LGPL-2.1
+
+edit_contact_edit = actions/edit-6.png
+crystal_clear / LGPL-2.1
+
+edit_contact_remove = actions/edit-delete-8.png
+crystal_clear / LGPL-2.1

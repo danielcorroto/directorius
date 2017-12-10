@@ -5,23 +5,39 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.function.Consumer;
 
+import com.danielcorroto.directorius.controller.data.AddressInfo;
+import com.danielcorroto.directorius.controller.data.DisplayUtil;
+import com.danielcorroto.directorius.controller.data.EmailInfo;
+import com.danielcorroto.directorius.controller.data.PhoneInfo;
 import com.danielcorroto.directorius.model.ContactManager;
+import com.danielcorroto.directorius.model.CustomParameter;
 import com.danielcorroto.directorius.view.ContactWindow;
 import com.danielcorroto.directorius.view.Text;
+import com.danielcorroto.directorius.view.info.AddressDialogWindow;
+import com.danielcorroto.directorius.view.info.EmailDialogWindow;
+import com.danielcorroto.directorius.view.info.PhoneDialogWindow;
 
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.parameter.ImageType;
+import ezvcard.property.Address;
+import ezvcard.property.Birthday;
 import ezvcard.property.Categories;
+import ezvcard.property.Email;
 import ezvcard.property.Note;
 import ezvcard.property.Photo;
 import ezvcard.property.StructuredName;
+import ezvcard.property.Telephone;
 import ezvcard.property.Uid;
+import ezvcard.util.PartialDate;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,7 +45,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -87,12 +110,16 @@ public class ContactWindowController extends Application {
 		mainFunctions();
 		fullNameAutoloadFunction();
 		photoFunctions();
+		addElementFunctions();
+		editElementFunctions();
+		removeElementFunctions();
 
 		stage.showAndWait();
 	}
-	
+
 	/**
-	 * Setea el valor de nombre completo a partir del valor de nombre y apellidos
+	 * Setea el valor de nombre completo a partir del valor de nombre y
+	 * apellidos
 	 */
 	private void fullNameAutoloadFunction() {
 		window.getFullNameTextField().focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -102,7 +129,7 @@ public class ContactWindowController extends Application {
 				if (!window.getFullNameTextField().getText().trim().isEmpty()) {
 					return;
 				}
-				
+
 				String name = window.getNameTextField().getText().trim();
 				String surname = window.getSurnameTextField().getText().trim();
 				window.getFullNameTextField().setText(name + " " + surname);
@@ -168,9 +195,348 @@ public class ContactWindowController extends Application {
 	}
 
 	/**
-	 * Setea la funcionalidad de los botones cancelar y guardar
+	 * Setea la funcionalidad de los botones de añadir teléfono/email/dirección
+	 */
+	private void addElementFunctions() {
+		// Añadir teléfono
+		window.getAddPhone().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				PhoneDialogWindow dialog = new PhoneDialogWindow();
+				Optional<PhoneInfo> result = dialog.showAndWait();
+
+				result.ifPresent(new Consumer<PhoneInfo>() {
+
+					@Override
+					public void accept(PhoneInfo t) {
+						addPhoneElement(t);
+					}
+				});
+			}
+		});
+
+		// Añadir email
+		window.getAddEmail().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				EmailDialogWindow dialog = new EmailDialogWindow();
+				Optional<EmailInfo> result = dialog.showAndWait();
+
+				result.ifPresent(new Consumer<EmailInfo>() {
+
+					@Override
+					public void accept(EmailInfo t) {
+						addEmailElement(t);
+					}
+				});
+			}
+		});
+
+		// Añadir dirección
+		window.getAddAddress().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				AddressDialogWindow dialog = new AddressDialogWindow();
+				Optional<AddressInfo> result = dialog.showAndWait();
+
+				result.ifPresent(new Consumer<AddressInfo>() {
+
+					@Override
+					public void accept(AddressInfo t) {
+						addAddressElement(t);
+					}
+				});
+			}
+		});
+	}
+
+	/**
+	 * Setea la funcionalidad de los botones de editar teléfono/email/dirección,
+	 * los habilita cuando hay un elemento seleccionado y setea la la acción de
+	 * doble click sobre cada uno de esos elementos
+	 */
+	private void editElementFunctions() {
+		// Editar teléfono
+		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PhoneInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends PhoneInfo> observable, PhoneInfo oldValue, PhoneInfo newValue) {
+				if (newValue != null) {
+					window.getEditPhone().setDisable(false);
+				}
+			}
+		});
+		window.getEditPhone().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				showEditPhoneDialog();
+			}
+		});
+		window.getListViewPhone().setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+					showEditPhoneDialog();
+				}
+
+			}
+		});
+
+		// Editar email
+		window.getListViewEmail().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EmailInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends EmailInfo> observable, EmailInfo oldValue, EmailInfo newValue) {
+				if (newValue != null) {
+					window.getEditEmail().setDisable(false);
+				}
+			}
+		});
+		window.getEditEmail().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				showEditEmailDialog();
+			}
+		});
+		window.getListViewEmail().setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+					showEditEmailDialog();
+				}
+
+			}
+		});
+
+		// Editar dirección
+		window.getListViewAddress().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AddressInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends AddressInfo> observable, AddressInfo oldValue, AddressInfo newValue) {
+				if (newValue != null) {
+					window.getEditAddress().setDisable(false);
+				}
+			}
+		});
+		window.getEditAddress().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				showEditAddressDialog();
+			}
+		});
+		window.getListViewAddress().setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+					showEditAddressDialog();
+				}
+
+			}
+		});
+	}
+
+	/**
+	 * Muestra el diálogo de edición del teléfono a partir del elemento
+	 * seleccionado
+	 */
+	private void showEditPhoneDialog() {
+		PhoneInfo info = window.getListViewPhone().getSelectionModel().getSelectedItem();
+		if (info == null) {
+			return;
+		}
+
+		PhoneDialogWindow dialog = new PhoneDialogWindow(info);
+		Optional<PhoneInfo> result = dialog.showAndWait();
+
+		result.ifPresent(new Consumer<PhoneInfo>() {
+
+			@Override
+			public void accept(PhoneInfo t) {
+				int index = window.getListViewPhone().getSelectionModel().getSelectedIndex();
+				window.getListViewPhone().getItems().set(index, t);
+			}
+		});
+	}
+
+	/**
+	 * Muestra el diálogo de edición del email a partir del elemento
+	 * seleccionado
+	 */
+	private void showEditEmailDialog() {
+		EmailInfo info = window.getListViewEmail().getSelectionModel().getSelectedItem();
+		if (info == null) {
+			return;
+		}
+
+		EmailDialogWindow dialog = new EmailDialogWindow(info);
+		Optional<EmailInfo> result = dialog.showAndWait();
+
+		result.ifPresent(new Consumer<EmailInfo>() {
+
+			@Override
+			public void accept(EmailInfo t) {
+				int index = window.getListViewEmail().getSelectionModel().getSelectedIndex();
+				window.getListViewEmail().getItems().set(index, t);
+			}
+		});
+	}
+
+	/**
+	 * Muestra el diálogo de edición de la dirección a partir del elemento
+	 * seleccionado
+	 */
+	private void showEditAddressDialog() {
+		AddressInfo info = window.getListViewAddress().getSelectionModel().getSelectedItem();
+		if (info == null) {
+			return;
+		}
+
+		AddressDialogWindow dialog = new AddressDialogWindow(info);
+		Optional<AddressInfo> result = dialog.showAndWait();
+
+		result.ifPresent(new Consumer<AddressInfo>() {
+
+			@Override
+			public void accept(AddressInfo t) {
+				int index = window.getListViewAddress().getSelectionModel().getSelectedIndex();
+				window.getListViewAddress().getItems().set(index, t);
+			}
+		});
+	}
+
+	/**
+	 * Setea la funcionalidad de los botones de eliminar
+	 * teléfono/email/dirección y los habilita cuando hay un elemento
+	 * seleccionado
+	 */
+	private void removeElementFunctions() {
+		// Eliminar teléfono
+		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PhoneInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends PhoneInfo> observable, PhoneInfo oldValue, PhoneInfo newValue) {
+				if (newValue != null) {
+					window.getRemovePhone().setDisable(false);
+				}
+			}
+		});
+		window.getRemovePhone().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				PhoneInfo info = window.getListViewPhone().getSelectionModel().getSelectedItem();
+				if (info == null) {
+					return;
+				}
+
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle(rb.getString(Text.I18N_EDITCONTACT_PHONE_REMOVE));
+				alert.setHeaderText(DisplayUtil.getPhoneInfo(info, rb));
+				alert.setContentText(null);
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.OK) {
+					int index = window.getListViewPhone().getSelectionModel().getSelectedIndex();
+					window.getListViewPhone().getItems().remove(index);
+				}
+			}
+		});
+
+		// Eliminar email
+		window.getListViewEmail().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EmailInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends EmailInfo> observable, EmailInfo oldValue, EmailInfo newValue) {
+				if (newValue != null) {
+					window.getRemoveEmail().setDisable(false);
+				}
+			}
+		});
+		window.getRemoveEmail().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				EmailInfo info = window.getListViewEmail().getSelectionModel().getSelectedItem();
+				if (info == null) {
+					return;
+				}
+
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle(rb.getString(Text.I18N_EDITCONTACT_EMAIL_REMOVE));
+				alert.setHeaderText(DisplayUtil.getEmailInfo(info, rb));
+				alert.setContentText(null);
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.OK) {
+					int index = window.getListViewEmail().getSelectionModel().getSelectedIndex();
+					window.getListViewEmail().getItems().remove(index);
+				}
+			}
+		});
+
+		// Eliminar dirección
+		window.getListViewAddress().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AddressInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends AddressInfo> observable, AddressInfo oldValue, AddressInfo newValue) {
+				if (newValue != null) {
+					window.getRemoveAddress().setDisable(false);
+				}
+			}
+		});
+		window.getRemoveAddress().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				AddressInfo info = window.getListViewAddress().getSelectionModel().getSelectedItem();
+				if (info == null) {
+					return;
+				}
+
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle(rb.getString(Text.I18N_EDITCONTACT_ADDRESS_REMOVE));
+				alert.setHeaderText(DisplayUtil.getAddressInfo(info, rb));
+				alert.setContentText(null);
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.OK) {
+					int index = window.getListViewAddress().getSelectionModel().getSelectedIndex();
+					window.getListViewAddress().getItems().remove(index);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Setea la funcionalidad de los botones cancelar, guardar y pulsar ESC y
+	 * autoactivado de botón guardar
 	 */
 	private void mainFunctions() {
+		// Autoactivado del botón guardar
+		window.getFullNameTextField().textProperty().addListener((observable, oldValue, newValue) -> {
+			window.getSave().setDisable(newValue.trim().isEmpty());
+		});
+
+		// Pulsar ESC
+		window.getStage().addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				if (event.getCode() == KeyCode.ESCAPE) {
+					window.close();
+				}
+			}
+		});
+
 		// Cancelar
 		window.getCancel().setOnAction(new EventHandler<ActionEvent>() {
 
@@ -211,6 +577,36 @@ public class ContactWindowController extends Application {
 					vcard.getCategories().getValues().add(window.getCategoryCombo().getSelectionModel().getSelectedItem());
 				}
 
+				// Fecha
+				String year = window.getComboBoxYear().getSelectionModel().getSelectedItem();
+				String month = window.getComboBoxMonth().getSelectionModel().getSelectedItem();
+				String day = window.getComboBoxDay().getSelectionModel().getSelectedItem();
+
+				if (year != null && !year.isEmpty() && month != null && !month.isEmpty() && day != null && !day.isEmpty()) {
+					// Fecha completa
+					Calendar c = Calendar.getInstance();
+					c.set(Calendar.YEAR, Integer.parseInt(year));
+					c.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+					c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+					Birthday bday = new Birthday(c.getTime());
+					vcard.setBirthday(bday);
+				} else if ((year != null && !year.isEmpty()) || (month != null && !month.isEmpty()) || (day != null && !day.isEmpty())) {
+					// Fecha parcial
+					PartialDate.Builder b = PartialDate.builder();
+					if (year != null && !year.isEmpty()) {
+						b.year(Integer.parseInt(year));
+					}
+					if (month != null && !month.isEmpty()) {
+						b.month(Integer.parseInt(month));
+					}
+					if (day != null && !day.isEmpty()) {
+						b.date(Integer.parseInt(day));
+					}
+
+					Birthday bday = new Birthday(b.build());
+					vcard.setBirthday(bday);
+				}
+
 				// Notas
 				if (!window.getNotesTextArea().getText().isEmpty()) {
 					vcard.getNotes().clear();
@@ -230,6 +626,50 @@ public class ContactWindowController extends Application {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+				}
+
+				// Teléfono
+				if (vcard.getTelephoneNumbers() != null && !vcard.getTelephoneNumbers().isEmpty()) {
+					vcard.getTelephoneNumbers().clear();
+				}
+				for (PhoneInfo phone : window.getListViewPhone().getItems()) {
+					Telephone phoneCard = new Telephone(phone.getNumber().trim());
+					phoneCard.getTypes().add(phone.getType().getTelephoneType());
+					if (phone.getTag() != null && !phone.getTag().trim().isEmpty()) {
+						phoneCard.addParameter(CustomParameter.TELEPHONE_TAG, phone.getTag().trim());
+					}
+					vcard.addTelephoneNumber(phoneCard);
+				}
+
+				// Email
+				if (vcard.getEmails() != null && !vcard.getEmails().isEmpty()) {
+					vcard.getEmails().clear();
+				}
+				for (EmailInfo email : window.getListViewEmail().getItems()) {
+					Email emailCard = new Email(email.getEmail().trim());
+					emailCard.getTypes().add(email.getType().getEmailType());
+					if (email.getTag() != null && !email.getTag().trim().isEmpty()) {
+						emailCard.addParameter(CustomParameter.EMAIL_TAG, email.getTag().trim());
+					}
+					vcard.addEmail(emailCard);
+				}
+
+				// Dirección
+				if (vcard.getAddresses() != null && !vcard.getAddresses().isEmpty()) {
+					vcard.getAddresses().clear();
+				}
+				for (AddressInfo address : window.getListViewAddress().getItems()) {
+					Address addressCard = new Address();
+					addressCard.setStreetAddress(address.getStreet());
+					addressCard.setLocality(address.getLocality());
+					addressCard.setRegion(address.getRegion());
+					addressCard.setPostalCode(address.getPostalCode());
+					addressCard.setCountry(address.getCountry());
+					addressCard.getTypes().add(address.getType().getAddressType());
+					if (address.getTag() != null && !address.getTag().trim().isEmpty()) {
+						addressCard.addParameter(CustomParameter.ADDRESS_TAG, address.getTag().trim());
+					}
+					vcard.addAddress(addressCard);
 				}
 
 				// Fecha de edición
@@ -278,6 +718,36 @@ public class ContactWindowController extends Application {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Añade un teléfono a la lista
+	 * 
+	 * @param info
+	 *            Información del teléfono
+	 */
+	private void addPhoneElement(PhoneInfo info) {
+		window.getListViewPhone().getItems().add(info);
+	}
+
+	/**
+	 * Añade un email a la lista
+	 * 
+	 * @param info
+	 *            Información del email
+	 */
+	private void addEmailElement(EmailInfo info) {
+		window.getListViewEmail().getItems().add(info);
+	}
+
+	/**
+	 * Añade una dirección a la lista
+	 * 
+	 * @param info
+	 *            Información de la dirección
+	 */
+	private void addAddressElement(AddressInfo info) {
+		window.getListViewAddress().getItems().add(info);
 	}
 
 }

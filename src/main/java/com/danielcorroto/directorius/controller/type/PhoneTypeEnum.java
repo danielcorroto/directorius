@@ -1,4 +1,4 @@
-package com.danielcorroto.directorius.model.type;
+package com.danielcorroto.directorius.controller.type;
 
 import com.danielcorroto.directorius.view.Text;
 
@@ -68,6 +68,33 @@ public enum PhoneTypeEnum {
 	private PhoneTypeEnum(String i18n, TelephoneType type) {
 		this.i18n = i18n;
 		this.type = type;
+	}
+
+	/**
+	 * Indica el tipo de teléfono por defecto
+	 * 
+	 * @return Tipo de teléfono por defecto
+	 */
+	public static PhoneTypeEnum getDefault() {
+		return PhoneTypeEnum.HOME;
+	}
+
+	/**
+	 * Obtiene cadena para realizar i18n
+	 * 
+	 * @return Cadena para realizar i18n
+	 */
+	public String getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * Obtiene el tipo VCard
+	 * 
+	 * @return Tipo VCard
+	 */
+	public TelephoneType getTelephoneType() {
+		return type;
 	}
 
 	/**

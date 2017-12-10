@@ -1,4 +1,4 @@
-package com.danielcorroto.directorius.model.type;
+package com.danielcorroto.directorius.controller.type;
 
 import com.danielcorroto.directorius.view.Text;
 
@@ -40,6 +40,33 @@ public enum EmailTypeEnum {
 	private EmailTypeEnum(String i18n, EmailType type) {
 		this.i18n = i18n;
 		this.type = type;
+	}
+
+	/**
+	 * Indica el tipo de email por defecto
+	 * 
+	 * @return Tipo de email por defecto
+	 */
+	public static EmailTypeEnum getDefault() {
+		return EmailTypeEnum.HOME;
+	}
+
+	/**
+	 * Obtiene cadena para realizar i18n
+	 * 
+	 * @return Cadena para realizar i18n
+	 */
+	public String getI18n() {
+		return i18n;
+	}
+
+	/**
+	 * Obtiene el tipo VCard
+	 * 
+	 * @return Tipo VCard
+	 */
+	public EmailType getEmailType() {
+		return type;
 	}
 
 	/**

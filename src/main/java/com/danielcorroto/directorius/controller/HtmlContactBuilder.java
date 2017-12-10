@@ -10,10 +10,10 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import com.danielcorroto.directorius.controller.type.AddressTypeEnum;
+import com.danielcorroto.directorius.controller.type.EmailTypeEnum;
+import com.danielcorroto.directorius.controller.type.PhoneTypeEnum;
 import com.danielcorroto.directorius.model.CustomParameter;
-import com.danielcorroto.directorius.model.type.AddressTypeEnum;
-import com.danielcorroto.directorius.model.type.EmailTypeEnum;
-import com.danielcorroto.directorius.model.type.PhoneTypeEnum;
 import com.danielcorroto.directorius.view.ResourcePath;
 import com.danielcorroto.directorius.view.Text;
 
