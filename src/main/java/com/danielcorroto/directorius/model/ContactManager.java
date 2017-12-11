@@ -294,25 +294,33 @@ public class ContactManager {
 	 * 
 	 * @param source
 	 *            Fichero de origen
-	 * @param dest
+	 * @param destPath
 	 *            Nombre del fichero (sin ruta ni extensión)
 	 * @return Nombre del fichero con extensión
 	 * @throws IOException
 	 */
-	public String savePhotoFile(File source, String dest) throws IOException {
+	public String savePhotoFile(File source, String destPath) throws IOException {
 		FileChannel sourceChannel = null;
 		FileChannel destChannel = null;
 		FileInputStream fis = null;
 		FileOutputStream fos = null;
 		String result = null;
+
+		String extension = source.getName().substring(source.getName().lastIndexOf('.'));
+		result = destPath + extension;
+		String fullDestPath = getPhotoDir() + result;
+		File dest = new File(fullDestPath);
+		
+		// Si los ficheros son el mismo, salir
+		if (source.equals(dest)) {
+			return result;
+		}
+		
 		try {
 			fis = new FileInputStream(source);
 			sourceChannel = fis.getChannel();
 
-			String extension = source.getName().substring(source.getName().lastIndexOf('.'));
-			result = dest + extension;
-			String fullDestPath = getPhotoDir() + result;
-			fos = new FileOutputStream(fullDestPath);
+			fos = new FileOutputStream(dest);
 			destChannel = fos.getChannel();
 
 			destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
@@ -322,7 +330,7 @@ public class ContactManager {
 			sourceChannel.close();
 			destChannel.close();
 		}
-		
+
 		return result;
 	}
 
