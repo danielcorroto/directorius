@@ -234,7 +234,7 @@ public class ContactWindow {
 		listViewPhone.setMaxHeight(100);
 		listViewPhone.setCellFactory(createPhoneListViewCellFactory());
 		gridPane.add(listViewPhone, 1, 6);
-		
+
 		HBox phoneButtons = new HBox();
 		phoneButtons.setAlignment(Pos.CENTER);
 		phoneButtons.setSpacing(20);
@@ -254,7 +254,7 @@ public class ContactWindow {
 		listViewEmail.setMaxHeight(100);
 		listViewEmail.setCellFactory(createEmailListViewCellFactory());
 		gridPane.add(listViewEmail, 1, 7);
-		
+
 		HBox emailButtons = new HBox();
 		emailButtons.setAlignment(Pos.CENTER);
 		emailButtons.setSpacing(20);
@@ -274,7 +274,7 @@ public class ContactWindow {
 		listViewAddress.setMaxHeight(100);
 		listViewAddress.setCellFactory(createAddressListViewCellFactory());
 		gridPane.add(listViewAddress, 1, 8);
-		
+
 		HBox addressButtons = new HBox();
 		addressButtons.setAlignment(Pos.CENTER);
 		addressButtons.setSpacing(20);
@@ -473,6 +473,16 @@ public class ContactWindow {
 		};
 
 		return cellFactory;
+	}
+
+	/**
+	 * Setea el título de la ventana
+	 * 
+	 * @param title
+	 *            Título
+	 */
+	public void setTitle(String title) {
+		stage.setTitle(title);
 	}
 
 	/**

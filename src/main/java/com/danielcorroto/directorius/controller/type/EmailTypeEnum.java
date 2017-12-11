@@ -70,6 +70,22 @@ public enum EmailTypeEnum {
 	}
 
 	/**
+	 * Obtiene el enumerado a partir del tipo de email
+	 * 
+	 * @param type
+	 *            Tipo de email vcard
+	 * @return Elemento del enumerado
+	 */
+	public static EmailTypeEnum findByEmailType(EmailType type) {
+		for (EmailTypeEnum element : values()) {
+			if (element.type.equals(type)) {
+				return element;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Obtiene cadena para realizar i18n
 	 * 
 	 * @param type

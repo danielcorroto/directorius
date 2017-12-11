@@ -17,6 +17,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 /**
@@ -87,20 +89,24 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				try {
-					new ContactWindowController(manager, null).start(new Stage());
-					
-					// Carga la nueva lista
-					String text = window.getSearchTextField().getText();
-					SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
-					Set<SimpleVCard> list = manager.search(text.trim(), type);
-					setListViewItems(list);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				loadContactWindow(null);
 			}
 		});
 		
+		window.getMenuItems().getContactEdit().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				if (window.getListView().getSelectionModel().getSelectedItem() == null) {
+					return;
+				}
+				
+				SimpleVCard simple = window.getListView().getSelectionModel().getSelectedItem();
+				VCard vcard = manager.readContact(simple.getUid());
+				loadContactWindow(vcard);
+			}
+		});
+
 		window.getMenuItems().getHelpAbout().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -113,7 +119,28 @@ public class MainWindowController extends Application {
 			}
 		});
 	}
-	
+
+	/**
+	 * Carga la ventana de añadir/editar contacto y recarga la lista de
+	 * contactos
+	 * 
+	 * @param vcard
+	 *            Información del contacto a editar o null si es uno nuevo
+	 */
+	private void loadContactWindow(VCard vcard) {
+		try {
+			new ContactWindowController(manager, vcard).start(new Stage());
+
+			// Carga la nueva lista
+			String text = window.getSearchTextField().getText();
+			SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
+			Set<SimpleVCard> list = manager.search(text.trim(), type);
+			setListViewItems(list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void addContactButtonFunction() {
 		window.getAddContactButton().setOnAction(window.getMenuItems().getContactAdd().getOnAction());
 	}
@@ -126,7 +153,21 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void changed(ObservableValue<? extends SimpleVCard> observable, SimpleVCard oldValue, SimpleVCard newValue) {
-				setWebViewInfo(newValue);
+				if (newValue != null) {
+					setWebViewInfo(newValue);
+				}
+			}
+		});
+		window.getListView().setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+					SimpleVCard simple = window.getListView().getSelectionModel().getSelectedItem();
+					VCard vcard = manager.readContact(simple.getUid());
+					loadContactWindow(vcard);
+				}
+
 			}
 		});
 	}

@@ -70,6 +70,22 @@ public enum AddressTypeEnum {
 	}
 
 	/**
+	 * Obtiene el enumerado a partir del tipo de dirección
+	 * 
+	 * @param type
+	 *            Tipo de dirección vcard
+	 * @return Elemento del enumerado
+	 */
+	public static AddressTypeEnum findByAddressType(AddressType type) {
+		for (AddressTypeEnum element : values()) {
+			if (element.type.equals(type)) {
+				return element;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Obtiene cadena para realizar i18n
 	 * 
 	 * @param type

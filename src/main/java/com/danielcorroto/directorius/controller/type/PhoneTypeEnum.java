@@ -98,6 +98,22 @@ public enum PhoneTypeEnum {
 	}
 
 	/**
+	 * Obtiene el enumerado a partir del tipo de teléfono
+	 * 
+	 * @param type
+	 *            Tipo de teléfono vcard
+	 * @return Elemento del enumerado
+	 */
+	public static PhoneTypeEnum findByPhoneType(TelephoneType type) {
+		for (PhoneTypeEnum element : values()) {
+			if (element.type.equals(type)) {
+				return element;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Obtiene cadena para realizar i18n
 	 * 
 	 * @param type

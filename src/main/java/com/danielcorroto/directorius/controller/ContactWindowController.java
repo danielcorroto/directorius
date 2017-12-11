@@ -17,6 +17,9 @@ import com.danielcorroto.directorius.controller.data.AddressInfo;
 import com.danielcorroto.directorius.controller.data.DisplayUtil;
 import com.danielcorroto.directorius.controller.data.EmailInfo;
 import com.danielcorroto.directorius.controller.data.PhoneInfo;
+import com.danielcorroto.directorius.controller.type.AddressTypeEnum;
+import com.danielcorroto.directorius.controller.type.EmailTypeEnum;
+import com.danielcorroto.directorius.controller.type.PhoneTypeEnum;
 import com.danielcorroto.directorius.model.ContactManager;
 import com.danielcorroto.directorius.model.CustomParameter;
 import com.danielcorroto.directorius.view.ContactWindow;
@@ -27,7 +30,10 @@ import com.danielcorroto.directorius.view.info.PhoneDialogWindow;
 
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
+import ezvcard.parameter.AddressType;
+import ezvcard.parameter.EmailType;
 import ezvcard.parameter.ImageType;
+import ezvcard.parameter.TelephoneType;
 import ezvcard.property.Address;
 import ezvcard.property.Birthday;
 import ezvcard.property.Categories;
@@ -87,7 +93,7 @@ public class ContactWindowController extends Application {
 	private ResourceBundle rb;
 
 	/**
-	 * Constructor por defecto. Inicia i18n
+	 * Constructor con parámetros. Inicia i18n
 	 * 
 	 * @param manager
 	 *            Gestión de contactos
@@ -97,6 +103,7 @@ public class ContactWindowController extends Application {
 	public ContactWindowController(ContactManager manager, VCard vcard) {
 		super();
 		this.manager = manager;
+		this.vcard = vcard;
 		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
 	}
 
@@ -106,6 +113,9 @@ public class ContactWindowController extends Application {
 		window.build(stage);
 
 		loadCategories();
+		if (vcard != null) {
+			loadVCard();
+		}
 
 		mainFunctions();
 		fullNameAutoloadFunction();
@@ -115,6 +125,115 @@ public class ContactWindowController extends Application {
 		removeElementFunctions();
 
 		stage.showAndWait();
+	}
+
+	/**
+	 * Carga la información del contacto en el formulario
+	 */
+	private void loadVCard() {
+		// Nombre
+		if (vcard.getStructuredName() != null) {
+			if (vcard.getStructuredName().getGiven() != null) {
+				window.getNameTextField().setText(vcard.getStructuredName().getGiven());
+			}
+			if (vcard.getStructuredName().getFamily() != null) {
+				window.getSurnameTextField().setText(vcard.getStructuredName().getFamily());
+			}
+		}
+		String fullName = "";
+		if (vcard.getFormattedName() != null) {
+			fullName = vcard.getFormattedName().getValue();
+			window.getFullNameTextField().setText(fullName);
+		}
+
+		// Fecha
+		if (vcard.getBirthday() != null) {
+			Integer year = null;
+			Integer month = null;
+			Integer day = null;
+
+			// Fecha completa
+			if (vcard.getBirthday().getDate() != null) {
+				Calendar c = Calendar.getInstance();
+				c.setTime(vcard.getBirthday().getDate());
+				year = c.get(Calendar.YEAR);
+				month = c.get(Calendar.MONTH) + 1;
+				day = c.get(Calendar.DATE);
+			}
+
+			// Fecha parcial
+			if (vcard.getBirthday().getPartialDate() != null) {
+				year = vcard.getBirthday().getPartialDate().getYear();
+				month = vcard.getBirthday().getPartialDate().getMonth();
+				day = vcard.getBirthday().getPartialDate().getDate();
+			}
+
+			// Seteo de elementos
+			if (year != null) {
+				window.getComboBoxYear().getSelectionModel().select(String.valueOf(year));
+			}
+			if (month != null) {
+				window.getComboBoxMonth().getSelectionModel().select(String.valueOf(month));
+			}
+			if (day != null) {
+				window.getComboBoxDay().getSelectionModel().select(String.valueOf(day));
+			}
+		}
+
+		// Categorías
+		if (vcard.getCategories() != null && !vcard.getCategories().getValues().isEmpty()) {
+			String category = vcard.getCategories().getValues().get(0);
+			window.getCategoryCombo().getSelectionModel().select(category);
+		}
+
+		// Notas
+		if (vcard.getNotes() != null && !vcard.getNotes().isEmpty()) {
+			window.getNotesTextArea().setText(vcard.getNotes().get(0).getValue());
+		}
+
+		// Foto
+		if (vcard.getPhotos() != null && !vcard.getPhotos().isEmpty()) {
+			String url = vcard.getPhotos().get(0).getUrl();
+			imageFile = new File(manager.getPhotoDir() + url);
+			try {
+				loadImage();
+			} catch (FileNotFoundException e) {
+				imageFile = null;
+				e.printStackTrace();
+			}
+		}
+
+		// Teléfonos
+		if (vcard.getTelephoneNumbers() != null && !vcard.getTelephoneNumbers().isEmpty()) {
+			for (Telephone phone : vcard.getTelephoneNumbers()) {
+				TelephoneType type = phone.getTypes().get(0);
+				PhoneInfo info = new PhoneInfo(phone.getText(), PhoneTypeEnum.findByPhoneType(type), phone.getParameter(CustomParameter.EMAIL_TAG));
+				addPhoneElement(info);
+			}
+		}
+
+		// Emails
+		if (vcard.getEmails() != null && !vcard.getEmails().isEmpty()) {
+			for (Email email : vcard.getEmails()) {
+				EmailType type = email.getTypes().get(0);
+				EmailInfo info = new EmailInfo(email.getValue(), EmailTypeEnum.findByEmailType(type), email.getParameter(CustomParameter.EMAIL_TAG));
+				addEmailElement(info);
+			}
+		}
+
+		// Direcciones
+		if (vcard.getAddresses() != null && !vcard.getAddresses().isEmpty()) {
+			for (Address address : vcard.getAddresses()) {
+				AddressType type = address.getTypes().get(0);
+				AddressInfo info = new AddressInfo(address.getStreetAddress(), address.getLocality(), address.getRegion(), address.getPostalCode(), address.getCountry(),
+						AddressTypeEnum.findByAddressType(type), address.getParameter(CustomParameter.ADDRESS_TAG));
+				addAddressElement(info);
+			}
+		}
+
+		// Valores de la ventana
+		window.setTitle(rb.getString(Text.I18N_MENU_CONTACT_EDIT) + ": " + fullName);
+		window.getSave().setDisable(false);
 	}
 
 	/**
@@ -169,29 +288,36 @@ public class ContactWindowController extends Application {
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle(rb.getString(Text.I18N_EDITCONTACT_PHOTO_SEARCH));
 				imageFile = fileChooser.showOpenDialog(window.getStage());
-				InputStream is;
 				try {
-					is = new FileInputStream(imageFile);
-					Image image = new Image(is);
-					window.getImageView().setImage(image);
-
-					window.getImageView().setImage(image);
-					window.getImageView().maxHeight(200 - 10);
-					int yoursize = 200;
-					if (window.getImageView().maxHeight(200 - 10) > yoursize) {
-						window.getImageView().setFitHeight(200 - 10);
-						System.out.println("Fix Size : 200 ");
-					}
-					window.getImageView().setPreserveRatio(true);
-					window.getImageView().setSmooth(true);
-					window.getImageView().setCache(true);
-
+					loadImage();
 				} catch (FileNotFoundException e) {
 					imageFile = null;
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+
+	/**
+	 * Carga la imagen en el elemento ImageView. El fichero es el de la variable
+	 * imageFile
+	 * 
+	 * @throws FileNotFoundException
+	 */
+	private void loadImage() throws FileNotFoundException {
+		InputStream is = new FileInputStream(imageFile);
+		Image image = new Image(is);
+		window.getImageView().setImage(image);
+
+		window.getImageView().setImage(image);
+		window.getImageView().maxHeight(200 - 10);
+		int yoursize = 200;
+		if (window.getImageView().maxHeight(200 - 10) > yoursize) {
+			window.getImageView().setFitHeight(200 - 10);
+		}
+		window.getImageView().setPreserveRatio(true);
+		window.getImageView().setSmooth(true);
+		window.getImageView().setCache(true);
 	}
 
 	/**
