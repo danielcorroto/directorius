@@ -11,7 +11,7 @@
 
 	<properties>
 		<!-- Propiedades del proyecto visibles en aplicación -->
-		<project.version>0.1</project.version>
+		<project.version>0.2</project.version>
 		<project.timestamp>${maven.build.timestamp}</project.timestamp>
 	
 		<!-- Propiedades del proyecto -->
