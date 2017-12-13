@@ -43,7 +43,6 @@ import javafx.util.Callback;
  * @author Daniel Corroto Quirós
  *
  */
-@SuppressWarnings("restriction")
 public class MainWindow {
 	/**
 	 * Tamaño (ancho y alto) de la imagen en el menú

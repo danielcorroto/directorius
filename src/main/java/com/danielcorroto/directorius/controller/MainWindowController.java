@@ -27,7 +27,6 @@ import javafx.stage.Stage;
  * @author Daniel Corroto Quirós
  *
  */
-@SuppressWarnings("restriction")
 public class MainWindowController extends Application {
 	/**
 	 * Clase de la vista
