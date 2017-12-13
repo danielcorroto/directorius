@@ -22,6 +22,7 @@ import com.danielcorroto.directorius.controller.type.EmailTypeEnum;
 import com.danielcorroto.directorius.controller.type.PhoneTypeEnum;
 import com.danielcorroto.directorius.model.ContactManager;
 import com.danielcorroto.directorius.model.CustomParameter;
+import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.view.ContactWindow;
 import com.danielcorroto.directorius.view.Text;
 import com.danielcorroto.directorius.view.info.AddressDialogWindow;
@@ -69,6 +70,10 @@ import javafx.stage.Stage;
  *
  */
 public class ContactWindowController extends Application {
+	/**
+	 * Logger
+	 */
+	private static final Logger LOGGER = Logger.getLogger(ContactWindowController.class);
 	/**
 	 * Clase de la vista
 	 */
@@ -292,7 +297,7 @@ public class ContactWindowController extends Application {
 					loadImage();
 				} catch (FileNotFoundException e) {
 					imageFile = null;
-					e.printStackTrace();
+					LOGGER.severe("Fichero no encontrado " + imageFile.getAbsolutePath(),e);
 				}
 			}
 		});

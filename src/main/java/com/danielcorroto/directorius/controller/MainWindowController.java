@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.danielcorroto.directorius.model.ContactManager;
 import com.danielcorroto.directorius.model.SimpleVCard;
+import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 import com.danielcorroto.directorius.view.AboutWindow;
 import com.danielcorroto.directorius.view.MainWindow;
@@ -29,6 +30,10 @@ import javafx.stage.Stage;
  */
 public class MainWindowController extends Application {
 	/**
+	 * Logger
+	 */
+	private static final Logger LOGGER = Logger.getLogger(MainWindowController.class);
+	/**
 	 * Clase de la vista
 	 */
 	private MainWindow window;
@@ -39,18 +44,22 @@ public class MainWindowController extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		window = new MainWindow();
-		window.build(primaryStage);
-
-		menuItemFunction();
-		addContactButtonFunction();
-		listViewFunction();
-		searchTextFieldFunction();
-		searchTypeComboBoxFunction();
-
-		manager = ContactManager.autoLoadFile();
-		if (manager != null) {
-			setListViewItems(manager.getAllSimpleVCard());
+		try {
+			window = new MainWindow();
+			window.build(primaryStage);
+	
+			menuItemFunction();
+			addContactButtonFunction();
+			listViewFunction();
+			searchTextFieldFunction();
+			searchTypeComboBoxFunction();
+	
+			manager = ContactManager.autoLoadFile();
+			if (manager != null) {
+				setListViewItems(manager.getAllSimpleVCard());
+			}
+		} catch (Throwable t) {
+			LOGGER.severe("Error en la aplicación principal", t);
 		}
 	}
 
@@ -91,7 +100,7 @@ public class MainWindowController extends Application {
 				loadContactWindow(null);
 			}
 		});
-		
+
 		window.getMenuItems().getContactEdit().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -99,7 +108,7 @@ public class MainWindowController extends Application {
 				if (window.getListView().getSelectionModel().getSelectedItem() == null) {
 					return;
 				}
-				
+
 				SimpleVCard simple = window.getListView().getSelectionModel().getSelectedItem();
 				VCard vcard = manager.readContact(simple.getUid());
 				loadContactWindow(vcard);
@@ -113,7 +122,7 @@ public class MainWindowController extends Application {
 				try {
 					new AboutWindow().start(new Stage());
 				} catch (Exception e) {
-					e.printStackTrace();
+					LOGGER.severe("Error al abrir la ventana Acerca de...",e);
 				}
 			}
 		});
@@ -136,7 +145,7 @@ public class MainWindowController extends Application {
 			Set<SimpleVCard> list = manager.search(text.trim(), type);
 			setListViewItems(list);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.severe("Error al abrir la ventana Añadir/Editar contacto...",e);
 		}
 	}
 

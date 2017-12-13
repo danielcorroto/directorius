@@ -14,6 +14,7 @@ import com.danielcorroto.directorius.controller.type.AddressTypeEnum;
 import com.danielcorroto.directorius.controller.type.EmailTypeEnum;
 import com.danielcorroto.directorius.controller.type.PhoneTypeEnum;
 import com.danielcorroto.directorius.model.CustomParameter;
+import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.view.ResourcePath;
 import com.danielcorroto.directorius.view.Text;
 
@@ -32,6 +33,10 @@ import ezvcard.property.Telephone;
  *
  */
 public class HtmlContactBuilder {
+	/**
+	 * Logger
+	 */
+	private static final Logger LOGGER = Logger.getLogger(HtmlContactBuilder.class);
 	/**
 	 * Conjunto de colores para la imagen por defecto
 	 */
@@ -454,6 +459,7 @@ public class HtmlContactBuilder {
 			}
 			return out.toString();
 		} catch (Exception e) {
+			LOGGER.severe("Error al cargar el fichero del recurso " + resourcePath,e);
 		}
 
 		return "";
