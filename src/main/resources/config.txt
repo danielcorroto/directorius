@@ -1,0 +1,49 @@
+Configuración del entorno para funcionar con JavaFX
+===================================================
+
+-------------
+Añadir JavaFX
+-------------
+
+Click derecho sobre el proyecto, Properties
+
+Ventana Properties
+Seleccionar apartado Java Build Path
+Seleccionar pestaña Libraries
+Click botón Add library...
+
+Ventana Add library
+Seleccionar opción User Library y click en Next
+Click en User Libraries
+
+Ventana Preferences de User Libraries
+Click en New
+En el popup escribir JavaFX y click en OK
+Seleccionar opción JavaFX y click en Add External JARs...
+Ir al directorio lib de la instalación java. Por ejemplo C:\Program Files\Java\jre1.8.0_151\lib
+Seleccionar el fichero jfxswt.jar
+Click en OK
+Click en OK que cierra la ventana Preferences de User Libraries
+
+Ventana Add library (de nuevo)
+Seleccionar JavaFX y click en Finish que cierra la ventana Add library
+Click en OK que cierra la ventana Properties
+
+---------------------------
+Seleccionar otro compilador
+---------------------------
+
+Click derecho sobre el proyecto, Properties
+
+Ventana Properties
+Seleccionar apartado Java Build Path
+Seleccionar pestaña Libraries
+Click botón Add library...
+
+Ventana Add library
+Seleccionar opción JRE System Library y click en Next
+Seleccionar la JRE instalada en el sistema y click en Finish que cierra la ventana Add library
+
+Ventana Properties
+Seleccionar la JRE System Library {JavaSE-1.6] y click en remove
+Click en OK que cierra la ventana Properties
