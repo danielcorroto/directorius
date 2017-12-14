@@ -22,6 +22,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.danielcorroto.directorius.controller.data.Statistics;
 import com.danielcorroto.directorius.model.searchalgorithm.SearchAlgorithm;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 
@@ -310,12 +311,12 @@ public class ContactManager {
 		result = destPath + extension;
 		String fullDestPath = getPhotoDir() + result;
 		File dest = new File(fullDestPath);
-		
+
 		// Si los ficheros son el mismo, salir
 		if (source.equals(dest)) {
 			return result;
 		}
-		
+
 		try {
 			fis = new FileInputStream(source);
 			sourceChannel = fis.getChannel();
@@ -366,5 +367,19 @@ public class ContactManager {
 	private void saveFile() throws IOException {
 		FileOutputStream fos = new FileOutputStream(file);
 		Ezvcard.write(vcardMap.values()).go(new OutputStreamWriter(fos, CHARSET_DEFAULT));
+	}
+
+	/**
+	 * Construye y rellena las estadísticas
+	 * 
+	 * @return Estadísticas de los contactos
+	 */
+	public Statistics getStatistic() {
+		Statistics statistic = new Statistics();
+		for (VCard vcard : vcardMap.values()) {
+			statistic.addContact(vcard);
+		}
+
+		return statistic;
 	}
 }

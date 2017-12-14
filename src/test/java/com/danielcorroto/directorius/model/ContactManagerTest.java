@@ -10,13 +10,19 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
 import com.danielcorroto.directorius.TestUtil;
+import com.danielcorroto.directorius.controller.data.Statistics;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 
 import ezvcard.VCard;
+import ezvcard.parameter.ImageType;
+import ezvcard.property.Birthday;
+import ezvcard.property.Photo;
+import ezvcard.util.PartialDate;
 import junit.framework.TestCase;
 
 /**
@@ -548,6 +554,76 @@ public class ContactManagerTest extends TestCase {
 		assertTrue(cm.getCategories().contains("ee"));
 		assertTrue(cm.getCategories().contains("ff"));
 		assertTrue(cm.getCategories().contains("hh"));
+	}
+
+	/**
+	 * Prueba las estadísticas
+	 * 
+	 * @throws IOException
+	 */
+	public void testStatistic() throws IOException {
+		ContactManager cm = new ContactManager(createTempFile().getAbsolutePath());
+		VCard vcard1 = TestUtil.createVCardAll("test", null, null, null, null, null, null, null);
+		cm.createContact(vcard1);
+		VCard vcard2 = TestUtil.createVCardAll("test", null, new String[] { "a", "c" }, new String[] { "1", "2" }, null, null, null, null);
+		vcard2.addPhoto(new Photo("", ImageType.PNG));
+		vcard2.setBirthday(new Birthday(new Date()));
+		cm.createContact(vcard2);
+		VCard vcard3 = TestUtil.createVCardAll("test", null, new String[] { "b", "c" }, new String[] { "1", "2" }, null, null, null, null);
+		vcard3.addPhoto(new Photo("", ImageType.PNG));
+		vcard3.setBirthday(new Birthday(new Date()));
+		cm.createContact(vcard3);
+		VCard vcard4 = TestUtil.createVCardAll("test", null, new String[] { "a", "d" }, new String[] { "1", "2", "3", "4" }, null, null, null,
+				new String[] { "s|l|r|p|c", "s2|l|r|p|c", "s3|l|r|p|c", "s4|l|r|p|c" });
+		vcard4.addPhoto(new Photo("", ImageType.PNG));
+		vcard3.setBirthday(new Birthday(new PartialDate.Builder().build()));
+		cm.createContact(vcard4);
+		VCard vcard5 = TestUtil.createVCardAll("test", null, new String[] { "b", "d" }, new String[] { "1", "2", "8", "9", "12" }, null,
+				new String[] { "a@", "b@", "c@", "d@", "e@" }, null, new String[] { "s|l|r|p|c", "s5|l|r|p|c", "s6|l|r|p|c", "s7|l|r|p|c", "s8|l|r|p|c" });
+		vcard5.addPhoto(new Photo("", ImageType.PNG));
+		vcard5.setBirthday(new Birthday(new Date()));
+		cm.createContact(vcard5);
+		VCard vcard6 = TestUtil.createVCardAll("test", null, new String[] { "a" }, new String[] { "9", "10", "11", "12", "13" }, null,
+				new String[] { "c@", "d@", "e@", "f@", "g@" }, null, new String[] { "sa|l|r|p|c" });
+		vcard6.addPhoto(new Photo("", ImageType.PNG));
+		vcard6.setBirthday(new Birthday(new Date()));
+		cm.createContact(vcard6);
+		VCard vcard7 = TestUtil.createVCardAll("test", null, new String[] { "b" }, new String[] { "7", "8", "9", "10" }, null, new String[] { "a@", "b@", "c@", "d@" }, null,
+				new String[] { "s9|l|r|p|c" });
+		vcard7.addPhoto(new Photo("", ImageType.PNG));
+		vcard7.setBirthday(new Birthday(new Date()));
+		cm.createContact(vcard7);
+		VCard vcard8 = TestUtil.createVCardAll("test", null, new String[] { "a" }, new String[] { "3", "4", "5", "6", "7" }, null, new String[] { "h@", "i@", "j@", "k@" }, null,
+				new String[] { "s0|l|r|p|c" });
+		vcard8.addPhoto(new Photo("", ImageType.PNG));
+		vcard8.setBirthday(new Birthday(new Date()));
+		cm.createContact(vcard8);
+		VCard vcard9 = TestUtil.createVCardAll("test", null, new String[] { "b" }, null, null, new String[] { "l@" }, null, null);
+		vcard9.addPhoto(new Photo("", ImageType.PNG));
+		vcard9.setBirthday(new Birthday(new Date()));
+		cm.createContact(vcard9);
+		VCard vcard0 = TestUtil.createVCardAll("test", null, new String[] { "c", "d" }, null, null, new String[] { "a@", "b@", "c@", "d@", "f@" }, null, null);
+		vcard0.addPhoto(new Photo("", ImageType.PNG));
+		vcard0.setBirthday(new Birthday(new Date()));
+		cm.createContact(vcard0);
+
+		Statistics statistic = cm.getStatistic();
+		assertEquals(10, statistic.getAllContacts());
+		assertEquals(9, statistic.getAllContactsPhoto());
+		assertEquals(8, statistic.getAllContactsBirthday());
+		assertEquals(7, statistic.getAllContactsPhone());
+		assertEquals(6, statistic.getAllContactsEmail());
+		assertEquals(5, statistic.getAllContactsAddress());
+
+		assertEquals(4, (int) statistic.getAllContactsCategoryMap().size());
+		assertEquals(4, (int) statistic.getAllContactsCategoryMap().get("a"));
+		assertEquals(4, (int) statistic.getAllContactsCategoryMap().get("b"));
+		assertEquals(3, (int) statistic.getAllContactsCategoryMap().get("c"));
+		assertEquals(3, (int) statistic.getAllContactsCategoryMap().get("d"));
+
+		assertEquals(13, statistic.getUniquePhones());
+		assertEquals(12, statistic.getUniqueEmails());
+		assertEquals(11, statistic.getUniqueAddresses());
 	}
 
 	/**
