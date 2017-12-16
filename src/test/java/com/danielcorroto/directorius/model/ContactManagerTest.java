@@ -10,8 +10,10 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.danielcorroto.directorius.TestUtil;
@@ -627,6 +629,81 @@ public class ContactManagerTest extends TestCase {
 	}
 
 	/**
+	 * Comprueba el cálculo de fechas de cumpleaños
+	 * 
+	 * @throws IOException
+	 */
+	public void testBirthday() throws IOException {
+		ContactManager cm = new ContactManager(createTempFile().getAbsolutePath());
+		VCard vcard0 = TestUtil.createVCard("0");
+		vcard0.setBirthday(buildBirthday(2017, 12, 27));
+		cm.createContact(vcard0);
+		VCard vcard1 = TestUtil.createVCard("1");
+		vcard1.setBirthday(buildBirthday(2017, 12, 28));
+		cm.createContact(vcard1);
+		VCard vcard2 = TestUtil.createVCard("2");
+		vcard2.setBirthday(buildBirthday(2017, 12, 29));
+		cm.createContact(vcard2);
+		VCard vcard3 = TestUtil.createVCard("3");
+		vcard3.setBirthday(buildBirthday(2018, 1, 2));
+		cm.createContact(vcard3);
+		VCard vcard4 = TestUtil.createVCard("4");
+		vcard4.setBirthday(buildBirthday(2018, 1, 3));
+		cm.createContact(vcard4);
+		VCard vcard5 = TestUtil.createVCard("5");
+		vcard5.setBirthday(buildBirthday(2018, 1, 4));
+		cm.createContact(vcard5);
+		VCard vcard6 = TestUtil.createVCard("6");
+		vcard6.setBirthday(buildBirthday(null, 12, 27));
+		cm.createContact(vcard6);
+		VCard vcard7 = TestUtil.createVCard("7");
+		vcard7.setBirthday(buildBirthday(null, 12, 28));
+		cm.createContact(vcard7);
+		VCard vcard8 = TestUtil.createVCard("8");
+		vcard8.setBirthday(buildBirthday(null, 12, 29));
+		cm.createContact(vcard8);
+		VCard vcard9 = TestUtil.createVCard("9");
+		vcard9.setBirthday(buildBirthday(null, 1, 2));
+		cm.createContact(vcard9);
+		VCard vcarda = TestUtil.createVCard("a");
+		vcarda.setBirthday(buildBirthday(null, 1, 3));
+		cm.createContact(vcarda);
+		VCard vcardb = TestUtil.createVCard("b");
+		vcardb.setBirthday(buildBirthday(null, 1, 4));
+		cm.createContact(vcardb);
+		VCard vcardc = TestUtil.createVCard("c");
+		vcardc.setBirthday(buildBirthday(null, null, null));
+		cm.createContact(vcardc);
+		VCard vcardd = TestUtil.createVCard("d");
+		vcardd.setBirthday(buildBirthday(null, null, 29));
+		cm.createContact(vcardd);
+		VCard vcarde = TestUtil.createVCard("e");
+		vcarde.setBirthday(buildBirthday(null, 12, null));
+		cm.createContact(vcarde);
+		VCard vcardf = TestUtil.createVCard("f");
+		vcardf.setBirthday(buildBirthday(2017, null, null));
+		cm.createContact(vcardf);
+		// No es fecha válida (year, null, date)
+		VCard vcardg = TestUtil.createVCard("g");
+		vcardg.setBirthday(buildBirthday(2017, 12, null));
+		cm.createContact(vcardg);
+
+		List<VCard> bdayCards = cm.getBirthday(buildDate(2017, 12, 28), buildDate(2018, 1, 3));
+
+		assertEquals(8, bdayCards.size());
+		Iterator<VCard> iterator = bdayCards.iterator();
+		assertEquals(vcard1.getUid(), iterator.next().getUid());
+		assertEquals(vcard7.getUid(), iterator.next().getUid());
+		assertEquals(vcard2.getUid(), iterator.next().getUid());
+		assertEquals(vcard8.getUid(), iterator.next().getUid());
+		assertEquals(vcard3.getUid(), iterator.next().getUid());
+		assertEquals(vcard9.getUid(), iterator.next().getUid());
+		assertEquals(vcard4.getUid(), iterator.next().getUid());
+		assertEquals(vcarda.getUid(), iterator.next().getUid());
+
+	}
+
+	/**
 	 * Crea un fichero temporal
 	 * 
 	 * @return Descriptor del fichero temporal
@@ -653,4 +730,52 @@ public class ContactManagerTest extends TestCase {
 		File configFile = new File(new URL(filename).toURI());
 		return configFile;
 	}
+
+	/**
+	 * Construye objeto birthday a partir de la información pasada. Si ningún
+	 * dato es nulo se construye una fecha completa; si alguno es nulo, una
+	 * fecha parcial y si todos son nulos devuelve null
+	 * 
+	 * @param year
+	 *            Año
+	 * @param month
+	 *            Mes (1-12)
+	 * @param date
+	 *            Día (1-31)
+	 * @return Objeto birthday que representa esa fecha
+	 */
+	private Birthday buildBirthday(Integer year, Integer month, Integer date) {
+		Birthday bday;
+		if (year != null && month != null && date != null) {
+			bday = new Birthday(buildDate(year, month, date));
+		} else if (year == null && month == null && date == null) {
+			bday = null;
+		} else {
+			PartialDate pd = new PartialDate.Builder().year(year).month(month).date(date).build();
+			bday = new Birthday(pd);
+		}
+
+		return bday;
+	}
+
+	/**
+	 * Construye objeto fecha a partir de la información pasada. Ninguno debe
+	 * ser null
+	 * 
+	 * @param year
+	 *            Año
+	 * @param month
+	 *            Mes (1-12)
+	 * @param date
+	 *            Día (1-31)
+	 * @return Objeto que representa esa fecha
+	 */
+	private Date buildDate(int year, int month, int date) {
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.YEAR, year);
+		c.set(Calendar.MONTH, month + 1);
+		c.set(Calendar.DATE, date);
+		return c.getTime();
+	}
+
 }

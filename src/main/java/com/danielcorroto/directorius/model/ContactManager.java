@@ -12,12 +12,17 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -381,5 +386,89 @@ public class ContactManager {
 		}
 
 		return statistic;
+	}
+
+	/**
+	 * Obtiene los contactos que cumplen años entre las fechas indicas (ambas
+	 * inclusive) ordenadas por fecha y nombre completo
+	 * 
+	 * @param start
+	 *            Fecha inicial a comprobar
+	 * @param end
+	 *            Fecha final a comprobar
+	 * @return Contactos que cumplen años
+	 */
+	public List<VCard> getBirthday(Date start, Date end) {
+		Map<Date, Set<VCard>> map = new TreeMap<>();
+
+		for (VCard card : vcardMap.values()) {
+			if (card.getBirthday() == null) {
+				continue;
+			}
+
+			// Obtiene fecha de nacimiento
+			Calendar bdayCalendar = Calendar.getInstance();
+			if (card.getBirthday().getDate() != null) {
+				bdayCalendar.setTime(card.getBirthday().getDate());
+			} else if (card.getBirthday().getPartialDate() != null) {
+				// La fecha parcial es válida si hay día y mes
+				if (card.getBirthday().getPartialDate().getMonth() == null || card.getBirthday().getPartialDate().getDate() == null) {
+					continue;
+				}
+				bdayCalendar.set(Calendar.MONTH, card.getBirthday().getPartialDate().getMonth() + 1);
+				bdayCalendar.set(Calendar.DATE, card.getBirthday().getPartialDate().getDate());
+			} else {
+				continue;
+			}
+
+			// Obtiene la fecha (año) del siguiente cumpleaños
+			Calendar startCalendar = Calendar.getInstance();
+			int year = startCalendar.get(Calendar.YEAR);
+			bdayCalendar.set(Calendar.YEAR, year);
+			if (bdayCalendar.before(startCalendar)) {
+				bdayCalendar.set(Calendar.YEAR, year + 1);
+			}
+
+			// Comprueba la fecha
+			Date bday = bdayCalendar.getTime();
+			start = setTimeZero(start);
+			end = setTimeZero(end);
+			bday = setTimeZero(bday);
+			if ((start.before(bday) || start.equals(bday)) && (end.after(bday) || end.equals(bday))) {
+				Set<VCard> cardSet = map.get(bday);
+				if (cardSet == null) {
+					cardSet = new TreeSet<>(new FullNameVCardComparator());
+					map.put(bday, cardSet);
+				}
+				cardSet.add(new VCard(card));
+			}
+		}
+
+		// Rellena lista de resultados ordenada
+		List<VCard> result = new ArrayList<>();
+		for (Entry<Date, Set<VCard>> entry : map.entrySet()) {
+			for (VCard card : entry.getValue()) {
+				result.add(card);
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Setea la hora de la fecha a 00:00:00 del huso horario correspondiente
+	 * 
+	 * @param date
+	 *            Fecha a la que se le va a asignar la hora 00:00:00
+	 * @return Fecha con 00:00:00
+	 */
+	private Date setTimeZero(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTime();
 	}
 }
