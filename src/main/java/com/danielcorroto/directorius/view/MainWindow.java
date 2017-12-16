@@ -240,12 +240,14 @@ public class MainWindow {
 		MenuItem menuContactAdd = createMenuItem(Text.I18N_MENU_CONTACT_ADD, ResourcePath.IMG_MENU_CONTACT_ADD, KeyCode.A, KeyCombination.CONTROL_DOWN);
 		MenuItem menuContactEdit = createMenuItem(Text.I18N_MENU_CONTACT_EDIT, ResourcePath.IMG_MENU_CONTACT_EDIT, KeyCode.E, KeyCombination.CONTROL_DOWN);
 		MenuItem menuContactRemove = createMenuItem(Text.I18N_MENU_CONTACT_REMOVE, ResourcePath.IMG_MENU_CONTACT_REMOVE, KeyCode.R, KeyCombination.CONTROL_DOWN);
+		MenuItem menuContactStatistics = createMenuItem(Text.I18N_MENU_CONTACT_STATISTICS, ResourcePath.IMG_MENU_CONTACT_STATISTICS, null);
 		Menu menuContact = new Menu(rb.getString(Text.I18N_MENU_CONTACT));
-		menuContact.getItems().addAll(menuContactAdd, menuContactEdit, menuContactRemove);
+		menuContact.getItems().addAll(menuContactAdd, menuContactEdit, menuContactRemove, new SeparatorMenuItem(), menuContactStatistics);
 		menuBar.getMenus().addAll(menuContact);
 		menuItems.setContactAdd(menuContactAdd);
 		menuItems.setContactEdit(menuContactEdit);
 		menuItems.setContactRemove(menuContactRemove);
+		menuItems.setContactStatistics(menuContactStatistics);
 
 		// Crea menú Birthday
 		MenuItem menuBirthdayToday = createMenuItem(Text.I18N_MENU_BIRTHDAY_TODAY, ResourcePath.IMG_MENU_BIRTHDAY_TODAY, null);

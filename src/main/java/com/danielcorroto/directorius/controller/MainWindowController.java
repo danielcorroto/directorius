@@ -9,6 +9,7 @@ import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 import com.danielcorroto.directorius.view.AboutWindow;
 import com.danielcorroto.directorius.view.MainWindow;
+import com.danielcorroto.directorius.view.StatisticWindow;
 
 import ezvcard.VCard;
 import javafx.application.Application;
@@ -112,6 +113,18 @@ public class MainWindowController extends Application {
 				SimpleVCard simple = window.getListView().getSelectionModel().getSelectedItem();
 				VCard vcard = manager.readContact(simple.getUid());
 				loadContactWindow(vcard);
+			}
+		});
+
+		window.getMenuItems().getContactStatistics().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					new StatisticWindow(manager.getStatistic()).showAndWait();
+				} catch (Exception e) {
+					LOGGER.severe("Error al abrir la ventana Estadísticas",e);
+				}
 			}
 		});
 

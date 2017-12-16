@@ -32,6 +32,8 @@ public interface Text {
 
 	public static final String I18N_MENU_CONTACT_REMOVE = "menu.contact.remove";
 
+	public static final String I18N_MENU_CONTACT_STATISTICS = "menu.contact.statistics";
+
 	public static final String I18N_MENU_BIRTHDAY = "menu.birthday";
 
 	public static final String I18N_MENU_BIRTHDAY_TODAY = "menu.birthday.today";
@@ -135,49 +137,75 @@ public interface Text {
 	public static final String I18N_EDITCONTACT_CANCEL = "editcontact.cancel";
 
 	public static final String I18N_EDITCONTACT_SAVE = "editcontact.save";
-	
+
 	public static final String I18N_EDITCONTACT_PHONE_ADD = "editcontact.phone.add";
 
 	public static final String I18N_EDITCONTACT_PHONE_EDIT = "editcontact.phone.edit";
-	
+
 	public static final String I18N_EDITCONTACT_PHONE_REMOVE = "editcontact.phone.remove";
-	
+
 	public static final String I18N_EDITCONTACT_PHONE_NUMBER = "editcontact.phone.number";
-	
+
 	public static final String I18N_EDITCONTACT_PHONE_TYPE = "editcontact.phone.type";
-	
+
 	public static final String I18N_EDITCONTACT_PHONE_TAG = "editcontact.phone.tag";
-	
+
 	public static final String I18N_EDITCONTACT_EMAIL_ADD = "editcontact.email.add";
-	
+
 	public static final String I18N_EDITCONTACT_EMAIL_EDIT = "editcontact.email.edit";
-	
+
 	public static final String I18N_EDITCONTACT_EMAIL_REMOVE = "editcontact.email.remove";
-	
+
 	public static final String I18N_EDITCONTACT_EMAIL_EMAIL = "editcontact.email.email";
-	
+
 	public static final String I18N_EDITCONTACT_EMAIL_TYPE = "editcontact.email.type";
-	
+
 	public static final String I18N_EDITCONTACT_EMAIL_TAG = "editcontact.email.tag";
-	
+
 	public static final String I18N_EDITCONTACT_ADDRESS_ADD = "editcontact.address.add";
-	
+
 	public static final String I18N_EDITCONTACT_ADDRESS_EDIT = "editcontact.address.edit";
-	
+
 	public static final String I18N_EDITCONTACT_ADDRESS_REMOVE = "editcontact.address.remove";
-	
+
 	public static final String I18N_EDITCONTACT_ADDRESS_STREET = "editcontact.address.street";
-	
+
 	public static final String I18N_EDITCONTACT_ADDRESS_LOCALITY = "editcontact.address.locality";
-	
+
 	public static final String I18N_EDITCONTACT_ADDRESS_REGION = "editcontact.address.region";
-	
+
 	public static final String I18N_EDITCONTACT_ADDRESS_POSTALCODE = "editcontact.address.postalcode";
-	
+
 	public static final String I18N_EDITCONTACT_ADDRESS_COUNTRY = "editcontact.address.country";
-	
+
 	public static final String I18N_EDITCONTACT_ADDRESS_TYPE = "editcontact.address.type";
-	
+
 	public static final String I18N_EDITCONTACT_ADDRESS_TAG = "editcontact.address.tag";
+
+	public static final String I18N_STATISTIC_TITLE_TEXT = "statistic.title.text";
+
+	public static final String I18N_STATISTIC_TITLE_VALUE = "statistic.title.value";
+
+	public static final String I18N_STATISTIC_TITLE_PERCENTAGE = "statistic.title.percentage";
+
+	public static final String I18N_STATISTIC_ITEM_TOTAL = "statistic.item.total";
+
+	public static final String I18N_STATISTIC_ITEM_BIRTHDAY = "statistic.item.birthday";
+
+	public static final String I18N_STATISTIC_ITEM_PHOTO = "statistic.item.photo";
+
+	public static final String I18N_STATISTIC_ITEM_PHONE = "statistic.item.phone";
+
+	public static final String I18N_STATISTIC_ITEM_EMAIL = "statistic.item.email";
+
+	public static final String I18N_STATISTIC_ITEM_ADDRESS = "statistic.item.address";
+
+	public static final String I18N_STATISTIC_ITEM_CATEGORY = "statistic.item.category";
+
+	public static final String I18N_STATISTIC_ITEM_UNIQUEPHONE = "statistic.item.uniquephone";
+
+	public static final String I18N_STATISTIC_ITEM_UNIQUEEMAIL = "statistic.item.uniqueemail";
+
+	public static final String I18N_STATISTIC_ITEM_UNIQUEADDRES = "statistic.item.uniqueaddress";
 
 }

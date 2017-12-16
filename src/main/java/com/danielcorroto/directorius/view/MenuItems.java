@@ -34,6 +34,10 @@ public class MenuItems {
 	 */
 	private MenuItem contactRemove;
 	/**
+	 * Contacto / Estadísticas
+	 */
+	private MenuItem contactStatistics;
+	/**
 	 * Cumpleaños / Hoy
 	 */
 	private MenuItem birthdayToday;
@@ -100,6 +104,14 @@ public class MenuItems {
 
 	public MenuItem getContactRemove() {
 		return contactRemove;
+	}
+
+	public MenuItem getContactStatistics() {
+		return contactStatistics;
+	}
+
+	public void setContactStatistics(MenuItem contactStatistics) {
+		this.contactStatistics = contactStatistics;
 	}
 
 	public void setContactRemove(MenuItem contactRemove) {

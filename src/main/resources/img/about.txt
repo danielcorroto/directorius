@@ -32,6 +32,9 @@ oxygen / CC-BY-SA 3.0 or LGPL
 menu_contact_remove = actions/user-delete-2
 oxygen / CC-BY-SA 3.0 or LGPL
 
+menu_contact_statistics = actions/view-statistics
+oxygen / CC-BY-SA 3.0 or LGPL
+
 
 menu_file_exit = actions/dialog-close-2
 oxygen / CC-BY-SA 3.0 or LGPL

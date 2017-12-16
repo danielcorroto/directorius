@@ -84,6 +84,10 @@ public interface ResourcePath {
 	 */
 	public static final String IMG_MENU_CONTACT_REMOVE = "/img/menu_contact_remove.png";
 	/**
+	 * Imagen de menú Contact / Statistics
+	 */
+	public static final String IMG_MENU_CONTACT_STATISTICS = "/img/menu_contact_statistics.png";
+	/**
 	 * Imagen de menú Birthday / Today
 	 */
 	public static final String IMG_MENU_BIRTHDAY_TODAY = "/img/menu_birthday_today.png";
