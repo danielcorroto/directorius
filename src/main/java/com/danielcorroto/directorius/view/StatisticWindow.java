@@ -70,6 +70,10 @@ public class StatisticWindow extends Dialog<Void> {
 		for (Entry<String, Integer> entry : stat.getAllContactsCategoryMap().entrySet()) {
 			data.add(new Statistic(MessageFormat.format(itemCategory, entry.getKey()), entry.getValue(), stat.getAllContacts()));
 		}
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_UNIQUEPHONE), stat.getUniquePhones(), stat.getUniquePhones()));
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_UNIQUEEMAIL), stat.getUniqueEmails(), stat.getUniqueEmails()));
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_UNIQUEADDRES), stat.getUniqueAddresses(), stat.getUniqueAddresses()));
+		
 		table.setItems(data);
 
 		// Botones de guardar/cancelar
