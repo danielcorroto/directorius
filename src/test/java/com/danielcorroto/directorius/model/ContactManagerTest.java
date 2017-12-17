@@ -773,7 +773,7 @@ public class ContactManagerTest extends TestCase {
 	private Date buildDate(int year, int month, int date) {
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.YEAR, year);
-		c.set(Calendar.MONTH, month + 1);
+		c.set(Calendar.MONTH, month - 1);
 		c.set(Calendar.DATE, date);
 		return c.getTime();
 	}

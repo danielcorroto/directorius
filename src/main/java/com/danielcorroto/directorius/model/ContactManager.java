@@ -401,6 +401,15 @@ public class ContactManager {
 	public List<VCard> getBirthday(Date start, Date end) {
 		Map<Date, Set<VCard>> map = new TreeMap<>();
 
+		// Setea la fecha de inicio y fin con la hora 00:00:00
+		start = setTimeZero(start);
+		end = setTimeZero(end);
+
+		// Año de la fecha de inicio de búsqueda
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.setTime(start);
+		int year = startCalendar.get(Calendar.YEAR);
+
 		for (VCard card : vcardMap.values()) {
 			if (card.getBirthday() == null) {
 				continue;
@@ -415,24 +424,20 @@ public class ContactManager {
 				if (card.getBirthday().getPartialDate().getMonth() == null || card.getBirthday().getPartialDate().getDate() == null) {
 					continue;
 				}
-				bdayCalendar.set(Calendar.MONTH, card.getBirthday().getPartialDate().getMonth() + 1);
+				bdayCalendar.set(Calendar.MONTH, card.getBirthday().getPartialDate().getMonth() - 1);
 				bdayCalendar.set(Calendar.DATE, card.getBirthday().getPartialDate().getDate());
 			} else {
 				continue;
 			}
 
-			// Obtiene la fecha (año) del siguiente cumpleaños
-			Calendar startCalendar = Calendar.getInstance();
-			int year = startCalendar.get(Calendar.YEAR);
+			// Obtiene la fecha (año) del siguiente cumpleaños desde la fecha de inicio
 			bdayCalendar.set(Calendar.YEAR, year);
-			if (bdayCalendar.before(startCalendar)) {
+			if (bdayCalendar.getTime().before(start)) {
 				bdayCalendar.set(Calendar.YEAR, year + 1);
 			}
 
 			// Comprueba la fecha
 			Date bday = bdayCalendar.getTime();
-			start = setTimeZero(start);
-			end = setTimeZero(end);
 			bday = setTimeZero(bday);
 			if ((start.before(bday) || start.equals(bday)) && (end.after(bday) || end.equals(bday))) {
 				Set<VCard> cardSet = map.get(bday);
