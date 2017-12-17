@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import com.danielcorroto.directorius.controller.data.AbstractInfo;
 import com.danielcorroto.directorius.view.MainWindow;
 import com.danielcorroto.directorius.view.ResourcePath;
 import com.danielcorroto.directorius.view.Text;
@@ -22,7 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-public abstract class AbstractDialogWindow<T extends AbstractInfo> extends Dialog<T> {
+public abstract class AbstractDialogWindow<T> extends Dialog<T> {
 	/**
 	 * Gap horizontal en el grid
 	 */

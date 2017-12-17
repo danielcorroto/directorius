@@ -76,6 +76,12 @@ public interface Text {
 
 	public static final String I18N_INFORMATION_PERSONAL_NOTES = "information.personal.notes";
 
+	public static final String I18N_INFORMATION_CATEGORY_ADD = "information.category.add";
+
+	public static final String I18N_INFORMATION_CATEGORY_EDIT = "information.category.edit";
+
+	public static final String I18N_INFORMATION_CATEGORY_REMOVE = "information.category.remove";
+
 	public static final String I18N_INFORMATION_PHONE = "information.phone";
 
 	public static final String I18N_INFORMATION_PHONE_ADD = "information.phone.add";
@@ -137,6 +143,14 @@ public interface Text {
 	public static final String I18N_EDITCONTACT_CANCEL = "editcontact.cancel";
 
 	public static final String I18N_EDITCONTACT_SAVE = "editcontact.save";
+
+	public static final String I18N_EDITCONTACT_CATEGORY_ADD = "editcontact.category.add";
+
+	public static final String I18N_EDITCONTACT_CATEGORY_EDIT = "editcontact.category.edit";
+
+	public static final String I18N_EDITCONTACT_CATEGORY_REMOVE = "editcontact.category.remove";
+
+	public static final String I18N_EDITCONTACT_CATEGORY_CATEGORY = "editcontact.category.category";
 
 	public static final String I18N_EDITCONTACT_PHONE_ADD = "editcontact.phone.add";
 

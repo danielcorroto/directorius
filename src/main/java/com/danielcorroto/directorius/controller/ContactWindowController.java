@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import com.danielcorroto.directorius.controller.data.AddressInfo;
@@ -25,6 +24,7 @@ import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.view.ContactWindow;
 import com.danielcorroto.directorius.view.Text;
 import com.danielcorroto.directorius.view.info.AddressDialogWindow;
+import com.danielcorroto.directorius.view.info.CategoryDialogWindow;
 import com.danielcorroto.directorius.view.info.EmailDialogWindow;
 import com.danielcorroto.directorius.view.info.PhoneDialogWindow;
 
@@ -47,8 +47,6 @@ import ezvcard.util.PartialDate;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -116,7 +114,6 @@ public class ContactWindowController extends Application {
 		window = new ContactWindow();
 		window.build(stage);
 
-		loadCategories();
 		if (vcard != null) {
 			loadVCard();
 		}
@@ -186,8 +183,9 @@ public class ContactWindowController extends Application {
 
 		// Categorías
 		if (vcard.getCategories() != null && !vcard.getCategories().getValues().isEmpty()) {
-			String category = vcard.getCategories().getValues().get(0);
-			window.getCategoryCombo().getSelectionModel().select(category);
+			for (String category : vcard.getCategories().getValues()) {
+				addCategoryElement(category);
+			}
 		}
 
 		// Notas
@@ -261,16 +259,6 @@ public class ContactWindowController extends Application {
 	}
 
 	/**
-	 * Carga las categorías en el combo de categorías
-	 */
-	private void loadCategories() {
-		Set<String> categories = manager.getCategories();
-		categories.add("");
-		ObservableList<String> elementList = FXCollections.observableArrayList(categories);
-		window.getCategoryCombo().setItems(elementList);
-	}
-
-	/**
 	 * Setea la funcionalidad de los botones limpiar y buscar foto
 	 */
 	private void photoFunctions() {
@@ -296,7 +284,7 @@ public class ContactWindowController extends Application {
 					loadImage();
 				} catch (FileNotFoundException e) {
 					imageFile = null;
-					LOGGER.severe("Fichero no encontrado " + imageFile.getAbsolutePath(),e);
+					LOGGER.severe("Fichero no encontrado " + imageFile.getAbsolutePath(), e);
 				}
 			}
 		});
@@ -328,6 +316,24 @@ public class ContactWindowController extends Application {
 	 * Setea la funcionalidad de los botones de añadir teléfono/email/dirección
 	 */
 	private void addElementFunctions() {
+		// Añadir categoría
+		window.getAddCategory().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				CategoryDialogWindow dialog = new CategoryDialogWindow(manager.getCategories());
+				Optional<String> result = dialog.showAndWait();
+
+				result.ifPresent(new Consumer<String>() {
+
+					@Override
+					public void accept(String t) {
+						addCategoryElement(t);
+					}
+				});
+			}
+		});
+
 		// Añadir teléfono
 		window.getAddPhone().setOnAction(new EventHandler<ActionEvent>() {
 
@@ -389,6 +395,34 @@ public class ContactWindowController extends Application {
 	 * doble click sobre cada uno de esos elementos
 	 */
 	private void editElementFunctions() {
+		// Editar categoría
+		window.getListViewCategory().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (newValue != null) {
+					window.getEditCategory().setDisable(false);
+				}
+			}
+		});
+		window.getEditCategory().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				showEditCategoryDialog();
+			}
+		});
+		window.getListViewCategory().setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+					showEditCategoryDialog();
+				}
+
+			}
+		});
+
 		// Editar teléfono
 		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PhoneInfo>() {
 
@@ -475,6 +509,29 @@ public class ContactWindowController extends Application {
 	}
 
 	/**
+	 * Muestra el diálogo de edición de la categoría a partir del elemento
+	 * seleccionado
+	 */
+	private void showEditCategoryDialog() {
+		String info = window.getListViewCategory().getSelectionModel().getSelectedItem();
+		if (info == null) {
+			return;
+		}
+
+		CategoryDialogWindow dialog = new CategoryDialogWindow(info, manager.getCategories());
+		Optional<String> result = dialog.showAndWait();
+
+		result.ifPresent(new Consumer<String>() {
+
+			@Override
+			public void accept(String t) {
+				int index = window.getListViewCategory().getSelectionModel().getSelectedIndex();
+				window.getListViewCategory().getItems().set(index, t);
+			}
+		});
+	}
+
+	/**
 	 * Muestra el diálogo de edición del teléfono a partir del elemento
 	 * seleccionado
 	 */
@@ -549,6 +606,38 @@ public class ContactWindowController extends Application {
 	 * seleccionado
 	 */
 	private void removeElementFunctions() {
+		// Eliminar categoría
+		window.getListViewCategory().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (newValue != null) {
+					window.getRemoveCategory().setDisable(false);
+				}
+			}
+		});
+		window.getRemoveCategory().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				String info = window.getListViewCategory().getSelectionModel().getSelectedItem();
+				if (info == null) {
+					return;
+				}
+
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle(rb.getString(Text.I18N_EDITCONTACT_CATEGORY_REMOVE));
+				alert.setHeaderText(info);
+				alert.setContentText(null);
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.OK) {
+					int index = window.getListViewCategory().getSelectionModel().getSelectedIndex();
+					window.getListViewCategory().getItems().remove(index);
+				}
+			}
+		});
+
 		// Eliminar teléfono
 		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PhoneInfo>() {
 
@@ -695,18 +784,6 @@ public class ContactWindowController extends Application {
 				sn.setFamily(window.getSurnameTextField().getText().trim());
 				vcard.setStructuredName(sn);
 
-				// Categorías
-				if (window.getCategoryCombo().getSelectionModel() != null && window.getCategoryCombo().getSelectionModel().getSelectedItem() != null
-						&& !window.getCategoryCombo().getSelectionModel().getSelectedItem().isEmpty()) {
-					if (vcard.getCategories() == null) {
-						vcard.setCategories(new Categories());
-					}
-					if (vcard.getCategories().getValues() != null && !vcard.getCategories().getValues().isEmpty()) {
-						vcard.getCategories().getValues().clear();
-					}
-					vcard.getCategories().getValues().add(window.getCategoryCombo().getSelectionModel().getSelectedItem());
-				}
-
 				// Fecha
 				String year = window.getComboBoxYear().getSelectionModel().getSelectedItem();
 				String month = window.getComboBoxMonth().getSelectionModel().getSelectedItem();
@@ -755,6 +832,18 @@ public class ContactWindowController extends Application {
 						vcard.addPhoto(photo);
 					} catch (IOException e) {
 						e.printStackTrace();
+					}
+				}
+
+				// Categorías
+				if (vcard.getCategoriesList() != null && !vcard.getCategoriesList().isEmpty()) {
+					vcard.getCategoriesList().clear();
+				}
+				if (!window.getListViewCategory().getItems().isEmpty()) {
+					Categories categories = new Categories();
+					vcard.setCategories(categories);
+					for (String category : window.getListViewCategory().getItems()) {
+						categories.getValues().add(category);
 					}
 				}
 
@@ -848,6 +937,16 @@ public class ContactWindowController extends Application {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Añade una categoría a la lista
+	 * 
+	 * @param info
+	 *            Información de la categoría
+	 */
+	private void addCategoryElement(String info) {
+		window.getListViewCategory().getItems().add(info);
 	}
 
 	/**

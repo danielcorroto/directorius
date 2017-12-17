@@ -78,10 +78,6 @@ public class ContactWindow {
 	 */
 	private ComboBox<String> comboBoxDay;
 	/**
-	 * Combo para la lista de categorías
-	 */
-	private ComboBox<String> categoryCombo;
-	/**
 	 * Caja de texto para las notas
 	 */
 	private TextArea notesTextArea;
@@ -97,6 +93,18 @@ public class ContactWindow {
 	 * Contenedor de la foto
 	 */
 	private ImageView imageView;
+	/**
+	 * Botón para añadir categoría
+	 */
+	private Button addCategory;
+	/**
+	 * Botón para editar categoría
+	 */
+	private Button editCategory;
+	/**
+	 * Botón para eliminar categoría
+	 */
+	private Button removeCategory;
 	/**
 	 * Botón para añadir teléfono
 	 */
@@ -133,6 +141,10 @@ public class ContactWindow {
 	 * Botón para eliminar dirección
 	 */
 	private Button removeAddress;
+	/**
+	 * Contenedor de teléfonos
+	 */
+	private ListView<String> listViewCategory;
 	/**
 	 * Contenedor de teléfonos
 	 */
@@ -201,20 +213,15 @@ public class ContactWindow {
 		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_BIRTHDAY), 3);
 		gridPane.add(buildBirthdayForm(), 1, 3);
 
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_CATEGORIES), 4);
-		categoryCombo = new ComboBox<>();
-		categoryCombo.setEditable(true);
-		gridPane.add(categoryCombo, 1, 4);
-
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_NOTES), 5);
+		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_NOTES), 4);
 		notesTextArea = new TextArea();
 		notesTextArea.setMaxHeight(100);
-		gridPane.add(notesTextArea, 1, 5);
+		gridPane.add(notesTextArea, 1, 4);
 
 		// Fotografía
 		imageView = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO)));
 		gridPane.add(imageView, 2, 0);
-		GridPane.setRowSpan(imageView, 5);
+		GridPane.setRowSpan(imageView, 4);
 		GridPane.setHalignment(imageView, HPos.CENTER);
 
 		HBox photoButtons = new HBox();
@@ -224,7 +231,27 @@ public class ContactWindow {
 		photoButtons.getChildren().add(photoClean);
 		photoSearch = new Button(rb.getString(Text.I18N_EDITCONTACT_PHOTO_SEARCH));
 		photoButtons.getChildren().add(photoSearch);
-		gridPane.add(photoButtons, 2, 5);
+		gridPane.add(photoButtons, 2, 4);
+
+		// Categoría
+		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_CATEGORIES), 5);
+		addCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_CATEGORY_ADD, Text.I18N_INFORMATION_CATEGORY_ADD);
+		gridPane.add(addCategory, 0, 5);
+		listViewCategory = new ListView<>();
+		listViewCategory.setMaxHeight(100);
+		listViewCategory.setCellFactory(createCategoryListViewCellFactory());
+		gridPane.add(listViewCategory, 1, 5);
+
+		HBox categoryButtons = new HBox();
+		categoryButtons.setAlignment(Pos.CENTER);
+		categoryButtons.setSpacing(20);
+		editCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_INFORMATION_CATEGORY_EDIT);
+		editCategory.setDisable(true);
+		categoryButtons.getChildren().add(editCategory);
+		removeCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_INFORMATION_CATEGORY_REMOVE);
+		removeCategory.setDisable(true);
+		categoryButtons.getChildren().add(removeCategory);
+		gridPane.add(categoryButtons, 2, 5);
 
 		// Teléfono
 		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PHONE), 6);
@@ -389,6 +416,35 @@ public class ContactWindow {
 	}
 
 	/**
+	 * Crea la visualización para el listview de categorías
+	 * 
+	 * @return Objeto que implementa la visualización del texto del listview de
+	 *         categorías
+	 */
+	private Callback<ListView<String>, ListCell<String>> createCategoryListViewCellFactory() {
+		Callback<ListView<String>, ListCell<String>> cellFactory = new Callback<ListView<String>, ListCell<String>>() {
+
+			@Override
+			public ListCell<String> call(ListView<String> param) {
+				return new ListCell<String>() {
+					@Override
+					protected void updateItem(String item, boolean empty) {
+						super.updateItem(item, empty);
+
+						if (empty || item == null) {
+							setText(null);
+						} else {
+							setText(item);
+						}
+					}
+				};
+			}
+		};
+
+		return cellFactory;
+	}
+
+	/**
 	 * Crea la visualización para el listview de teléfonos
 	 * 
 	 * @return Objeto que implementa la visualización del texto del listview de
@@ -540,15 +596,6 @@ public class ContactWindow {
 	}
 
 	/**
-	 * Obtiene el componente ComboBox con la categoría seleccionada
-	 * 
-	 * @return Componente con la categoría seleccionada
-	 */
-	public ComboBox<String> getCategoryCombo() {
-		return categoryCombo;
-	}
-
-	/**
 	 * Obtiene el componente TextArea con las notas del contacto
 	 * 
 	 * @return Componente con las notas del contacto
@@ -582,6 +629,33 @@ public class ContactWindow {
 	 */
 	public ImageView getImageView() {
 		return imageView;
+	}
+
+	/**
+	 * Obtiene el componente Button para añadir una categoría
+	 * 
+	 * @return Componente para añadir una categoría
+	 */
+	public Button getAddCategory() {
+		return addCategory;
+	}
+
+	/**
+	 * Obtiene el componente Button para editar una categoría
+	 * 
+	 * @return Componente para editar una categoría
+	 */
+	public Button getEditCategory() {
+		return editCategory;
+	}
+
+	/**
+	 * Obtiene el componente Button para eliminar una categoría
+	 * 
+	 * @return Componente para eliminar una categoría
+	 */
+	public Button getRemoveCategory() {
+		return removeCategory;
 	}
 
 	/**
@@ -663,6 +737,15 @@ public class ContactWindow {
 	 */
 	public Button getRemoveAddress() {
 		return removeAddress;
+	}
+
+	/**
+	 * Obtiene el componente ListView que contiene las categorías
+	 * 
+	 * @return Componente que contiene las categorías
+	 */
+	public ListView<String> getListViewCategory() {
+		return listViewCategory;
 	}
 
 	/**
