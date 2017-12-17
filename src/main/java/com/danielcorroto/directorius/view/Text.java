@@ -208,4 +208,6 @@ public interface Text {
 
 	public static final String I18N_STATISTIC_ITEM_UNIQUEADDRES = "statistic.item.uniqueaddress";
 
+	public static final String I18N_BIRTHDAY_SHOW = "birthday.show";
+
 }

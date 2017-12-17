@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import com.danielcorroto.directorius.controller.DisplayUtil;
 import com.danielcorroto.directorius.controller.data.AddressInfo;
-import com.danielcorroto.directorius.controller.data.DisplayUtil;
 import com.danielcorroto.directorius.controller.data.EmailInfo;
 import com.danielcorroto.directorius.controller.data.PhoneInfo;
 

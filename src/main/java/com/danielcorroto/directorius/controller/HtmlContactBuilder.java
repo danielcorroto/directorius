@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.text.DateFormatSymbols;
-import java.text.MessageFormat;
-import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -45,10 +42,6 @@ public class HtmlContactBuilder {
 	 * Salto de línea HTML
 	 */
 	private static final String NEW_LINE = "<br/>";
-	/**
-	 * Campo de fecha desconocido
-	 */
-	private static final String UNKNOWN_DATE_DATA = "??";
 
 	/**
 	 * Construye el código HTML de la información del contacto
@@ -72,7 +65,7 @@ public class HtmlContactBuilder {
 
 		// Personal
 		html = html.replace(HtmlTemplate.FULL_NAME, vcard.getFormattedName().getValue());
-		html = html.replace(HtmlTemplate.BIRTHDAY, buildBirthday(vcard, rb));
+		html = html.replace(HtmlTemplate.BIRTHDAY, DisplayUtil.buildBirthday(vcard, rb));
 		html = html.replace(HtmlTemplate.NOTES, buildNotes(vcard));
 		html = html.replace(HtmlTemplate.GROUP_CATEGORY, buildGroupCategory(vcard));
 
@@ -123,111 +116,6 @@ public class HtmlContactBuilder {
 		}
 
 		return result;
-	}
-
-	/**
-	 * Genera el código HTML con la fecha de nacimiento del contacto
-	 * 
-	 * @param vcard
-	 *            Información del contacto
-	 * @param rb
-	 *            Recurso para i18n
-	 * @return Código HTML de la fecha de nacimiento del contacto
-	 */
-	private static String buildBirthday(VCard vcard, ResourceBundle rb) {
-		if (vcard.getBirthday() == null) {
-			return "";
-		}
-
-		Integer year = null;
-		Integer month = null;
-		Integer day = null;
-		Integer age = null;
-
-		// Fecha completa
-		if (vcard.getBirthday().getDate() != null) {
-			Calendar c = Calendar.getInstance();
-			c.setTime(vcard.getBirthday().getDate());
-			year = c.get(Calendar.YEAR);
-			month = c.get(Calendar.MONTH) + 1;
-			day = c.get(Calendar.DATE);
-
-			age = getAgeFrom(year, month, day);
-		}
-
-		// Fecha parcial
-		if (vcard.getBirthday().getPartialDate() != null) {
-			year = vcard.getBirthday().getPartialDate().getYear();
-			month = vcard.getBirthday().getPartialDate().getMonth();
-			day = vcard.getBirthday().getPartialDate().getDate();
-		}
-
-		String datePattern = rb.getString(Text.I18N_INFORMATION_DATEFORMAT);
-		String result = formatDate(datePattern, year, month, day);
-		if (age != null) {
-			String agePattern = rb.getString(Text.I18N_INFORMATION_AGEFORMAT);
-			result += " ( " + MessageFormat.format(agePattern, age) + " )";
-		}
-		return result;
-	}
-
-	/**
-	 * Formatea una fecha en formato texto según el idioma
-	 * 
-	 * @param datePattern
-	 *            Patrón para formatear. {0} es año, {1} es mes y {2} es día
-	 * @param year
-	 *            Año de nacimiento
-	 * @param month
-	 *            Mes de nacimiento (1-12)
-	 * @param day
-	 *            Día de nacimiento (1-31)
-	 * @return Fecha en formato texto
-	 */
-	private static String formatDate(String datePattern, Integer year, Integer month, Integer day) {
-		String syear = year != null ? year.toString() : UNKNOWN_DATE_DATA;
-		String smonth = month != null ? DateFormatSymbols.getInstance().getMonths()[month - 1] : UNKNOWN_DATE_DATA;
-		String sday = day != null ? day.toString() : UNKNOWN_DATE_DATA;
-		String result = MessageFormat.format(datePattern, syear, smonth, sday);
-		return result;
-	}
-
-	/**
-	 * Calcula la edad a partir de una fecha
-	 * 
-	 * @param year
-	 *            Año de nacimiento
-	 * @param month
-	 *            Mes de nacimiento (1-12)
-	 * @param day
-	 *            Día de nacimiento (1-31)
-	 * @return Edad
-	 */
-	private static int getAgeFrom(int year, int month, int day) {
-		int age = 0;
-		Calendar dob = Calendar.getInstance();
-		dob.set(Calendar.YEAR, year);
-		dob.set(Calendar.MONTH, month - 1);
-		dob.set(Calendar.DATE, day);
-		Calendar now = Calendar.getInstance();
-		if (dob.after(now)) {
-			throw new IllegalArgumentException("Can't be born in the future");
-		}
-		int year1 = now.get(Calendar.YEAR);
-		int year2 = dob.get(Calendar.YEAR);
-		age = year1 - year2;
-		int month1 = now.get(Calendar.MONTH);
-		int month2 = dob.get(Calendar.MONTH);
-		if (month2 > month1) {
-			age--;
-		} else if (month1 == month2) {
-			int day1 = now.get(Calendar.DAY_OF_MONTH);
-			int day2 = dob.get(Calendar.DAY_OF_MONTH);
-			if (day2 > day1) {
-				age--;
-			}
-		}
-		return age;
 	}
 
 	/**
@@ -459,7 +347,7 @@ public class HtmlContactBuilder {
 			}
 			return out.toString();
 		} catch (Exception e) {
-			LOGGER.severe("Error al cargar el fichero del recurso " + resourcePath,e);
+			LOGGER.severe("Error al cargar el fichero del recurso " + resourcePath, e);
 		}
 
 		return "";

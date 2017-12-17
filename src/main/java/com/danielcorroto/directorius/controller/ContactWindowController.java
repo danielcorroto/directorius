@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import com.danielcorroto.directorius.controller.data.AddressInfo;
-import com.danielcorroto.directorius.controller.data.DisplayUtil;
 import com.danielcorroto.directorius.controller.data.EmailInfo;
 import com.danielcorroto.directorius.controller.data.PhoneInfo;
 import com.danielcorroto.directorius.controller.type.AddressTypeEnum;
