@@ -1,5 +1,6 @@
 package com.danielcorroto.directorius.controller;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -28,6 +29,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -56,12 +60,12 @@ public class MainWindowController extends Application {
 	 * Para i18n
 	 */
 	private ResourceBundle rb;
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
 			rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
-			
+
 			window = new MainWindow();
 			window.build(primaryStage);
 
@@ -93,7 +97,8 @@ public class MainWindowController extends Application {
 	}
 
 	/**
-	 * Setea la colección de contactos en la ListView y la cantidad de los mismos
+	 * Setea la colección de contactos en la ListView y la cantidad de los
+	 * mismos
 	 * 
 	 * @param list
 	 *            Colección de contactos a mostrar
@@ -101,7 +106,7 @@ public class MainWindowController extends Application {
 	private void setListViewItems(Collection<SimpleVCard> list) {
 		ObservableList<SimpleVCard> elementList = FXCollections.observableArrayList(list);
 		window.getListView().setItems(elementList);
-		
+
 		String contactsSize = MessageFormat.format(rb.getString(Text.I18N_CONTACTS_SIZE), list.size());
 		window.getContactsSizeLabel().setText(contactsSize);
 	}
@@ -170,6 +175,33 @@ public class MainWindowController extends Application {
 				SimpleVCard simple = window.getListView().getSelectionModel().getSelectedItem();
 				VCard vcard = manager.readContact(simple.getUid());
 				loadContactWindow(vcard);
+			}
+		});
+
+		window.getMenuItems().getContactRemove().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				SimpleVCard simpleCard = window.getListView().getSelectionModel().getSelectedItem();
+				if (simpleCard == null) {
+					return;
+				}
+				VCard card = manager.readContact(simpleCard.getUid());
+
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle(rb.getString(Text.I18N_MENU_CONTACT_REMOVE));
+				alert.setHeaderText(card.getFormattedName().getValue());
+				alert.setContentText(null);
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.OK) {
+					try {
+						manager.deleteContact(card.getUid());
+					} catch (IOException e) {
+						LOGGER.severe("Error al borrar contacto " + card.getFormattedName().getValue(), e);
+					}
+					reloadContactListView();
+				}
 			}
 		});
 
@@ -322,15 +354,26 @@ public class MainWindowController extends Application {
 			new ContactWindowController(manager, vcard).start(new Stage());
 
 			// Carga la nueva lista
-			String text = window.getSearchTextField().getText();
-			SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
-			Set<SimpleVCard> list = manager.search(text.trim(), type);
-			setListViewItems(list);
+			reloadContactListView();
 		} catch (Exception e) {
 			LOGGER.severe("Error al abrir la ventana Añadir/Editar contacto...", e);
 		}
 	}
 
+	/**
+	 * Recarga la lista de contactos a partir de los parámetros de los elementos
+	 * de la búsqueda
+	 */
+	private void reloadContactListView() {
+		String text = window.getSearchTextField().getText();
+		SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
+		Set<SimpleVCard> list = manager.search(text.trim(), type);
+		setListViewItems(list);
+	}
+
+	/**
+	 * Setea la funcionalidad del botón añadir contacto
+	 */
 	private void addContactButtonFunction() {
 		window.getAddContactButton().setOnAction(window.getMenuItems().getContactAdd().getOnAction());
 	}

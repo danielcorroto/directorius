@@ -178,6 +178,7 @@ public class ContactManager {
 	 * @throws IOException
 	 */
 	public void deleteContact(Uid id) throws IOException {
+		removePhotoFile(vcardMap.get(id));
 		vcardMap.remove(id);
 		simpleVcardMap.remove(id);
 
@@ -341,6 +342,22 @@ public class ContactManager {
 	}
 
 	/**
+	 * Elimina el fichero de la fotografía del contacto indicado (si tiene)
+	 * 
+	 * @param card
+	 *            Información del contacto
+	 */
+	private void removePhotoFile(VCard card) {
+		if (card.getPhotos() == null || card.getPhotos().isEmpty()) {
+			return;
+		}
+
+		String path = getPhotoDir() + card.getPhotos().get(0).getUrl();
+		File file = new File(path);
+		file.delete();
+	}
+
+	/**
 	 * Crea una instancia del administrador de contactos y carga el fichero
 	 * VCard en memoria
 	 * 
@@ -430,7 +447,8 @@ public class ContactManager {
 				continue;
 			}
 
-			// Obtiene la fecha (año) del siguiente cumpleaños desde la fecha de inicio
+			// Obtiene la fecha (año) del siguiente cumpleaños desde la fecha de
+			// inicio
 			bdayCalendar.set(Calendar.YEAR, year);
 			if (bdayCalendar.getTime().before(start)) {
 				bdayCalendar.set(Calendar.YEAR, year + 1);
