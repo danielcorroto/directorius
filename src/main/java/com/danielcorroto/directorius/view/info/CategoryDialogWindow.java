@@ -76,6 +76,10 @@ public class CategoryDialogWindow extends AbstractDialogWindow<String> {
 		categoryComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
 			saveButton.setDisable(newValue.trim().isEmpty());
 		});
+		categoryComboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+			saveButton.setDisable(newValue.trim().isEmpty());
+		});
+		
 	}
 
 	@Override
