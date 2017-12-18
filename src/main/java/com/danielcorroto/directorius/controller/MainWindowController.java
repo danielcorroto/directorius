@@ -57,6 +57,7 @@ public class MainWindowController extends Application {
 
 			menuItemContactFunction();
 			menuItemBirthdayFunction();
+			menuItemHelpFunction();
 			addContactButtonFunction();
 			listViewFunction();
 			searchTextFieldFunction();
@@ -170,20 +171,11 @@ public class MainWindowController extends Application {
 				}
 			}
 		});
-
-		window.getMenuItems().getHelpAbout().setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					new AboutWindow().start(new Stage());
-				} catch (Exception e) {
-					LOGGER.severe("Error al abrir la ventana Acerca de...", e);
-				}
-			}
-		});
 	}
 
+	/**
+	 * Setea la funcionalidad de los items del menú Cumpleaños
+	 */
 	private void menuItemBirthdayFunction() {
 		// Cumpleaños hoy
 		window.getMenuItems().getBirthdayToday().setOnAction(new EventHandler<ActionEvent>() {
@@ -283,6 +275,23 @@ public class MainWindowController extends Application {
 					}
 				} catch (Exception e) {
 					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Setea la funcionalidad de los items del menú Ayuda
+	 */
+	private void menuItemHelpFunction() {
+		window.getMenuItems().getHelpAbout().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					new AboutWindow().start(new Stage());
+				} catch (Exception e) {
+					LOGGER.severe("Error al abrir la ventana Acerca de...", e);
 				}
 			}
 		});
