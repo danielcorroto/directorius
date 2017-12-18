@@ -1,10 +1,13 @@
 package com.danielcorroto.directorius.controller;
 
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import com.danielcorroto.directorius.model.ContactManager;
@@ -49,9 +52,16 @@ public class MainWindowController extends Application {
 	 */
 	private ContactManager manager;
 
+	/**
+	 * Para i18n
+	 */
+	private ResourceBundle rb;
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
+			rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
+			
 			window = new MainWindow();
 			window.build(primaryStage);
 
@@ -83,7 +93,7 @@ public class MainWindowController extends Application {
 	}
 
 	/**
-	 * Setea la colección de contactos en la ListView
+	 * Setea la colección de contactos en la ListView y la cantidad de los mismos
 	 * 
 	 * @param list
 	 *            Colección de contactos a mostrar
@@ -91,6 +101,9 @@ public class MainWindowController extends Application {
 	private void setListViewItems(Collection<SimpleVCard> list) {
 		ObservableList<SimpleVCard> elementList = FXCollections.observableArrayList(list);
 		window.getListView().setItems(elementList);
+		
+		String contactsSize = MessageFormat.format(rb.getString(Text.I18N_CONTACTS_SIZE), list.size());
+		window.getContactsSizeLabel().setText(contactsSize);
 	}
 
 	/**

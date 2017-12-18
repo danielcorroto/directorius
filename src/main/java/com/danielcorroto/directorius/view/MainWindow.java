@@ -10,9 +10,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -86,6 +88,10 @@ public class MainWindow {
 	 */
 	private ComboBox<SearchTypeEnum> searchTypeComboBox;
 	/**
+	 * Muestra la cantidad de contactos mostrados
+	 */
+	private Label contactsSizeLabel;
+	/**
 	 * Vista de la información del contacto
 	 */
 	private WebView webView;
@@ -114,7 +120,7 @@ public class MainWindow {
 	 *            Stage de la ventana
 	 */
 	public void build(Stage stage) {
-		// Crear borderpane
+		// Crear Panel
 		GridPane gridPane = new GridPane();
 		ColumnConstraints[] columnConstraints = new ColumnConstraints[MAINPANE_PERCENTAGE.length];
 		for (int i = 0; i < MAINPANE_PERCENTAGE.length; i++) {
@@ -125,14 +131,25 @@ public class MainWindow {
 			}
 		}
 		gridPane.getColumnConstraints().addAll(columnConstraints);
+		VBox.setVgrow(gridPane, Priority.ALWAYS);
 
+		// Lista de contactos
 		listView = createListView();
 		gridPane.add(listView, 0, 0);
 		GridPane.setVgrow(listView, Priority.ALWAYS);
+
+		// Visualización de contactos
 		WebView webView = createWebView();
 		gridPane.add(webView, 1, 0);
 		GridPane.setVgrow(webView, Priority.ALWAYS);
-		VBox.setVgrow(gridPane, Priority.ALWAYS);
+		GridPane.setRowSpan(webView, 2);
+
+		// Cantidad de contactos
+		contactsSizeLabel = new Label("0 contactos");
+		contactsSizeLabel.setAlignment(Pos.CENTER_RIGHT);
+		gridPane.add(contactsSizeLabel, 0, 1);
+		GridPane.setHalignment(contactsSizeLabel, HPos.CENTER);
+		GridPane.setMargin(contactsSizeLabel, TOOLBAR_MARGIN);
 
 		// Crear ventana principal
 		VBox main = new VBox();
@@ -159,6 +176,15 @@ public class MainWindow {
 	 */
 	public ListView<SimpleVCard> getListView() {
 		return listView;
+	}
+
+	/**
+	 * Obtiene el componente Label para mostrar la cantiad de contactos
+	 * 
+	 * @return Componente para mostrar la cantiad de contactos
+	 */
+	public Label getContactsSizeLabel() {
+		return contactsSizeLabel;
 	}
 
 	/**

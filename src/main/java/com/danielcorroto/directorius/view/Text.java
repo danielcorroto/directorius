@@ -64,6 +64,8 @@ public interface Text {
 
 	public static final String I18N_TOOLBAR_CONTACTADD_TOOLTIP = "toolbar.contactadd.tooltip";
 
+	public static final String I18N_CONTACTS_SIZE = "contacts.size";
+
 	public static final String I18N_CONTACT_NAME = "contact.name";
 
 	public static final String I18N_CONTACT_SURNAME = "contact.surname";
