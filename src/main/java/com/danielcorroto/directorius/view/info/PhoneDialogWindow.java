@@ -107,9 +107,9 @@ public class PhoneDialogWindow extends AbstractDialogWindow<PhoneInfo> {
 	@Override
 	protected String getI18NTitle(boolean edit) {
 		if (edit) {
-			return Text.I18N_EDITCONTACT_PHONE_EDIT;
+			return Text.I18N_CONTACT_PHONE_EDIT;
 		} else {
-			return Text.I18N_EDITCONTACT_PHONE_ADD;
+			return Text.I18N_CONTACT_PHONE_ADD;
 		}
 	}
 
@@ -121,14 +121,14 @@ public class PhoneDialogWindow extends AbstractDialogWindow<PhoneInfo> {
 	@Override
 	protected void buildGrid(GridPane grid) {
 		numberTextField = new TextField();
-		numberTextField.setPromptText(getResourceBundle().getString(Text.I18N_EDITCONTACT_PHONE_NUMBER));
+		numberTextField.setPromptText(getResourceBundle().getString(Text.I18N_CONTACT_PHONE_NUMBER));
 		typeComboBox = buildTypeComboBox();
 		tagTextField = new TextField();
-		tagTextField.setPromptText(getResourceBundle().getString(Text.I18N_EDITCONTACT_PHONE_TAG));
+		tagTextField.setPromptText(getResourceBundle().getString(Text.I18N_CONTACT_PHONE_TAG));
 
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_PHONE_NUMBER, numberTextField, 0);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_PHONE_TYPE, typeComboBox, 1);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_PHONE_TAG, tagTextField, 2);
+		buildRowGridPane(grid, Text.I18N_CONTACT_PHONE_NUMBER, numberTextField, 0);
+		buildRowGridPane(grid, Text.I18N_CONTACT_PHONE_TYPE, typeComboBox, 1);
+		buildRowGridPane(grid, Text.I18N_CONTACT_PHONE_TAG, tagTextField, 2);
 	}
 
 	@Override

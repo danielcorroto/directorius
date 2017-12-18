@@ -153,10 +153,10 @@ public class DisplayUtil {
 			day = vcard.getBirthday().getPartialDate().getDate();
 		}
 
-		String datePattern = rb.getString(Text.I18N_INFORMATION_DATEFORMAT);
+		String datePattern = rb.getString(Text.I18N_CONTACT_DATE_FORMAT);
 		String result = formatDate(datePattern, year, month, day);
 		if (age != null) {
-			String agePattern = rb.getString(Text.I18N_INFORMATION_AGEFORMAT);
+			String agePattern = rb.getString(Text.I18N_CONTACT_AGE_FORMAT);
 			result += " ( " + MessageFormat.format(agePattern, age) + " )";
 		}
 		return result;

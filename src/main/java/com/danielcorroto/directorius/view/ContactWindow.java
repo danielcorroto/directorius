@@ -198,22 +198,22 @@ public class ContactWindow {
 		gridPane.setPadding(new Insets(25, 25, 25, 25));
 
 		// Datos personales
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_NAME), 0);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_NAME), 0);
 		nameTextField = new TextField();
 		gridPane.add(nameTextField, 1, 0);
 
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_SURNAME), 1);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_SURNAME), 1);
 		surnameTextField = new TextField();
 		gridPane.add(surnameTextField, 1, 1);
 
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_FULLNAME), 2);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_FULLNAME), 2);
 		fullNameTextField = new TextField();
 		gridPane.add(fullNameTextField, 1, 2);
 
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_BIRTHDAY), 3);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_BIRTHDAY), 3);
 		gridPane.add(buildBirthdayForm(), 1, 3);
 
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_NOTES), 4);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_NOTES), 4);
 		notesTextArea = new TextArea();
 		notesTextArea.setMaxHeight(100);
 		gridPane.add(notesTextArea, 1, 4);
@@ -227,15 +227,15 @@ public class ContactWindow {
 		HBox photoButtons = new HBox();
 		photoButtons.setAlignment(Pos.CENTER);
 		photoButtons.setSpacing(20);
-		photoClean = new Button(rb.getString(Text.I18N_EDITCONTACT_PHOTO_CLEAN));
+		photoClean = new Button(rb.getString(Text.I18N_CONTACT_PHOTO_CLEAN));
 		photoButtons.getChildren().add(photoClean);
-		photoSearch = new Button(rb.getString(Text.I18N_EDITCONTACT_PHOTO_SEARCH));
+		photoSearch = new Button(rb.getString(Text.I18N_CONTACT_PHOTO_SEARCH));
 		photoButtons.getChildren().add(photoSearch);
 		gridPane.add(photoButtons, 2, 4);
 
 		// Categoría
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PERSONAL_CATEGORIES), 5);
-		addCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_CATEGORY_ADD, Text.I18N_INFORMATION_CATEGORY_ADD);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_CATEGORY), 5);
+		addCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_CATEGORY_ADD, Text.I18N_CONTACT_CATEGORY_ADD);
 		gridPane.add(addCategory, 0, 5);
 		listViewCategory = new ListView<>();
 		listViewCategory.setMaxHeight(100);
@@ -245,17 +245,17 @@ public class ContactWindow {
 		HBox categoryButtons = new HBox();
 		categoryButtons.setAlignment(Pos.CENTER);
 		categoryButtons.setSpacing(20);
-		editCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_INFORMATION_CATEGORY_EDIT);
+		editCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_CONTACT_CATEGORY_EDIT);
 		editCategory.setDisable(true);
 		categoryButtons.getChildren().add(editCategory);
-		removeCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_INFORMATION_CATEGORY_REMOVE);
+		removeCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_CATEGORY_REMOVE);
 		removeCategory.setDisable(true);
 		categoryButtons.getChildren().add(removeCategory);
 		gridPane.add(categoryButtons, 2, 5);
 
 		// Teléfono
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_PHONE), 6);
-		addPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_PHONE_ADD, Text.I18N_INFORMATION_PHONE_ADD);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_PHONE), 6);
+		addPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_PHONE_ADD, Text.I18N_CONTACT_PHONE_ADD);
 		gridPane.add(addPhone, 0, 6);
 		listViewPhone = new ListView<>();
 		listViewPhone.setMaxHeight(100);
@@ -265,17 +265,17 @@ public class ContactWindow {
 		HBox phoneButtons = new HBox();
 		phoneButtons.setAlignment(Pos.CENTER);
 		phoneButtons.setSpacing(20);
-		editPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_INFORMATION_PHONE_EDIT);
+		editPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_CONTACT_PHONE_EDIT);
 		editPhone.setDisable(true);
 		phoneButtons.getChildren().add(editPhone);
-		removePhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_INFORMATION_PHONE_REMOVE);
+		removePhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_PHONE_REMOVE);
 		removePhone.setDisable(true);
 		phoneButtons.getChildren().add(removePhone);
 		gridPane.add(phoneButtons, 2, 6);
 
 		// Email
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_EMAIL), 7);
-		addEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EMAIL_ADD, Text.I18N_INFORMATION_EMAIL_ADD);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_EMAIL), 7);
+		addEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EMAIL_ADD, Text.I18N_CONTACT_EMAIL_ADD);
 		gridPane.add(addEmail, 0, 7);
 		listViewEmail = new ListView<>();
 		listViewEmail.setMaxHeight(100);
@@ -285,17 +285,17 @@ public class ContactWindow {
 		HBox emailButtons = new HBox();
 		emailButtons.setAlignment(Pos.CENTER);
 		emailButtons.setSpacing(20);
-		editEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_INFORMATION_EMAIL_EDIT);
+		editEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_CONTACT_EMAIL_EDIT);
 		editEmail.setDisable(true);
 		emailButtons.getChildren().add(editEmail);
-		removeEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_INFORMATION_EMAIL_REMOVE);
+		removeEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_EMAIL_REMOVE);
 		removeEmail.setDisable(true);
 		emailButtons.getChildren().add(removeEmail);
 		gridPane.add(emailButtons, 2, 7);
 
 		// Dirección
-		setLabel(gridPane, rb.getString(Text.I18N_INFORMATION_ADDRESS), 8);
-		addAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ADDRESS_ADD, Text.I18N_INFORMATION_ADDRESS_ADD);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_ADDRESS), 8);
+		addAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ADDRESS_ADD, Text.I18N_CONTACT_ADDRESS_ADD);
 		gridPane.add(addAddress, 0, 8);
 		listViewAddress = new ListView<>();
 		listViewAddress.setMaxHeight(100);
@@ -305,10 +305,10 @@ public class ContactWindow {
 		HBox addressButtons = new HBox();
 		addressButtons.setAlignment(Pos.CENTER);
 		addressButtons.setSpacing(20);
-		editAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_INFORMATION_ADDRESS_EDIT);
+		editAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_CONTACT_ADDRESS_EDIT);
 		editAddress.setDisable(true);
 		addressButtons.getChildren().add(editAddress);
-		removeAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_INFORMATION_ADDRESS_REMOVE);
+		removeAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_ADDRESS_REMOVE);
 		removeAddress.setDisable(true);
 		addressButtons.getChildren().add(removeAddress);
 		gridPane.add(addressButtons, 2, 8);
@@ -317,9 +317,9 @@ public class ContactWindow {
 		HBox buttons = new HBox();
 		buttons.setAlignment(Pos.CENTER);
 		buttons.setSpacing(100);
-		cancel = new Button(rb.getString(Text.I18N_EDITCONTACT_CANCEL));
+		cancel = new Button(rb.getString(Text.I18N_CONTACT_CANCEL));
 		buttons.getChildren().add(cancel);
-		save = new Button(rb.getString(Text.I18N_EDITCONTACT_SAVE));
+		save = new Button(rb.getString(Text.I18N_CONTACT_SAVE));
 		save.setDisable(true);
 		buttons.getChildren().add(save);
 

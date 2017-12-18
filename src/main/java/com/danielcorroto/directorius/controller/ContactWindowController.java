@@ -278,7 +278,7 @@ public class ContactWindowController extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle(rb.getString(Text.I18N_EDITCONTACT_PHOTO_SEARCH));
+				fileChooser.setTitle(rb.getString(Text.I18N_CONTACT_PHOTO_SEARCH));
 				imageFile = fileChooser.showOpenDialog(window.getStage());
 				try {
 					loadImage();
@@ -626,7 +626,7 @@ public class ContactWindowController extends Application {
 				}
 
 				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle(rb.getString(Text.I18N_EDITCONTACT_CATEGORY_REMOVE));
+				alert.setTitle(rb.getString(Text.I18N_CONTACT_CATEGORY_REMOVE));
 				alert.setHeaderText(info);
 				alert.setContentText(null);
 
@@ -658,7 +658,7 @@ public class ContactWindowController extends Application {
 				}
 
 				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle(rb.getString(Text.I18N_EDITCONTACT_PHONE_REMOVE));
+				alert.setTitle(rb.getString(Text.I18N_CONTACT_PHONE_REMOVE));
 				alert.setHeaderText(DisplayUtil.getPhoneInfo(info, rb));
 				alert.setContentText(null);
 
@@ -690,7 +690,7 @@ public class ContactWindowController extends Application {
 				}
 
 				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle(rb.getString(Text.I18N_EDITCONTACT_EMAIL_REMOVE));
+				alert.setTitle(rb.getString(Text.I18N_CONTACT_EMAIL_REMOVE));
 				alert.setHeaderText(DisplayUtil.getEmailInfo(info, rb));
 				alert.setContentText(null);
 
@@ -722,7 +722,7 @@ public class ContactWindowController extends Application {
 				}
 
 				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle(rb.getString(Text.I18N_EDITCONTACT_ADDRESS_REMOVE));
+				alert.setTitle(rb.getString(Text.I18N_CONTACT_ADDRESS_REMOVE));
 				alert.setHeaderText(DisplayUtil.getAddressInfo(info, rb));
 				alert.setContentText(null);
 

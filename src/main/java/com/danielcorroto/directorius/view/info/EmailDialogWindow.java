@@ -107,9 +107,9 @@ public class EmailDialogWindow extends AbstractDialogWindow<EmailInfo> {
 	@Override
 	protected String getI18NTitle(boolean edit) {
 		if (edit) {
-			return Text.I18N_EDITCONTACT_EMAIL_EDIT;
+			return Text.I18N_CONTACT_EMAIL_EDIT;
 		} else {
-			return Text.I18N_EDITCONTACT_EMAIL_ADD;
+			return Text.I18N_CONTACT_EMAIL_ADD;
 		}
 	}
 
@@ -121,14 +121,14 @@ public class EmailDialogWindow extends AbstractDialogWindow<EmailInfo> {
 	@Override
 	protected void buildGrid(GridPane grid) {
 		emailTextField = new TextField();
-		emailTextField.setPromptText(getResourceBundle().getString(Text.I18N_EDITCONTACT_EMAIL_EMAIL));
+		emailTextField.setPromptText(getResourceBundle().getString(Text.I18N_CONTACT_EMAIL_EMAIL));
 		typeComboBox = buildTypeComboBox();
 		tagTextField = new TextField();
-		tagTextField.setPromptText(getResourceBundle().getString(Text.I18N_EDITCONTACT_EMAIL_TAG));
+		tagTextField.setPromptText(getResourceBundle().getString(Text.I18N_CONTACT_EMAIL_TAG));
 
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_EMAIL_EMAIL, emailTextField, 0);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_EMAIL_TYPE, typeComboBox, 1);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_EMAIL_TAG, tagTextField, 2);
+		buildRowGridPane(grid, Text.I18N_CONTACT_EMAIL_EMAIL, emailTextField, 0);
+		buildRowGridPane(grid, Text.I18N_CONTACT_EMAIL_TYPE, typeComboBox, 1);
+		buildRowGridPane(grid, Text.I18N_CONTACT_EMAIL_TAG, tagTextField, 2);
 	}
 
 	@Override

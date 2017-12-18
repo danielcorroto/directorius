@@ -14,11 +14,11 @@ public enum AddressTypeEnum {
 	/**
 	 * Dirección personal
 	 */
-	HOME(Text.I18N_INFORMATION_ADDRESS_TYPE_HOME, AddressType.HOME),
+	HOME(Text.I18N_CONTACT_ADDRESS_TYPE_HOME, AddressType.HOME),
 	/**
 	 * Dirección de trabajo
 	 */
-	WORK(Text.I18N_INFORMATION_ADDRESS_TYPE_WORK, AddressType.WORK),;
+	WORK(Text.I18N_CONTACT_ADDRESS_TYPE_WORK, AddressType.WORK),;
 
 	/**
 	 * Cadena para realizar i18n del tipo de búsqueda

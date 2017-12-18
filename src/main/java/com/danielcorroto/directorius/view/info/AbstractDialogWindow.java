@@ -58,7 +58,7 @@ public abstract class AbstractDialogWindow<T> extends Dialog<T> {
 		this.setGraphic(new ImageView(new Image(getGraphicStream())));
 
 		// Botones de guardar/cancelar
-		saveButtonType = new ButtonType(rb.getString(Text.I18N_EDITCONTACT_SAVE), ButtonData.OK_DONE);
+		saveButtonType = new ButtonType(rb.getString(Text.I18N_CONTACT_SAVE), ButtonData.OK_DONE);
 		this.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, saveButtonType);
 
 		// Crea los campos

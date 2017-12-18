@@ -14,39 +14,39 @@ public enum PhoneTypeEnum {
 	/**
 	 * Teléfono móvil
 	 */
-	CELL(Text.I18N_INFORMATION_PHONE_TYPE_CELL, TelephoneType.CELL),
+	CELL(Text.I18N_CONTACT_PHONE_TYPE_CELL, TelephoneType.CELL),
 	/**
 	 * Teléfono fax
 	 */
-	FAX(Text.I18N_INFORMATION_PHONE_TYPE_FAX, TelephoneType.FAX),
+	FAX(Text.I18N_CONTACT_PHONE_TYPE_FAX, TelephoneType.FAX),
 	/**
 	 * Teléfono personal
 	 */
-	HOME(Text.I18N_INFORMATION_PHONE_TYPE_HOME, TelephoneType.HOME),
+	HOME(Text.I18N_CONTACT_PHONE_TYPE_HOME, TelephoneType.HOME),
 	/**
 	 * Teléfono paginación
 	 */
-	PAGER(Text.I18N_INFORMATION_PHONE_TYPE_PAGER, TelephoneType.PAGER),
+	PAGER(Text.I18N_CONTACT_PHONE_TYPE_PAGER, TelephoneType.PAGER),
 	/**
 	 * Teléfono sms
 	 */
-	TEXT(Text.I18N_INFORMATION_PHONE_TYPE_TEXT, TelephoneType.TEXT),
+	TEXT(Text.I18N_CONTACT_PHONE_TYPE_TEXT, TelephoneType.TEXT),
 	/**
 	 * Teléfono de texto
 	 */
-	TEXTPHONE(Text.I18N_INFORMATION_PHONE_TYPE_TEXTPHONE, TelephoneType.TEXTPHONE),
+	TEXTPHONE(Text.I18N_CONTACT_PHONE_TYPE_TEXTPHONE, TelephoneType.TEXTPHONE),
 	/**
 	 * Teléfono vídeo
 	 */
-	VIDEO(Text.I18N_INFORMATION_PHONE_TYPE_VICEO, TelephoneType.VIDEO),
+	VIDEO(Text.I18N_CONTACT_PHONE_TYPE_VICEO, TelephoneType.VIDEO),
 	/**
 	 * Teléfono voz
 	 */
-	VOICE(Text.I18N_INFORMATION_PHONE_TYPE_VOICE, TelephoneType.VOICE),
+	VOICE(Text.I18N_CONTACT_PHONE_TYPE_VOICE, TelephoneType.VOICE),
 	/**
 	 * Teléfono de trabajo
 	 */
-	WORK(Text.I18N_INFORMATION_PHONE_TYPE_WORK, TelephoneType.WORK),;
+	WORK(Text.I18N_CONTACT_PHONE_TYPE_WORK, TelephoneType.WORK),;
 
 	/**
 	 * Cadena para realizar i18n del tipo de búsqueda

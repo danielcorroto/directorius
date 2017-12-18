@@ -60,19 +60,19 @@ public class StatisticWindow extends Dialog<Void> {
 
 		// Rellenar la tabla
 		ObservableList<Statistic> data = FXCollections.observableArrayList();
-		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_TOTAL), stat.getAllContacts(), stat.getAllContacts()));
-		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_BIRTHDAY), stat.getAllContactsBirthday(), stat.getAllContacts()));
-		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_PHOTO), stat.getAllContactsPhoto(), stat.getAllContacts()));
-		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_PHONE), stat.getAllContactsPhone(), stat.getAllContacts()));
-		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_EMAIL), stat.getAllContactsEmail(), stat.getAllContacts()));
-		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_ADDRESS), stat.getAllContactsAddress(), stat.getAllContacts()));
-		String itemCategory = rb.getString(Text.I18N_STATISTIC_ITEM_CATEGORY);
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_TOTAL), stat.getAllContacts(), stat.getAllContacts()));
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_BIRTHDAY), stat.getAllContactsBirthday(), stat.getAllContacts()));
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_PHOTO), stat.getAllContactsPhoto(), stat.getAllContacts()));
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_PHONE), stat.getAllContactsPhone(), stat.getAllContacts()));
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_EMAIL), stat.getAllContactsEmail(), stat.getAllContacts()));
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_ADDRESS), stat.getAllContactsAddress(), stat.getAllContacts()));
+		String itemCategory = rb.getString(Text.I18N_STATISTICS_ITEM_CATEGORY);
 		for (Entry<String, Integer> entry : stat.getAllContactsCategoryMap().entrySet()) {
 			data.add(new Statistic(MessageFormat.format(itemCategory, entry.getKey()), entry.getValue(), stat.getAllContacts()));
 		}
-		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_UNIQUEPHONE), stat.getUniquePhones(), stat.getUniquePhones()));
-		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_UNIQUEEMAIL), stat.getUniqueEmails(), stat.getUniqueEmails()));
-		data.add(new Statistic(rb.getString(Text.I18N_STATISTIC_ITEM_UNIQUEADDRES), stat.getUniqueAddresses(), stat.getUniqueAddresses()));
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_UNIQUETELEPHONE), stat.getUniquePhones(), stat.getUniquePhones()));
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_UNIQUEEMAIL), stat.getUniqueEmails(), stat.getUniqueEmails()));
+		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_UNIQUEADDRES), stat.getUniqueAddresses(), stat.getUniqueAddresses()));
 		
 		table.setItems(data);
 
@@ -98,9 +98,9 @@ public class StatisticWindow extends Dialog<Void> {
 		TableView<Statistic> table = new TableView<>();
 
 		// Definición de columnas
-		TableColumn<Statistic, String> textCol = new TableColumn<>(rb.getString(Text.I18N_STATISTIC_TITLE_TEXT));
-		TableColumn<Statistic, Number> totalCol = new TableColumn<>(rb.getString(Text.I18N_STATISTIC_TITLE_VALUE));
-		TableColumn<Statistic, Number> percentageCol = new TableColumn<>(rb.getString(Text.I18N_STATISTIC_TITLE_PERCENTAGE));
+		TableColumn<Statistic, String> textCol = new TableColumn<>(rb.getString(Text.I18N_STATISTICS_TITLE_TEXT));
+		TableColumn<Statistic, Number> totalCol = new TableColumn<>(rb.getString(Text.I18N_STATISTICS_TITLE_VALUE));
+		TableColumn<Statistic, Number> percentageCol = new TableColumn<>(rb.getString(Text.I18N_STATISTICS_TITLE_PERCENTAGE));
 
 		// Propiedades de las columnas
 		textCol.prefWidthProperty().bind(table.widthProperty().multiply(STATISTIC_PERCENTAGE[0]));

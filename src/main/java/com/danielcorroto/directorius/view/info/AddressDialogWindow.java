@@ -129,9 +129,9 @@ public class AddressDialogWindow extends AbstractDialogWindow<AddressInfo> {
 	@Override
 	protected String getI18NTitle(boolean edit) {
 		if (edit) {
-			return Text.I18N_EDITCONTACT_ADDRESS_EDIT;
+			return Text.I18N_CONTACT_ADDRESS_EDIT;
 		} else {
-			return Text.I18N_EDITCONTACT_ADDRESS_ADD;
+			return Text.I18N_CONTACT_ADDRESS_ADD;
 		}
 	}
 
@@ -143,26 +143,26 @@ public class AddressDialogWindow extends AbstractDialogWindow<AddressInfo> {
 	@Override
 	protected void buildGrid(GridPane grid) {
 		streetTextField = new TextField();
-		streetTextField.setPromptText(getResourceBundle().getString(Text.I18N_EDITCONTACT_ADDRESS_STREET));
+		streetTextField.setPromptText(getResourceBundle().getString(Text.I18N_CONTACT_ADDRESS_STREET));
 		localityTextField = new TextField();
-		localityTextField.setPromptText(getResourceBundle().getString(Text.I18N_EDITCONTACT_ADDRESS_LOCALITY));
+		localityTextField.setPromptText(getResourceBundle().getString(Text.I18N_CONTACT_ADDRESS_LOCALITY));
 		regionTextField = new TextField();
-		regionTextField.setPromptText(getResourceBundle().getString(Text.I18N_EDITCONTACT_ADDRESS_REGION));
+		regionTextField.setPromptText(getResourceBundle().getString(Text.I18N_CONTACT_ADDRESS_REGION));
 		postalCodeTextField = new TextField();
-		postalCodeTextField.setPromptText(getResourceBundle().getString(Text.I18N_EDITCONTACT_ADDRESS_POSTALCODE));
+		postalCodeTextField.setPromptText(getResourceBundle().getString(Text.I18N_CONTACT_ADDRESS_POSTALCODE));
 		countryTextField = new TextField();
-		countryTextField.setPromptText(getResourceBundle().getString(Text.I18N_EDITCONTACT_ADDRESS_COUNTRY));
+		countryTextField.setPromptText(getResourceBundle().getString(Text.I18N_CONTACT_ADDRESS_COUNTRY));
 		typeComboBox = buildTypeComboBox();
 		tagTextField = new TextField();
-		tagTextField.setPromptText(getResourceBundle().getString(Text.I18N_EDITCONTACT_PHONE_TAG));
+		tagTextField.setPromptText(getResourceBundle().getString(Text.I18N_CONTACT_PHONE_TAG));
 
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_ADDRESS_STREET, streetTextField, 0);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_ADDRESS_LOCALITY, localityTextField, 1);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_ADDRESS_REGION, regionTextField, 2);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_ADDRESS_POSTALCODE, postalCodeTextField, 3);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_ADDRESS_COUNTRY, countryTextField, 4);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_ADDRESS_TYPE, typeComboBox, 5);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_ADDRESS_TAG, tagTextField, 6);
+		buildRowGridPane(grid, Text.I18N_CONTACT_ADDRESS_STREET, streetTextField, 0);
+		buildRowGridPane(grid, Text.I18N_CONTACT_ADDRESS_LOCALITY, localityTextField, 1);
+		buildRowGridPane(grid, Text.I18N_CONTACT_ADDRESS_REGION, regionTextField, 2);
+		buildRowGridPane(grid, Text.I18N_CONTACT_ADDRESS_POSTALCODE, postalCodeTextField, 3);
+		buildRowGridPane(grid, Text.I18N_CONTACT_ADDRESS_COUNTRY, countryTextField, 4);
+		buildRowGridPane(grid, Text.I18N_CONTACT_ADDRESS_TYPE, typeComboBox, 5);
+		buildRowGridPane(grid, Text.I18N_CONTACT_ADDRESS_TAG, tagTextField, 6);
 	}
 
 	@Override

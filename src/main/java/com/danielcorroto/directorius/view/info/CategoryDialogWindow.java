@@ -52,9 +52,9 @@ public class CategoryDialogWindow extends AbstractDialogWindow<String> {
 	@Override
 	protected String getI18NTitle(boolean edit) {
 		if (edit) {
-			return Text.I18N_EDITCONTACT_CATEGORY_EDIT;
+			return Text.I18N_CONTACT_CATEGORY_EDIT;
 		} else {
-			return Text.I18N_EDITCONTACT_CATEGORY_ADD;
+			return Text.I18N_CONTACT_CATEGORY_ADD;
 		}
 	}
 
@@ -67,7 +67,7 @@ public class CategoryDialogWindow extends AbstractDialogWindow<String> {
 	protected void buildGrid(GridPane grid) {
 		categoryComboBox = new ComboBox<>();
 		categoryComboBox.setEditable(true);
-		buildRowGridPane(grid, Text.I18N_EDITCONTACT_CATEGORY_CATEGORY, categoryComboBox, 0);
+		buildRowGridPane(grid, Text.I18N_CONTACT_CATEGORY_CATEGORY, categoryComboBox, 0);
 	}
 
 	@Override

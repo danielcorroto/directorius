@@ -14,11 +14,11 @@ public enum EmailTypeEnum {
 	/**
 	 * Dirección personal
 	 */
-	HOME(Text.I18N_INFORMATION_EMAIL_TYPE_HOME, EmailType.HOME),
+	HOME(Text.I18N_CONTACT_EMAIL_TYPE_HOME, EmailType.HOME),
 	/**
 	 * Dirección de trabajo
 	 */
-	WORK(Text.I18N_INFORMATION_EMAIL_TYPE_WORK, EmailType.WORK),;
+	WORK(Text.I18N_CONTACT_EMAIL_TYPE_WORK, EmailType.WORK),;
 
 	/**
 	 * Cadena para realizar i18n del tipo de búsqueda
