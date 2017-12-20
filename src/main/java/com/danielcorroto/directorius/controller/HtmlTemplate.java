@@ -122,4 +122,9 @@ public interface HtmlTemplate {
 	 * Texto/descripción de la dirección postal
 	 */
 	public static final String ADDRESS_TEXT = "##ADDRESS_TEXT##";
+	
+	/**
+	 * Fecha de última edición
+	 */
+	public static final String LAST_EDITION = "##LAST_EDITION##";
 }

@@ -3,6 +3,7 @@ package com.danielcorroto.directorius.controller;
 import java.text.DateFormatSymbols;
 import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import com.danielcorroto.directorius.controller.data.AddressInfo;
@@ -160,6 +161,29 @@ public class DisplayUtil {
 			result += " ( " + MessageFormat.format(agePattern, age) + " )";
 		}
 		return result;
+	}
+
+	/**
+	 * Genera una cadena con la fecha indicada teniendo en cuenta el recurso de
+	 * i18n. Por ejemplo: "17 de diciembre de 1987"
+	 * 
+	 * @param date
+	 *            Fecha a convertir en cadena
+	 * @param rb
+	 *            Recurso para i18n
+	 * @return Fecha convertida en texto
+	 */
+	public static String buildDate(Date date, ResourceBundle rb) {
+		if (date == null) {
+			return "";
+		}
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH) + 1;
+		int day = c.get(Calendar.DATE);
+		String datePattern = rb.getString(Text.I18N_CONTACT_DATE_FORMAT);
+		return formatDate(datePattern, year, month, day);
 	}
 
 	/**

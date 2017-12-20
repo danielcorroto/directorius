@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -77,6 +78,9 @@ public class HtmlContactBuilder {
 
 		// Dirección
 		html = html.replace(HtmlTemplate.GROUP_ADDRESS, buildGroupAddress(vcard, rb));
+
+		// Fecha de última edición
+		html = html.replace(HtmlTemplate.LAST_EDITION, buildLastEdition(vcard,rb));
 
 		return html;
 	}
@@ -306,6 +310,20 @@ public class HtmlContactBuilder {
 		}
 
 		return sb.toString();
+	}
+
+	/**
+	 * Genera el código HTML con la fecha de última edición
+	 * @param vcard
+	 *            Información del contacto
+	 * @param rb
+	 *            Recurso para i18n
+	 * @return Código HTML de la fecha de última edición del contacto
+	 */
+	private static String buildLastEdition(VCard vcard, ResourceBundle rb) {
+		String date = DisplayUtil.buildDate(vcard.getRevision().getValue(), rb);
+		String lastEditionPattern = rb.getString(Text.I18N_CONTACT_LASTEDITION);
+		return MessageFormat.format(lastEditionPattern, date);
 	}
 
 	/**

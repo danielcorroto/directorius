@@ -174,6 +174,8 @@ public interface Text {
 
 	public static final String I18N_CONTACT_AGE_FORMAT = "contact.age.format";
 
+	public static final String I18N_CONTACT_LASTEDITION = "contact.lastedition";
+
 	public static final String I18N_STATISTICS_TITLE_TEXT = "statistics.title.text";
 
 	public static final String I18N_STATISTICS_TITLE_VALUE = "statistics.title.value";
