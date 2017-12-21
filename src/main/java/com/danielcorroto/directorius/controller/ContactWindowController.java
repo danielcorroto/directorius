@@ -200,7 +200,7 @@ public class ContactWindowController extends Application {
 				loadImage();
 			} catch (IOException e) {
 				imageFile = null;
-				e.printStackTrace();
+				LOGGER.severe("No se ha podido cargar la foto de " + vcard.getUid(), e);
 			}
 		}
 
@@ -843,7 +843,7 @@ public class ContactWindowController extends Application {
 							vcard.addPhoto(photo);
 						}
 					} catch (IOException e) {
-						e.printStackTrace();
+						LOGGER.severe("No se ha podido guardar la foto de " + vcard.getUid(), e);
 					}
 				} else {
 					// No se ha seleccionado foto
@@ -852,7 +852,7 @@ public class ContactWindowController extends Application {
 						try {
 							manager.removePhotoFile(previousUrl);
 						} catch (IOException e) {
-							e.printStackTrace();
+							LOGGER.severe("No se ha podido eliminar la foto de " + vcard.getUid(), e);
 						}
 						vcard.getPhotos().clear();
 					}
@@ -922,13 +922,13 @@ public class ContactWindowController extends Application {
 					try {
 						manager.createContact(vcard);
 					} catch (IOException e) {
-						e.printStackTrace();
+						LOGGER.severe("No se ha podido guardar el contacto " + vcard.getFormattedName().getValue(), e);
 					}
 				} else {
 					try {
 						manager.updateContact(vcard);
 					} catch (IOException e) {
-						e.printStackTrace();
+						LOGGER.severe("No se ha podido actualizar el contacto " + vcard.getUid(), e);
 					}
 				}
 
