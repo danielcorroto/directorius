@@ -28,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.danielcorroto.directorius.controller.data.Statistics;
+import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.model.searchalgorithm.SearchAlgorithm;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 
@@ -42,6 +43,10 @@ import ezvcard.property.Uid;
  *
  */
 public class ContactManager {
+	/**
+	 * Logger
+	 */
+	private static final Logger LOGGER = Logger.getLogger(ContactManager.class);
 	/**
 	 * Fichero que contiene el fichero para cargar la agenda por defecto
 	 */
@@ -165,7 +170,7 @@ public class ContactManager {
 	public void updateContact(VCard vcard) throws IOException {
 		VCard previous = vcardMap.get(vcard.getUid());
 		if (previous != null) {
-			deleteContact(vcard.getUid());
+			deleteContact(vcard.getUid(), false);
 		}
 		createContact(vcard);
 	}
@@ -178,7 +183,23 @@ public class ContactManager {
 	 * @throws IOException
 	 */
 	public void deleteContact(Uid id) throws IOException {
-		removePhotoFile(vcardMap.get(id));
+		deleteContact(id, true);
+	}
+
+	/**
+	 * Elimina un contacto a partir de su identificador
+	 * 
+	 * @param id
+	 *            Identificador del contacto
+	 * @param removePhoto
+	 *            Si hay que borrar la foto. false si va a ser para actualizar
+	 *            el contacto.
+	 * @throws IOException
+	 */
+	private void deleteContact(Uid id, boolean removePhoto) throws IOException {
+		if (removePhoto) {
+			removePhotoFile(vcardMap.get(id));
+		}
 		vcardMap.remove(id);
 		simpleVcardMap.remove(id);
 
@@ -303,7 +324,8 @@ public class ContactManager {
 	 *            Fichero de origen
 	 * @param destPath
 	 *            Nombre del fichero (sin ruta ni extensión)
-	 * @return Nombre del fichero con extensión
+	 * @return Nombre del fichero con extensión o null si es el mismo que ya
+	 *         existía
 	 * @throws IOException
 	 */
 	public String savePhotoFile(File source, String destPath) throws IOException {
@@ -320,7 +342,7 @@ public class ContactManager {
 
 		// Si los ficheros son el mismo, salir
 		if (source.equals(dest)) {
-			return result;
+			return null;
 		}
 
 		try {
@@ -339,6 +361,21 @@ public class ContactManager {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Elimina la foto indicada
+	 * 
+	 * @param filename
+	 *            Nombre del fichero (nombre + extensión)
+	 * @throws IOException
+	 */
+	public void removePhotoFile(String filename) throws IOException {
+		String fullDestPath = getPhotoDir() + filename;
+		boolean deleted = new File(fullDestPath).delete();
+		if (!deleted) {
+			LOGGER.info("No se ha podido borrar " + filename);
+		}
 	}
 
 	/**

@@ -2,7 +2,6 @@ package com.danielcorroto.directorius.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
@@ -199,7 +198,7 @@ public class ContactWindowController extends Application {
 			imageFile = new File(manager.getPhotoDir() + url);
 			try {
 				loadImage();
-			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
 				imageFile = null;
 				e.printStackTrace();
 			}
@@ -282,7 +281,7 @@ public class ContactWindowController extends Application {
 				imageFile = fileChooser.showOpenDialog(window.getStage());
 				try {
 					loadImage();
-				} catch (FileNotFoundException e) {
+				} catch (IOException e) {
 					imageFile = null;
 					LOGGER.severe("Fichero no encontrado " + imageFile.getAbsolutePath(), e);
 				}
@@ -294,9 +293,9 @@ public class ContactWindowController extends Application {
 	 * Carga la imagen en el elemento ImageView. El fichero es el de la variable
 	 * imageFile
 	 * 
-	 * @throws FileNotFoundException
+	 * @throws IOException
 	 */
-	private void loadImage() throws FileNotFoundException {
+	private void loadImage() throws IOException {
 		InputStream is = new FileInputStream(imageFile);
 		Image image = new Image(is);
 		window.getImageView().setImage(image);
@@ -310,6 +309,8 @@ public class ContactWindowController extends Application {
 		window.getImageView().setPreserveRatio(true);
 		window.getImageView().setSmooth(true);
 		window.getImageView().setCache(true);
+
+		is.close();
 	}
 
 	/**
@@ -823,15 +824,37 @@ public class ContactWindowController extends Application {
 				// Foto
 				if (imageFile != null) {
 					try {
-						if (vcard.getPhotos() != null && !vcard.getPhotos().isEmpty()) {
-							vcard.getPhotos().clear();
-						}
 						String fileName = vcard.getUid().getValue().replaceAll("urn:uuid:", "");
 						fileName = manager.savePhotoFile(imageFile, fileName);
-						Photo photo = new Photo(fileName, getImageTypeFromFileName(fileName));
-						vcard.addPhoto(photo);
+						if (fileName != null) {
+							// Si se incluye una nueva foto
+							if (vcard.getPhotos() != null && !vcard.getPhotos().isEmpty()) {
+								String previousUrl = vcard.getPhotos().get(0).getUrl();
+								if (!previousUrl.equals(fileName)) {
+									// Se elimina la foto antigua si se ha
+									// cambiado la extensión. Si no se ha
+									// cambiado la extensión ya ha sido
+									// sobreescrita
+									manager.removePhotoFile(previousUrl);
+								}
+								vcard.getPhotos().clear();
+							}
+							Photo photo = new Photo(fileName, getImageTypeFromFileName(fileName));
+							vcard.addPhoto(photo);
+						}
 					} catch (IOException e) {
 						e.printStackTrace();
+					}
+				} else {
+					// No se ha seleccionado foto
+					if (vcard.getPhotos() != null) {
+						String previousUrl = vcard.getPhotos().get(0).getUrl();
+						try {
+							manager.removePhotoFile(previousUrl);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						vcard.getPhotos().clear();
 					}
 				}
 

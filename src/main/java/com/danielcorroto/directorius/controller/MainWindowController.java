@@ -135,6 +135,7 @@ public class MainWindowController extends Application {
 
 		window.getWebView().getEngine().loadContent(html);
 		window.getWebView().getEngine().setJavaScriptEnabled(true);
+		window.getWebView().setCache(false);
 	}
 
 	/**
