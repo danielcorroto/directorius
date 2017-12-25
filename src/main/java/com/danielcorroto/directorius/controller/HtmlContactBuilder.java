@@ -80,7 +80,7 @@ public class HtmlContactBuilder {
 		html = html.replace(HtmlTemplate.GROUP_ADDRESS, buildGroupAddress(vcard, rb));
 
 		// Fecha de última edición
-		html = html.replace(HtmlTemplate.LAST_EDITION, buildLastEdition(vcard,rb));
+		html = html.replace(HtmlTemplate.LAST_EDITION, buildLastEdition(vcard, rb));
 
 		return html;
 	}
@@ -101,7 +101,9 @@ public class HtmlContactBuilder {
 			String path = photoDir + vcard.getPhotos().get(0).getUrl();
 			File f = new File(path);
 			if (f.exists() && !f.isDirectory()) {
-				result = f.toURI().toString();
+				// Se añade query parameter para que no lea la imagen de cache
+				// si ha sido modificada
+				result = f.toURI().toString() + "?" + vcard.getRevision().getValue();
 			}
 		}
 
@@ -314,6 +316,7 @@ public class HtmlContactBuilder {
 
 	/**
 	 * Genera el código HTML con la fecha de última edición
+	 * 
 	 * @param vcard
 	 *            Información del contacto
 	 * @param rb
