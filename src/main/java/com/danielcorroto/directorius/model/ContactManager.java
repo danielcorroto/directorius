@@ -350,8 +350,18 @@ public class ContactManager {
 
 		String extension = source.getName().substring(source.getName().lastIndexOf('.'));
 		result = destPath + extension;
-		String fullDestPath = getPhotoDir() + result;
+		String photoPath = getPhotoDir();
+		String fullDestPath = photoPath + result;
 		File dest = new File(fullDestPath);
+
+		// Intenta crear el directorio de fotografía
+		File photoDir = new File(photoPath);
+		if (!photoDir.exists()) {
+			if (!photoDir.mkdirs()) {
+				LOGGER.warning("No se ha podido crear el directorio " + photoPath);
+				return null;
+			}
+		}
 
 		// Si los ficheros son el mismo, salir
 		if (source.equals(dest)) {
@@ -367,10 +377,26 @@ public class ContactManager {
 
 			destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
 		} finally {
-			fis.close();
-			fos.close();
-			sourceChannel.close();
-			destChannel.close();
+			try {
+				fis.close();
+			} catch (Exception e) {
+				LOGGER.warning("No se puede cerrar el stream", e);
+			}
+			try {
+				fos.close();
+			} catch (Exception e) {
+				LOGGER.warning("No se puede cerrar el stream", e);
+			}
+			try {
+				sourceChannel.close();
+			} catch (Exception e) {
+				LOGGER.warning("No se puede cerrar el canal", e);
+			}
+			try {
+				destChannel.close();
+			} catch (Exception e) {
+				LOGGER.warning("No se puede cerrar el canal", e);
+			}
 		}
 
 		return result;
