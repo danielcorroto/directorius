@@ -30,6 +30,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.danielcorroto.directorius.controller.data.Statistics;
+import com.danielcorroto.directorius.model.comparator.FullNameSimpleVCardComparator;
+import com.danielcorroto.directorius.model.comparator.FullNameVCardComparator;
 import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.model.searchalgorithm.SearchAlgorithm;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;

@@ -1,8 +1,10 @@
-package com.danielcorroto.directorius.model;
+package com.danielcorroto.directorius.model.comparator;
 
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.Locale;
+
+import com.danielcorroto.directorius.model.SimpleVCard;
 
 /**
  * Comparador para ordenar VCard según su nombre completo

@@ -1,4 +1,4 @@
-package com.danielcorroto.directorius.model;
+package com.danielcorroto.directorius.model.comparator;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -6,7 +6,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import ezvcard.VCard;
+import com.danielcorroto.directorius.model.SimpleVCard;
+
 import junit.framework.TestCase;
 
 /**
@@ -15,13 +16,13 @@ import junit.framework.TestCase;
  * @author Daniel Corroto Quirós
  *
  */
-public class FullNameVCardComparatorTest extends TestCase {
+public class FullNameSimpleVCardComparatorTest extends TestCase {
 
 	/**
 	 * Prueba la ordenación sin elemntos
 	 */
 	public void testEmpty() {
-		Collection<VCard> vcards = createData();
+		Collection<SimpleVCard> vcards = createData();
 
 		assertTrue(vcards.isEmpty());
 	}
@@ -30,8 +31,8 @@ public class FullNameVCardComparatorTest extends TestCase {
 	 * Prueba la ordenación donde alguno de los elementos tienen valor null
 	 */
 	public void testSomeNull() {
-		Collection<VCard> vcards = createData(null, "Ceres");
-		Iterator<VCard> iterator = vcards.iterator();
+		Collection<SimpleVCard> vcards = createData(null, "Ceres");
+		Iterator<SimpleVCard> iterator = vcards.iterator();
 
 		assertNull(iterator.next().getFormattedName());
 		assertEquals("Ceres", iterator.next().getFormattedName().getValue());
@@ -41,8 +42,8 @@ public class FullNameVCardComparatorTest extends TestCase {
 	 * Prueba la ordenación con todos los datos
 	 */
 	public void testData() {
-		Collection<VCard> vcards = createData("Ceres", "Pallas", "Juno", "Vesta", "Astraea", "Hebe");
-		Iterator<VCard> iterator = vcards.iterator();
+		Collection<SimpleVCard> vcards = createData("Ceres", "Pallas", "Juno", "Vesta", "Astraea", "Hebe");
+		Iterator<SimpleVCard> iterator = vcards.iterator();
 
 		assertEquals("Astraea", iterator.next().getFormattedName().getValue());
 		assertEquals("Ceres", iterator.next().getFormattedName().getValue());
@@ -57,8 +58,8 @@ public class FullNameVCardComparatorTest extends TestCase {
 	 * minúsculas
 	 */
 	public void testDataCaseInsensitive() {
-		Collection<VCard> vcards = createData("caris", "caras", "Caros", "Cares");
-		Iterator<VCard> iterator = vcards.iterator();
+		Collection<SimpleVCard> vcards = createData("caris", "caras", "Caros", "Cares");
+		Iterator<SimpleVCard> iterator = vcards.iterator();
 
 		assertEquals("caras", iterator.next().getFormattedName().getValue());
 		assertEquals("Cares", iterator.next().getFormattedName().getValue());
@@ -70,8 +71,8 @@ public class FullNameVCardComparatorTest extends TestCase {
 	 * Prueba la ordenación con datos con tilde
 	 */
 	public void testDiacritic() {
-		Collection<VCard> vcards = createData("Oan", "Ábe", "Ace", "Áde", "Oañ", "Ábá", "Na", "Ábí", "Ña", "Acá", "Ací", "Oao", "Abò", "Àbu");
-		Iterator<VCard> iterator = vcards.iterator();
+		Collection<SimpleVCard> vcards = createData("Oan", "Ábe", "Ace", "Áde", "Oañ", "Ábá", "Na", "Ábí", "Ña", "Acá", "Ací", "Oao", "Abò", "Àbu");
+		Iterator<SimpleVCard> iterator = vcards.iterator();
 
 		assertEquals("Ábá", iterator.next().getFormattedName().getValue());
 		assertEquals("Ábe", iterator.next().getFormattedName().getValue());
@@ -96,8 +97,8 @@ public class FullNameVCardComparatorTest extends TestCase {
 	 *            Nombres utilizados para ordenar
 	 * @return Conjunto de VCard ordenado por nombre
 	 */
-	private Set<VCard> createData(String... names) {
-		SortedSet<VCard> set = new TreeSet<>(new FullNameVCardComparator());
+	private Set<SimpleVCard> createData(String... names) {
+		SortedSet<SimpleVCard> set = new TreeSet<>(new FullNameSimpleVCardComparator());
 		for (String name : names) {
 			set.add(createVCard(name));
 		}
@@ -111,8 +112,8 @@ public class FullNameVCardComparatorTest extends TestCase {
 	 *            Nombre utilizado como Formatted Name
 	 * @return Objeto VCard con el nombre
 	 */
-	private VCard createVCard(String name) {
-		VCard vcard = new VCard();
+	private SimpleVCard createVCard(String name) {
+		SimpleVCard vcard = new SimpleVCard();
 		vcard.setFormattedName(name);
 		return vcard;
 	}

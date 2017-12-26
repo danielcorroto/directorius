@@ -1,4 +1,4 @@
-package com.danielcorroto.directorius.model;
+package com.danielcorroto.directorius.model.comparator;
 
 import java.text.Collator;
 import java.util.Comparator;
