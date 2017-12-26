@@ -847,7 +847,7 @@ public class ContactWindowController extends Application {
 					}
 				} else {
 					// No se ha seleccionado foto
-					if (vcard.getPhotos() != null) {
+					if (vcard.getPhotos() != null && !vcard.getPhotos().isEmpty()) {
 						String previousUrl = vcard.getPhotos().get(0).getUrl();
 						try {
 							manager.removePhotoFile(previousUrl);
