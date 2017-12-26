@@ -32,8 +32,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -105,10 +105,12 @@ public class MainWindowController extends Application {
 		Calendar end = Calendar.getInstance();
 		end.add(Calendar.DATE, 7);
 		List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
-		Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
-		if (card.isPresent()) {
-			setWebViewInfo(card.get());
-			selectListViewElement(card.get());
+		if (cards != null && !cards.isEmpty()) {
+			Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
+			if (card.isPresent()) {
+				setWebViewInfo(card.get());
+				selectListViewElement(card.get());
+			}
 		}
 	}
 
