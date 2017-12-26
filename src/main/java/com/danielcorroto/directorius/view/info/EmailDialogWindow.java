@@ -1,9 +1,11 @@
 package com.danielcorroto.directorius.view.info;
 
 import java.io.InputStream;
+import java.util.Collections;
 
 import com.danielcorroto.directorius.controller.data.EmailInfo;
 import com.danielcorroto.directorius.controller.type.EmailTypeEnum;
+import com.danielcorroto.directorius.model.comparator.EmailTypeComparator;
 import com.danielcorroto.directorius.view.ResourcePath;
 import com.danielcorroto.directorius.view.Text;
 
@@ -69,6 +71,7 @@ public class EmailDialogWindow extends AbstractDialogWindow<EmailInfo> {
 		for (EmailTypeEnum type : EmailTypeEnum.values()) {
 			observableList.add(type);
 		}
+		Collections.sort(observableList, new EmailTypeComparator(getResourceBundle()));
 		ComboBox<EmailTypeEnum> result = new ComboBox<>(observableList);
 
 		result.setButtonCell(createEmailTypeComboBoxCellFactory().call(null));

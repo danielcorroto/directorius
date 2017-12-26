@@ -1,9 +1,11 @@
 package com.danielcorroto.directorius.view.info;
 
 import java.io.InputStream;
+import java.util.Collections;
 
 import com.danielcorroto.directorius.controller.data.PhoneInfo;
 import com.danielcorroto.directorius.controller.type.PhoneTypeEnum;
+import com.danielcorroto.directorius.model.comparator.PhoneTypeComparator;
 import com.danielcorroto.directorius.view.ResourcePath;
 import com.danielcorroto.directorius.view.Text;
 
@@ -69,6 +71,7 @@ public class PhoneDialogWindow extends AbstractDialogWindow<PhoneInfo> {
 		for (PhoneTypeEnum type : PhoneTypeEnum.values()) {
 			observableList.add(type);
 		}
+		Collections.sort(observableList, new PhoneTypeComparator(getResourceBundle()));
 		ComboBox<PhoneTypeEnum> result = new ComboBox<>(observableList);
 
 		result.setButtonCell(createPhoneTypeComboBoxCellFactory().call(null));

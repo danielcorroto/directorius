@@ -1,9 +1,11 @@
 package com.danielcorroto.directorius.view.info;
 
 import java.io.InputStream;
+import java.util.Collections;
 
 import com.danielcorroto.directorius.controller.data.AddressInfo;
 import com.danielcorroto.directorius.controller.type.AddressTypeEnum;
+import com.danielcorroto.directorius.model.comparator.AddressTypeComparator;
 import com.danielcorroto.directorius.view.ResourcePath;
 import com.danielcorroto.directorius.view.Text;
 
@@ -91,6 +93,7 @@ public class AddressDialogWindow extends AbstractDialogWindow<AddressInfo> {
 		for (AddressTypeEnum type : AddressTypeEnum.values()) {
 			observableList.add(type);
 		}
+		Collections.sort(observableList, new AddressTypeComparator(getResourceBundle()));
 		ComboBox<AddressTypeEnum> result = new ComboBox<>(observableList);
 
 		result.setButtonCell(createAddressTypeComboBoxCellFactory().call(null));
