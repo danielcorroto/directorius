@@ -115,8 +115,9 @@ public class ContactManagerTest extends TestCase {
 	 * Prueba la carga de fichero
 	 * 
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void testLoad() throws IOException {
+	public void testLoad() throws IOException, URISyntaxException {
 		File file = createTempFile();
 		ContactManager cmOriginal = new ContactManager(file.getAbsolutePath());
 		ContactManager cmReaded = ContactManager.loadFile(file.getAbsolutePath());
@@ -128,8 +129,9 @@ public class ContactManagerTest extends TestCase {
 	 * Prueba la creación, carga de fichero y lectura
 	 * 
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void testCreateLoadRead() throws IOException {
+	public void testCreateLoadRead() throws IOException, URISyntaxException {
 		File file = createTempFile();
 		VCard vcard = TestUtil.createVCard("Test");
 		ContactManager cmOriginal = new ContactManager(file.getAbsolutePath());
@@ -147,8 +149,9 @@ public class ContactManagerTest extends TestCase {
 	 * Prueba la creación, actualización, carga de fichero y lectura
 	 * 
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void testCreateUpdateLoadRead() throws IOException {
+	public void testCreateUpdateLoadRead() throws IOException, URISyntaxException {
 		File file = createTempFile();
 		ContactManager cmOriginal = new ContactManager(file.getAbsolutePath());
 		VCard vcard = TestUtil.createVCard("Test");
@@ -168,8 +171,9 @@ public class ContactManagerTest extends TestCase {
 	 * Prueba la creación, borrado, carga del fichero y lectura
 	 * 
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void testCreateDeleteLoadRead() throws IOException {
+	public void testCreateDeleteLoadRead() throws IOException, URISyntaxException {
 		VCard vcard = TestUtil.createVCard("Test");
 		File file = createTempFile();
 		ContactManager cmOriginal = new ContactManager(file.getAbsolutePath());
@@ -188,8 +192,9 @@ public class ContactManagerTest extends TestCase {
 	 * una de ellas carga el fichero
 	 * 
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void testMultiRead() throws IOException {
+	public void testMultiRead() throws IOException, URISyntaxException {
 		// Creacion
 		VCard vcard = TestUtil.createVCard("Test");
 		File file = createTempFile();
@@ -249,8 +254,9 @@ public class ContactManagerTest extends TestCase {
 	 * SimpleVCard
 	 * 
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void testCreateLoadGetAll() throws IOException {
+	public void testCreateLoadGetAll() throws IOException, URISyntaxException {
 		File file = createTempFile();
 		ContactManager cmOriginal = new ContactManager(file.getAbsolutePath());
 		VCard vcard1 = TestUtil.createVCard("Test");
@@ -271,8 +277,9 @@ public class ContactManagerTest extends TestCase {
 	 * registros SimpleVCard
 	 * 
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void testCreateLoadUpdateGetAll() throws IOException {
+	public void testCreateLoadUpdateGetAll() throws IOException, URISyntaxException {
 		File file = createTempFile();
 		ContactManager cmOriginal = new ContactManager(file.getAbsolutePath());
 		VCard vcard1 = TestUtil.createVCard("Test");

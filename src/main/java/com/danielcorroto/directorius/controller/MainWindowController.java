@@ -1,5 +1,6 @@
 package com.danielcorroto.directorius.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Calendar;
@@ -23,6 +24,7 @@ import com.danielcorroto.directorius.view.Text;
 
 import ezvcard.VCard;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -34,6 +36,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -55,6 +58,10 @@ public class MainWindowController extends Application {
 	 * Gestión de contactos
 	 */
 	private ContactManager manager;
+	/**
+	 * Stage de la ventana
+	 */
+	private Stage stage;
 
 	/**
 	 * Para i18n
@@ -66,9 +73,11 @@ public class MainWindowController extends Application {
 		try {
 			rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
 
+			stage = primaryStage;
 			window = new MainWindow();
 			window.build(primaryStage);
 
+			menuItemFileFunction();
 			menuItemContactFunction();
 			menuItemBirthdayFunction();
 			menuItemHelpFunction();
@@ -79,20 +88,27 @@ public class MainWindowController extends Application {
 
 			manager = ContactManager.autoLoadFile();
 			if (manager != null) {
-				// Carga datos
-				setListViewItems(manager.getAllSimpleVCard());
-				// Carga ventana de cumpleaños
-				Calendar end = Calendar.getInstance();
-				end.add(Calendar.DATE, 7);
-				List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
-				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
-				if (card.isPresent()) {
-					setWebViewInfo(card.get());
-					selectListViewElement(card.get());
-				}
+				loadManager();
 			}
 		} catch (Throwable t) {
 			LOGGER.severe("Error en la aplicación principal", t);
+		}
+	}
+
+	/**
+	 * Carga los datos del manager en la lista de contactos y cumpleaños
+	 */
+	private void loadManager() {
+		// Carga datos
+		setListViewItems(manager.getAllSimpleVCard());
+		// Carga ventana de cumpleaños
+		Calendar end = Calendar.getInstance();
+		end.add(Calendar.DATE, 7);
+		List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
+		Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
+		if (card.isPresent()) {
+			setWebViewInfo(card.get());
+			selectListViewElement(card.get());
 		}
 	}
 
@@ -150,6 +166,88 @@ public class MainWindowController extends Application {
 				window.getListView().scrollTo(simpleVCard);
 			}
 		}
+	}
+
+	/**
+	 * Setea la funcionalidad de los items del menú Archivo
+	 */
+	private void menuItemFileFunction() {
+		window.getMenuItems().getFileNew().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				File f = createFileChooser(true);
+
+				try {
+					if (f == null) {
+						return;
+					}
+					f.delete();
+					if (!f.createNewFile()) {
+						return;
+					}
+					manager = ContactManager.loadFile(f.getAbsolutePath());
+					if (manager != null) {
+						loadManager();
+					}
+				} catch (Exception e) {
+					LOGGER.severe("Error al cargar el fichero " + f, e);
+				}
+			}
+		});
+		window.getMenuItems().getFileOpen().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				File f = createFileChooser(false);
+
+				if (f != null) {
+					try {
+						manager = ContactManager.loadFile(f.getAbsolutePath());
+						if (manager != null) {
+							loadManager();
+						}
+					} catch (Exception e) {
+						LOGGER.severe("Error al cargar el fichero " + f, e);
+					}
+				}
+			}
+		});
+		window.getMenuItems().getFileExit().setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				Platform.exit();
+			}
+		});
+	}
+
+	/**
+	 * Crea el selector de fichero para Nuevo directorio y Abrir directorio
+	 * 
+	 * @param create
+	 *            Indica si es de creación de directorio (true) o de apertura
+	 *            (false)
+	 * @return Fichero seleccionado o null
+	 */
+	private File createFileChooser(boolean create) {
+		String title;
+		if (create) {
+			title = rb.getString(Text.I18N_MENU_FILE_NEW);
+		} else {
+			title = rb.getString(Text.I18N_MENU_FILE_OPEN);
+		}
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle(title);
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(rb.getString(Text.I18N_FILE_OPEN_VCF), "*.vcf"));
+		File f;
+		if (create) {
+			f = fileChooser.showSaveDialog(stage);
+		} else {
+			f = fileChooser.showOpenDialog(stage);
+		}
+		return f;
 	}
 
 	/**

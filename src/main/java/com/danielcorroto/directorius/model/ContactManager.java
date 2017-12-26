@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
@@ -282,13 +284,7 @@ public class ContactManager {
 	 */
 	public static ContactManager autoLoadFile() throws FileNotFoundException, IOException, URISyntaxException {
 		// Comprueba existencia del fichero de configuración
-		String currentPath = ContactManager.class.getProtectionDomain().getCodeSource().getLocation().toString();
-		if (currentPath.lastIndexOf('/') + 1 < currentPath.length()) {
-			currentPath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-		}
-		String filename = currentPath + CONFIG_FILE;
-		File configFile = new File(new URL(filename).toURI());
-
+		File configFile = getConfigFile();
 		if (configFile == null || !configFile.exists()) {
 			return null;
 		}
@@ -303,7 +299,24 @@ public class ContactManager {
 			return null;
 		}
 
-		return loadFile(filePath);
+		return loadFile(filePath, false);
+	}
+
+	/**
+	 * Genera la ruta del fichero de configuración
+	 * 
+	 * @return Fichero de configuración
+	 * @throws URISyntaxException
+	 * @throws MalformedURLException
+	 */
+	private static File getConfigFile() throws MalformedURLException, URISyntaxException {
+		String currentPath = ContactManager.class.getProtectionDomain().getCodeSource().getLocation().toString();
+		if (currentPath.lastIndexOf('/') + 1 < currentPath.length()) {
+			currentPath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+		}
+		String filename = currentPath + CONFIG_FILE;
+		File configFile = new File(new URL(filename).toURI());
+		return configFile;
 	}
 
 	/**
@@ -396,14 +409,41 @@ public class ContactManager {
 
 	/**
 	 * Crea una instancia del administrador de contactos y carga el fichero
-	 * VCard en memoria
+	 * VCard en memoria. Sobreescribe la información de configuración
 	 * 
 	 * @param path
 	 *            Ruta absoluta del fichero
 	 * @return Instancia del administrador de contactos con los datos cargados
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public static ContactManager loadFile(String path) throws IOException {
+	public static ContactManager loadFile(String path) throws IOException, URISyntaxException {
+		return loadFile(path, true);
+	}
+
+	/**
+	 * Crea una instancia del administrador de contactos y carga el fichero
+	 * VCard en memoria
+	 * 
+	 * @param path
+	 *            Ruta absoluta del fichero
+	 * @param writeConfig
+	 *            Indica si se sobreescribe la información de configuración
+	 * @return Instancia del administrador de contactos con los datos cargados
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
+	private static ContactManager loadFile(String path, boolean writeConfig) throws IOException, URISyntaxException {
+		if (writeConfig) {
+			File configFile = getConfigFile();
+			OutputStream out = new FileOutputStream(configFile);
+
+			Properties properties = new Properties();
+			properties.setProperty(PROPERTIES_FILE, path);
+
+			properties.store(out, "");
+			out.close();
+		}
 		ContactManager cm = new ContactManager();
 		cm.file = new File(path);
 		FileInputStream fis = new FileInputStream(cm.file);
