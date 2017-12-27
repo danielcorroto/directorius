@@ -432,37 +432,7 @@ public class MainWindow {
 	 */
 	private ListView<SimpleVCard> createListView() {
 		ListView<SimpleVCard> listView = new ListView<>();
-		listView.setCellFactory(createContactListViewCellFactory());
-
 		return listView;
-	}
-
-	/**
-	 * Crea la visualización para el listview
-	 * 
-	 * @return Objeto que implementa la visualización del texto del listview
-	 */
-	private Callback<ListView<SimpleVCard>, ListCell<SimpleVCard>> createContactListViewCellFactory() {
-		Callback<ListView<SimpleVCard>, ListCell<SimpleVCard>> cellFactory = new Callback<ListView<SimpleVCard>, ListCell<SimpleVCard>>() {
-
-			@Override
-			public ListCell<SimpleVCard> call(ListView<SimpleVCard> param) {
-				return new ListCell<SimpleVCard>() {
-					@Override
-					protected void updateItem(SimpleVCard item, boolean empty) {
-						super.updateItem(item, empty);
-
-						if (empty || item == null || item.getFormattedName() == null) {
-							setText(null);
-						} else {
-							setText(item.getFormattedName().getValue());
-						}
-					}
-				};
-			}
-		};
-
-		return cellFactory;
 	}
 
 	/**

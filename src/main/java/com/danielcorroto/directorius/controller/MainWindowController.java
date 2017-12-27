@@ -35,10 +35,15 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  * Gestión la ventana principal
@@ -279,9 +284,8 @@ public class MainWindowController extends Application {
 					return;
 				}
 
-				SimpleVCard simple = window.getListView().getSelectionModel().getSelectedItem();
-				VCard vcard = manager.readContact(simple.getUid());
-				loadContactWindow(vcard);
+				SimpleVCard simplevcard = window.getListView().getSelectionModel().getSelectedItem();
+				loadContactWindow(simplevcard);
 			}
 		});
 
@@ -290,26 +294,7 @@ public class MainWindowController extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 				SimpleVCard simpleCard = window.getListView().getSelectionModel().getSelectedItem();
-				if (simpleCard == null) {
-					return;
-				}
-				VCard card = manager.readContact(simpleCard.getUid());
-
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle(rb.getString(Text.I18N_MENU_CONTACT_REMOVE));
-				alert.setHeaderText(card.getFormattedName().getValue());
-				alert.setContentText(null);
-
-				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == ButtonType.OK) {
-					try {
-						manager.deleteContact(card.getUid());
-					} catch (IOException e) {
-						LOGGER.severe("Error al borrar contacto " + card.getFormattedName().getValue(), e);
-						new AlertExceptionWindow(e).showAndWait();
-					}
-					reloadContactListView();
-				}
+				removeContact(simpleCard);
 			}
 		});
 
@@ -461,11 +446,15 @@ public class MainWindowController extends Application {
 	 * Carga la ventana de añadir/editar contacto y recarga la lista de
 	 * contactos
 	 * 
-	 * @param vcard
+	 * @param simplevcard
 	 *            Información del contacto a editar o null si es uno nuevo
 	 */
-	private void loadContactWindow(VCard vcard) {
+	private void loadContactWindow(SimpleVCard simplevcard) {
 		try {
+			VCard vcard = null;
+			if (simplevcard != null) {
+				vcard = manager.readContact(simplevcard.getUid());
+			}
 			new ContactWindowController(manager, vcard).start(new Stage());
 
 			// Carga la nueva lista
@@ -512,13 +501,94 @@ public class MainWindowController extends Application {
 			@Override
 			public void handle(MouseEvent event) {
 				if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
-					SimpleVCard simple = window.getListView().getSelectionModel().getSelectedItem();
-					VCard vcard = manager.readContact(simple.getUid());
-					loadContactWindow(vcard);
+					SimpleVCard simplevcard = window.getListView().getSelectionModel().getSelectedItem();
+					loadContactWindow(simplevcard);
 				}
 
 			}
 		});
+		window.getListView().setCellFactory(createContactListViewCellFactory());
+	}
+
+	/**
+	 * Crea la visualización para el listview
+	 * 
+	 * @return Objeto que implementa la visualización del texto del listview
+	 */
+	private Callback<ListView<SimpleVCard>, ListCell<SimpleVCard>> createContactListViewCellFactory() {
+		Callback<ListView<SimpleVCard>, ListCell<SimpleVCard>> cellFactory = new Callback<ListView<SimpleVCard>, ListCell<SimpleVCard>>() {
+
+			@Override
+			public ListCell<SimpleVCard> call(ListView<SimpleVCard> param) {
+				return new ListCell<SimpleVCard>() {
+					@Override
+					protected void updateItem(SimpleVCard item, boolean empty) {
+						super.updateItem(item, empty);
+						final ListCell<SimpleVCard> cell = this;
+
+						if (empty || item == null || item.getFormattedName() == null) {
+							setText(null);
+						} else {
+							setText(item.getFormattedName().getValue());
+						}
+
+						// Menú contextual
+						final ContextMenu contextMenu = new ContextMenu();
+						MenuItem edit = new MenuItem(rb.getString(Text.I18N_MENU_CONTACT_EDIT));
+						MenuItem remove = new MenuItem(rb.getString(Text.I18N_MENU_CONTACT_REMOVE));
+						contextMenu.getItems().addAll(edit, remove);
+						edit.setOnAction(new EventHandler<ActionEvent>() {
+							@Override
+							public void handle(ActionEvent event) {
+								SimpleVCard simplevcad = cell.getItem();
+								loadContactWindow(simplevcad);
+							}
+						});
+						remove.setOnAction(new EventHandler<ActionEvent>() {
+							@Override
+							public void handle(ActionEvent event) {
+								SimpleVCard simpleCard = cell.getItem();
+								removeContact(simpleCard);
+							}
+						});
+						this.setContextMenu(contextMenu);
+
+					}
+				};
+			}
+		};
+
+		return cellFactory;
+	}
+
+	/**
+	 * Muestra el cuadro de diálogo de eliminar contacto y realiza la función de
+	 * eliminarlo
+	 * 
+	 * @param simpleCard
+	 *            Información sencilla del contacto
+	 */
+	private void removeContact(SimpleVCard simpleCard) {
+		if (simpleCard == null) {
+			return;
+		}
+		VCard card = manager.readContact(simpleCard.getUid());
+
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle(rb.getString(Text.I18N_MENU_CONTACT_REMOVE));
+		alert.setHeaderText(card.getFormattedName().getValue());
+		alert.setContentText(null);
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK) {
+			try {
+				manager.deleteContact(card.getUid());
+			} catch (IOException e) {
+				LOGGER.severe("Error al borrar contacto " + card.getFormattedName().getValue(), e);
+				new AlertExceptionWindow(e).showAndWait();
+			}
+			reloadContactListView();
+		}
 	}
 
 	/**
