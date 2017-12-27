@@ -98,9 +98,12 @@ public class MainWindowController extends Application {
 	}
 
 	/**
-	 * Carga los datos del manager en la lista de contactos y cumpleaños
+	 * Carga los datos del manager en la lista de contactos y cumpleaños.
+	 * Habilita la ventana
 	 */
 	private void loadManager() {
+		// Habilita ventana
+		window.setDisable(false);
 		// Carga datos
 		setListViewItems(manager.getAllSimpleVCard());
 		// Carga ventana de cumpleaños

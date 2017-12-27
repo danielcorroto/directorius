@@ -76,6 +76,10 @@ public class MainWindow {
 	 */
 	private ListView<SimpleVCard> listView;
 	/**
+	 * Toolbar
+	 */
+	private ToolBar toolbar;
+	/**
 	 * Botón añadir contacto
 	 */
 	private Button addContactButton;
@@ -99,6 +103,14 @@ public class MainWindow {
 	 * Lista de todos los items del menú
 	 */
 	private MenuItems menuItems;
+	/**
+	 * Menú de contactos
+	 */
+	private Menu menuContact;
+	/**
+	 * Menú de cumpleaños
+	 */
+	private Menu menuBirthday;
 
 	/**
 	 * Para i18n
@@ -156,6 +168,7 @@ public class MainWindow {
 		main.getChildren().add(createMenuBar());
 		main.getChildren().add(createToolbar());
 		main.getChildren().add(gridPane);
+		setDisable(true);
 
 		// Crear scene y stage
 		Scene scene = new Scene(main);
@@ -267,7 +280,7 @@ public class MainWindow {
 		MenuItem menuContactEdit = createMenuItem(Text.I18N_MENU_CONTACT_EDIT, ResourcePath.IMG_MENU_CONTACT_EDIT, KeyCode.E, KeyCombination.CONTROL_DOWN);
 		MenuItem menuContactRemove = createMenuItem(Text.I18N_MENU_CONTACT_REMOVE, ResourcePath.IMG_MENU_CONTACT_REMOVE, KeyCode.R, KeyCombination.CONTROL_DOWN);
 		MenuItem menuContactStatistics = createMenuItem(Text.I18N_MENU_CONTACT_STATISTICS, ResourcePath.IMG_MENU_CONTACT_STATISTICS, null);
-		Menu menuContact = new Menu(rb.getString(Text.I18N_MENU_CONTACT));
+		menuContact = new Menu(rb.getString(Text.I18N_MENU_CONTACT));
 		menuContact.getItems().addAll(menuContactAdd, menuContactEdit, menuContactRemove, new SeparatorMenuItem(), menuContactStatistics);
 		menuBar.getMenus().addAll(menuContact);
 		menuItems.setContactAdd(menuContactAdd);
@@ -281,7 +294,7 @@ public class MainWindow {
 		MenuItem menuBirthdayWithinMonth = createMenuItem(Text.I18N_MENU_BIRTHDAY_WITHINMONTH, ResourcePath.IMG_MENU_BIRTHDAY_WITHINMONTH, null);
 		MenuItem menuBirthdayThisWeek = createMenuItem(Text.I18N_MENU_BIRTHDAY_THISWEEK, ResourcePath.IMG_MENU_BIRTHDAY_THISWEEK, null);
 		MenuItem menuBirthdayThisMonth = createMenuItem(Text.I18N_MENU_BIRTHDAY_THISMONTH, ResourcePath.IMG_MENU_BIRTHDAY_THISMONTH, null);
-		Menu menuBirthday = new Menu(rb.getString(Text.I18N_MENU_BIRTHDAY));
+		menuBirthday = new Menu(rb.getString(Text.I18N_MENU_BIRTHDAY));
 		menuBirthday.getItems().addAll(menuBirthdayToday, new SeparatorMenuItem(), menuBirthdayWithinWeek, menuBirthdayWithinMonth, new SeparatorMenuItem(), menuBirthdayThisWeek,
 				menuBirthdayThisMonth);
 		menuBar.getMenus().addAll(menuBirthday);
@@ -345,7 +358,7 @@ public class MainWindow {
 		}
 		gridPane.getColumnConstraints().addAll(columnConstraints);
 		HBox.setHgrow(gridPane, Priority.ALWAYS);
-		ToolBar toolbar = new ToolBar(gridPane);
+		toolbar = new ToolBar(gridPane);
 
 		// Buscador
 		searchTextField = new TextField();
@@ -460,5 +473,35 @@ public class MainWindow {
 	private WebView createWebView() {
 		webView = new WebView();
 		return webView;
+	}
+
+	/**
+	 * Deshabilita los elementos de la ventana según estén cargados los
+	 * contactos
+	 * 
+	 * @param value
+	 *            True deshabilita elementos y False habilita elementos
+	 */
+	public void setDisable(boolean value) {
+		// Deshabilita menú
+		menuContact.setDisable(value);
+		menuItems.getContactAdd().setDisable(value);
+		menuItems.getContactEdit().setDisable(value);
+		menuItems.getContactRemove().setDisable(value);
+		menuItems.getContactStatistics().setDisable(value);
+		menuBirthday.setDisable(value);
+		menuItems.getBirthdayThisMonth().setDisable(value);
+		menuItems.getBirthdayThisWeek().setDisable(value);
+		menuItems.getBirthdayToday().setDisable(value);
+		menuItems.getBirthdayWithinMonth().setDisable(value);
+		menuItems.getBirthdayWithinWeek().setDisable(value);
+
+		// Deshabilita toolbar
+		toolbar.setDisable(value);
+
+		// Deshabilita elementos principales
+		listView.setDisable(value);
+		contactsSizeLabel.setDisable(value);
+		webView.setDisable(value);
 	}
 }
