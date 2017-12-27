@@ -205,5 +205,9 @@ public interface Text {
 	public static final String I18N_STATISTICS_ITEM_UNIQUEADDRES = "statistics.item.uniqueaddress";
 
 	public static final String I18N_BIRTHDAY_SHOW = "birthday.show";
+	
+	public static final String I18N_EXCEPTION_TITLE = "exception.title";
+	
+	public static final String I18N_EXCEPTION_STACKTRACE = "exception.stacktrace";
 
 }

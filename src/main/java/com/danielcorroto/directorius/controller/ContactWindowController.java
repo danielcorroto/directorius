@@ -20,6 +20,7 @@ import com.danielcorroto.directorius.controller.type.PhoneTypeEnum;
 import com.danielcorroto.directorius.model.ContactManager;
 import com.danielcorroto.directorius.model.CustomParameter;
 import com.danielcorroto.directorius.model.log.Logger;
+import com.danielcorroto.directorius.view.AlertExceptionWindow;
 import com.danielcorroto.directorius.view.ContactWindow;
 import com.danielcorroto.directorius.view.Text;
 import com.danielcorroto.directorius.view.info.AddressDialogWindow;
@@ -199,8 +200,9 @@ public class ContactWindowController extends Application {
 			try {
 				loadImage();
 			} catch (IOException e) {
-				imageFile = null;
 				LOGGER.severe("No se ha podido cargar la foto de " + vcard.getUid(), e);
+				new AlertExceptionWindow(e).showAndWait();
+				imageFile = null;
 			}
 		}
 
@@ -282,8 +284,9 @@ public class ContactWindowController extends Application {
 				try {
 					loadImage();
 				} catch (IOException e) {
-					imageFile = null;
 					LOGGER.severe("Fichero no encontrado " + imageFile.getAbsolutePath(), e);
+					new AlertExceptionWindow(e).showAndWait();
+					imageFile = null;
 				}
 			}
 		});
@@ -844,6 +847,7 @@ public class ContactWindowController extends Application {
 						}
 					} catch (IOException e) {
 						LOGGER.severe("No se ha podido guardar la foto de " + vcard.getUid(), e);
+						new AlertExceptionWindow(e).showAndWait();
 					}
 				} else {
 					// No se ha seleccionado foto
@@ -853,6 +857,7 @@ public class ContactWindowController extends Application {
 							manager.removePhotoFile(previousUrl);
 						} catch (IOException e) {
 							LOGGER.severe("No se ha podido eliminar la foto de " + vcard.getUid(), e);
+							new AlertExceptionWindow(e).showAndWait();
 						}
 						vcard.getPhotos().clear();
 					}
@@ -923,12 +928,14 @@ public class ContactWindowController extends Application {
 						manager.createContact(vcard);
 					} catch (IOException e) {
 						LOGGER.severe("No se ha podido guardar el contacto " + vcard.getFormattedName().getValue(), e);
+						new AlertExceptionWindow(e).showAndWait();
 					}
 				} else {
 					try {
 						manager.updateContact(vcard);
 					} catch (IOException e) {
 						LOGGER.severe("No se ha podido actualizar el contacto " + vcard.getUid(), e);
+						new AlertExceptionWindow(e).showAndWait();
 					}
 				}
 

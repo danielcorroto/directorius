@@ -17,6 +17,7 @@ import com.danielcorroto.directorius.model.SimpleVCard;
 import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 import com.danielcorroto.directorius.view.AboutWindow;
+import com.danielcorroto.directorius.view.AlertExceptionWindow;
 import com.danielcorroto.directorius.view.BirthdayWindow;
 import com.danielcorroto.directorius.view.MainWindow;
 import com.danielcorroto.directorius.view.StatisticWindow;
@@ -90,8 +91,9 @@ public class MainWindowController extends Application {
 			if (manager != null) {
 				loadManager();
 			}
-		} catch (Throwable t) {
-			LOGGER.severe("Error en la aplicación principal", t);
+		} catch (Exception e) {
+			LOGGER.severe("Error en la aplicación principal", e);
+			new AlertExceptionWindow(e).showAndWait();
 		}
 	}
 
@@ -194,6 +196,7 @@ public class MainWindowController extends Application {
 					}
 				} catch (Exception e) {
 					LOGGER.severe("Error al cargar el fichero " + f, e);
+					new AlertExceptionWindow(e).showAndWait();
 				}
 			}
 		});
@@ -211,6 +214,7 @@ public class MainWindowController extends Application {
 						}
 					} catch (Exception e) {
 						LOGGER.severe("Error al cargar el fichero " + f, e);
+						new AlertExceptionWindow(e).showAndWait();
 					}
 				}
 			}
@@ -299,6 +303,7 @@ public class MainWindowController extends Application {
 						manager.deleteContact(card.getUid());
 					} catch (IOException e) {
 						LOGGER.severe("Error al borrar contacto " + card.getFormattedName().getValue(), e);
+						new AlertExceptionWindow(e).showAndWait();
 					}
 					reloadContactListView();
 				}
@@ -313,6 +318,7 @@ public class MainWindowController extends Application {
 					new StatisticWindow(manager.getStatistic()).showAndWait();
 				} catch (Exception e) {
 					LOGGER.severe("Error al abrir la ventana Estadísticas", e);
+					new AlertExceptionWindow(e).showAndWait();
 				}
 			}
 		});
@@ -336,6 +342,7 @@ public class MainWindowController extends Application {
 					}
 				} catch (Exception e) {
 					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
+					new AlertExceptionWindow(e).showAndWait();
 				}
 			}
 		});
@@ -356,6 +363,7 @@ public class MainWindowController extends Application {
 					}
 				} catch (Exception e) {
 					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
+					new AlertExceptionWindow(e).showAndWait();
 				}
 			}
 		});
@@ -376,6 +384,7 @@ public class MainWindowController extends Application {
 					}
 				} catch (Exception e) {
 					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
+					new AlertExceptionWindow(e).showAndWait();
 				}
 			}
 		});
@@ -398,6 +407,7 @@ public class MainWindowController extends Application {
 					}
 				} catch (Exception e) {
 					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
+					new AlertExceptionWindow(e).showAndWait();
 				}
 			}
 		});
@@ -420,6 +430,7 @@ public class MainWindowController extends Application {
 					}
 				} catch (Exception e) {
 					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
+					new AlertExceptionWindow(e).showAndWait();
 				}
 			}
 		});
@@ -437,6 +448,7 @@ public class MainWindowController extends Application {
 					new AboutWindow().start(new Stage());
 				} catch (Exception e) {
 					LOGGER.severe("Error al abrir la ventana Acerca de...", e);
+					new AlertExceptionWindow(e).showAndWait();
 				}
 			}
 		});
@@ -457,6 +469,7 @@ public class MainWindowController extends Application {
 			reloadContactListView();
 		} catch (Exception e) {
 			LOGGER.severe("Error al abrir la ventana Añadir/Editar contacto...", e);
+			new AlertExceptionWindow(e).showAndWait();
 		}
 	}
 
