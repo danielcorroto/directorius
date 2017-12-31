@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 import com.danielcorroto.directorius.controller.data.AddressInfo;
 import com.danielcorroto.directorius.controller.data.EmailInfo;
 import com.danielcorroto.directorius.controller.data.PhoneInfo;
+import com.danielcorroto.directorius.controller.handler.UpDownElementEventHandler;
 import com.danielcorroto.directorius.controller.type.AddressTypeEnum;
 import com.danielcorroto.directorius.controller.type.EmailTypeEnum;
 import com.danielcorroto.directorius.controller.type.PhoneTypeEnum;
@@ -119,6 +120,8 @@ public class ContactWindowController {
 		addElementFunctions();
 		editElementFunctions();
 		removeElementFunctions();
+		upElementFunctions();
+		downElementFunctions();
 
 		Optional<VCard> result = window.showAndWait();
 
@@ -741,6 +744,116 @@ public class ContactWindowController {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Setea la funcionalidad de los botones de subir posición de
+	 * teléfono/email/dirección y los habilita cuando hay un elemento
+	 * seleccionado
+	 */
+	private void upElementFunctions() {
+		// Subir categoría
+		window.getListViewCategory().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (newValue != null) {
+					window.getUpCategory().setDisable(false);
+				}
+			}
+		});
+		window.getUpCategory().setOnAction(new UpDownElementEventHandler<>(window.getListViewCategory(), true));
+		
+		// Subir teléfono
+		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PhoneInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends PhoneInfo> observable, PhoneInfo oldValue, PhoneInfo newValue) {
+				if (newValue != null) {
+					window.getUpPhone().setDisable(false);
+				}
+			}
+		});
+		window.getUpPhone().setOnAction(new UpDownElementEventHandler<>(window.getListViewPhone(), true));
+		
+		// Subir email
+		window.getListViewEmail().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EmailInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends EmailInfo> observable, EmailInfo oldValue, EmailInfo newValue) {
+				if (newValue != null) {
+					window.getUpEmail().setDisable(false);
+				}
+			}
+		});
+		window.getUpEmail().setOnAction(new UpDownElementEventHandler<>(window.getListViewEmail(), true));
+		
+		// Subir dirección
+		window.getListViewAddress().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AddressInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends AddressInfo> observable, AddressInfo oldValue, AddressInfo newValue) {
+				if (newValue != null) {
+					window.getUpAddress().setDisable(false);
+				}
+			}
+		});
+		window.getUpAddress().setOnAction(new UpDownElementEventHandler<>(window.getListViewAddress(), true));
+	}
+
+	/**
+	 * Setea la funcionalidad de los botones de bajar posición de
+	 * teléfono/email/dirección y los habilita cuando hay un elemento
+	 * seleccionado
+	 */
+	private void downElementFunctions() {
+		// Subir categoría
+		window.getListViewCategory().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (newValue != null) {
+					window.getDownCategory().setDisable(false);
+				}
+			}
+		});
+		window.getDownCategory().setOnAction(new UpDownElementEventHandler<>(window.getListViewCategory(), false));
+		
+		// Subir teléfono
+		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PhoneInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends PhoneInfo> observable, PhoneInfo oldValue, PhoneInfo newValue) {
+				if (newValue != null) {
+					window.getDownPhone().setDisable(false);
+				}
+			}
+		});
+		window.getDownPhone().setOnAction(new UpDownElementEventHandler<>(window.getListViewPhone(), false));
+		
+		// Subir email
+		window.getListViewEmail().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EmailInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends EmailInfo> observable, EmailInfo oldValue, EmailInfo newValue) {
+				if (newValue != null) {
+					window.getDownEmail().setDisable(false);
+				}
+			}
+		});
+		window.getDownEmail().setOnAction(new UpDownElementEventHandler<>(window.getListViewEmail(), false));
+		
+		// Subir dirección
+		window.getListViewAddress().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AddressInfo>() {
+
+			@Override
+			public void changed(ObservableValue<? extends AddressInfo> observable, AddressInfo oldValue, AddressInfo newValue) {
+				if (newValue != null) {
+					window.getDownAddress().setDisable(false);
+				}
+			}
+		});
+		window.getDownAddress().setOnAction(new UpDownElementEventHandler<>(window.getListViewAddress(), false));
 	}
 
 	/**

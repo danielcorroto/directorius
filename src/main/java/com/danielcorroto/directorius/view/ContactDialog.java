@@ -98,6 +98,14 @@ public class ContactDialog extends Dialog<VCard> {
 	 */
 	private Button removeCategory;
 	/**
+	 * Botón para subir posición de categoría
+	 */
+	private Button upCategory;
+	/**
+	 * Botón para bajar posición de categoría
+	 */
+	private Button downCategory;
+	/**
 	 * Botón para añadir teléfono
 	 */
 	private Button addPhone;
@@ -109,6 +117,14 @@ public class ContactDialog extends Dialog<VCard> {
 	 * Botón para eliminar teléfono
 	 */
 	private Button removePhone;
+	/**
+	 * Botón para subir posición de teléfono
+	 */
+	private Button upPhone;
+	/**
+	 * Botón para bajar posición de teléfono
+	 */
+	private Button downPhone;
 	/**
 	 * Botón para añadir email
 	 */
@@ -122,6 +138,14 @@ public class ContactDialog extends Dialog<VCard> {
 	 */
 	private Button removeEmail;
 	/**
+	 * Botón para subir posición de email
+	 */
+	private Button upEmail;
+	/**
+	 * Botón para bajar posición de email
+	 */
+	private Button downEmail;
+	/**
 	 * Botón para añadir dirección
 	 */
 	private Button addAddress;
@@ -133,6 +157,14 @@ public class ContactDialog extends Dialog<VCard> {
 	 * Botón para eliminar dirección
 	 */
 	private Button removeAddress;
+	/**
+	 * Botón para subir posición de dirección
+	 */
+	private Button upAddress;
+	/**
+	 * Botón para subir posición de dirección
+	 */
+	private Button downAddress;
 	/**
 	 * Contenedor de teléfonos
 	 */
@@ -226,84 +258,44 @@ public class ContactDialog extends Dialog<VCard> {
 		gridPane.add(photoButtons, 2, 4);
 
 		// Categoría
-		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_CATEGORY), 5);
 		addCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_CATEGORY_ADD, Text.I18N_CONTACT_CATEGORY_ADD);
-		gridPane.add(addCategory, 0, 5);
 		listViewCategory = new ListView<>();
-		listViewCategory.setMaxHeight(100);
 		listViewCategory.setCellFactory(createCategoryListViewCellFactory());
-		gridPane.add(listViewCategory, 1, 5);
-
-		HBox categoryButtons = new HBox();
-		categoryButtons.setAlignment(Pos.CENTER);
-		categoryButtons.setSpacing(20);
 		editCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_CONTACT_CATEGORY_EDIT);
-		editCategory.setDisable(true);
-		categoryButtons.getChildren().add(editCategory);
 		removeCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_CATEGORY_REMOVE);
-		removeCategory.setDisable(true);
-		categoryButtons.getChildren().add(removeCategory);
-		gridPane.add(categoryButtons, 2, 5);
+		upCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
+		downCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
+		buildMultiElement(gridPane, 5, Text.I18N_CONTACT_CATEGORY, listViewCategory, addCategory, editCategory, removeCategory, upCategory, downCategory);
 
 		// Teléfono
-		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_PHONE), 6);
 		addPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_PHONE_ADD, Text.I18N_CONTACT_PHONE_ADD);
-		gridPane.add(addPhone, 0, 6);
 		listViewPhone = new ListView<>();
-		listViewPhone.setMaxHeight(100);
 		listViewPhone.setCellFactory(createPhoneListViewCellFactory());
-		gridPane.add(listViewPhone, 1, 6);
-
-		HBox phoneButtons = new HBox();
-		phoneButtons.setAlignment(Pos.CENTER);
-		phoneButtons.setSpacing(20);
 		editPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_CONTACT_PHONE_EDIT);
-		editPhone.setDisable(true);
-		phoneButtons.getChildren().add(editPhone);
 		removePhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_PHONE_REMOVE);
-		removePhone.setDisable(true);
-		phoneButtons.getChildren().add(removePhone);
-		gridPane.add(phoneButtons, 2, 6);
+		upPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
+		downPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
+		buildMultiElement(gridPane, 6,Text.I18N_CONTACT_PHONE, listViewPhone, addPhone, editPhone, removePhone, upPhone, downPhone);
 
 		// Email
-		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_EMAIL), 7);
 		addEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EMAIL_ADD, Text.I18N_CONTACT_EMAIL_ADD);
-		gridPane.add(addEmail, 0, 7);
 		listViewEmail = new ListView<>();
-		listViewEmail.setMaxHeight(100);
 		listViewEmail.setCellFactory(createEmailListViewCellFactory());
-		gridPane.add(listViewEmail, 1, 7);
-
-		HBox emailButtons = new HBox();
-		emailButtons.setAlignment(Pos.CENTER);
-		emailButtons.setSpacing(20);
 		editEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_CONTACT_EMAIL_EDIT);
-		editEmail.setDisable(true);
-		emailButtons.getChildren().add(editEmail);
 		removeEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_EMAIL_REMOVE);
-		removeEmail.setDisable(true);
-		emailButtons.getChildren().add(removeEmail);
-		gridPane.add(emailButtons, 2, 7);
+		upEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
+		downEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
+		buildMultiElement(gridPane, 7,Text.I18N_CONTACT_EMAIL, listViewEmail, addEmail, editEmail, removeEmail, upEmail, downEmail);
 
 		// Dirección
-		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_ADDRESS), 8);
 		addAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ADDRESS_ADD, Text.I18N_CONTACT_ADDRESS_ADD);
-		gridPane.add(addAddress, 0, 8);
 		listViewAddress = new ListView<>();
-		listViewAddress.setMaxHeight(100);
 		listViewAddress.setCellFactory(createAddressListViewCellFactory());
-		gridPane.add(listViewAddress, 1, 8);
-
-		HBox addressButtons = new HBox();
-		addressButtons.setAlignment(Pos.CENTER);
-		addressButtons.setSpacing(20);
 		editAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EDIT, Text.I18N_CONTACT_ADDRESS_EDIT);
-		editAddress.setDisable(true);
-		addressButtons.getChildren().add(editAddress);
 		removeAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_ADDRESS_REMOVE);
-		removeAddress.setDisable(true);
-		addressButtons.getChildren().add(removeAddress);
-		gridPane.add(addressButtons, 2, 8);
+		upAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
+		downAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
+		buildMultiElement(gridPane, 8,Text.I18N_CONTACT_ADDRESS, listViewAddress, addAddress, editAddress, removeAddress, upAddress, downAddress);
 
 		// Botones de mostrar/cerrar
 		saveButtonType = new ButtonType(rb.getString(Text.I18N_CONTACT_SAVE), ButtonData.OK_DONE);
@@ -379,6 +371,63 @@ public class ContactDialog extends Dialog<VCard> {
 		result.getChildren().add(comboBoxDay);
 
 		return result;
+	}
+
+	/**
+	 * Construye elemento que puede contener varios items
+	 * (categoría/teléfono/email/dirección)
+	 * 
+	 * @param gridPane
+	 *            Grid de ubicación
+	 * @param row
+	 *            Fila del grid
+	 * @param i18n
+	 *            Titulo i18n
+	 * @param listView
+	 *            Lista de items
+	 * @param add
+	 *            Añadir item
+	 * @param edit
+	 *            Editar item
+	 * @param remove
+	 *            Eliminar item
+	 * @param up
+	 *            Subir posición de item
+	 * @param down
+	 *            Bajar posición de item
+	 */
+	private void buildMultiElement(GridPane gridPane, int row, String i18n, ListView<?> listView, Button add, Button edit, Button remove, Button up, Button down) {
+		// Título
+		setLabel(gridPane, rb.getString(i18n), row);
+		
+		// Añadir
+		gridPane.add(add, 0, row);
+
+		// Lista
+		listView.setMaxHeight(100);
+		gridPane.add(listView, 1, row);
+
+		// Grupo de botones
+		HBox groupButtons = new HBox();
+		groupButtons.setAlignment(Pos.CENTER);
+		groupButtons.setSpacing(20);
+
+		// Subir y bajar
+		VBox upDownButtons = new VBox();
+		upDownButtons.setAlignment(Pos.CENTER);
+		upDownButtons.setSpacing(10);
+		up.setDisable(true);
+		upDownButtons.getChildren().add(up);
+		down.setDisable(true);
+		upDownButtons.getChildren().add(down);
+		groupButtons.getChildren().add(upDownButtons);
+
+		// Editar y eliminar
+		edit.setDisable(true);
+		groupButtons.getChildren().add(edit);
+		remove.setDisable(true);
+		groupButtons.getChildren().add(remove);
+		gridPane.add(groupButtons, 2, row);
 	}
 
 	/**
@@ -634,6 +683,24 @@ public class ContactDialog extends Dialog<VCard> {
 	}
 
 	/**
+	 * Obtiene el componente Button para subir posición de una categoría
+	 * 
+	 * @return Componente para subir posición de una categoría
+	 */
+	public Button getUpCategory() {
+		return upCategory;
+	}
+
+	/**
+	 * Obtiene el componente Button para bajar posición de una categoría
+	 * 
+	 * @return Componente para bajar posición de una categoría
+	 */
+	public Button getDownCategory() {
+		return downCategory;
+	}
+
+	/**
 	 * Obtiene el componente Button para añadir un teléfono
 	 * 
 	 * @return Componente para añadir un teléfono
@@ -658,6 +725,24 @@ public class ContactDialog extends Dialog<VCard> {
 	 */
 	public Button getRemovePhone() {
 		return removePhone;
+	}
+
+	/**
+	 * Obtiene el componente Button para subir posición de un teléfono
+	 * 
+	 * @return Componente para subir posición de un teléfono
+	 */
+	public Button getUpPhone() {
+		return upPhone;
+	}
+
+	/**
+	 * Obtiene el componente Button para bajar posición de un teléfono
+	 * 
+	 * @return Componente para bajar posición de un teléfono
+	 */
+	public Button getDownPhone() {
+		return downPhone;
 	}
 
 	/**
@@ -688,6 +773,24 @@ public class ContactDialog extends Dialog<VCard> {
 	}
 
 	/**
+	 * Obtiene el componente Button para subir posición de un email
+	 * 
+	 * @return Componente para subir posición de un email
+	 */
+	public Button getUpEmail() {
+		return upEmail;
+	}
+
+	/**
+	 * Obtiene el componente Button para bajar posición de un email
+	 * 
+	 * @return Componente para bajar posición de un email
+	 */
+	public Button getDownEmail() {
+		return downEmail;
+	}
+
+	/**
 	 * Obtiene el componente Button para añadir una dirección
 	 * 
 	 * @return Componente para añadir una dirección
@@ -712,6 +815,24 @@ public class ContactDialog extends Dialog<VCard> {
 	 */
 	public Button getRemoveAddress() {
 		return removeAddress;
+	}
+
+	/**
+	 * Obtiene el componente Button para subir posición de una dirección
+	 * 
+	 * @return Componente para subir posición de una dirección
+	 */
+	public Button getUpAddress() {
+		return upAddress;
+	}
+
+	/**
+	 * Obtiene el componente Button para bajar posición de una dirección
+	 * 
+	 * @return Componente para bajar posición de una dirección
+	 */
+	public Button getDownAddress() {
+		return downAddress;
 	}
 
 	/**

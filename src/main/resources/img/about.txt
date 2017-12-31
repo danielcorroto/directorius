@@ -67,3 +67,9 @@ crystal_clear / LGPL-2.1
 
 edit_contact_remove = actions/edit-delete-8
 crystal_clear / LGPL-2.1
+
+edit_contact_arrow_up = actions/arrow-up
+crystal / LGPL-2.1
+
+edit_contact_arrow_down = actions/arrow-down
+crystal / LGPL-2.1

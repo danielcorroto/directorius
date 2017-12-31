@@ -168,6 +168,10 @@ public interface Text {
 
 	public static final String I18N_CONTACT_ADDRESS_TYPE_WORK = "contact.address.type.work";
 
+	public static final String I18N_CONTACT_ELEMENT_UP = "contact.element.up";
+
+	public static final String I18N_CONTACT_ELEMENT_DOWN = "contact.element.down";
+
 	public static final String I18N_CONTACT_SAVE = "contact.save";
 
 	public static final String I18N_CONTACT_DATE_FORMAT = "contact.date.format";

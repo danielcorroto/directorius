@@ -135,4 +135,12 @@ public interface ResourcePath {
 	 * Imagen de editar contacto / Eliminar
 	 */
 	public static final String IMG_EDIT_CONTACT_REMOVE = "/img/edit_contact_remove.png";
+	/**
+	 * Imagen de subir elemento
+	 */
+	public static final String IMG_EDIT_CONTACT_ARROW_UP = "/img/edit_contact_arrow_up.png";
+	/**
+	 * Imagen de bajar elemento
+	 */
+	public static final String IMG_EDIT_CONTACT_ARROW_DOWN = "/img/edit_contact_arrow_down.png";
 }
