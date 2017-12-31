@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -14,6 +16,7 @@ import java.util.function.Consumer;
 import com.danielcorroto.directorius.controller.data.AddressInfo;
 import com.danielcorroto.directorius.controller.data.EmailInfo;
 import com.danielcorroto.directorius.controller.data.PhoneInfo;
+import com.danielcorroto.directorius.controller.handler.ElementEnablerChangeListener;
 import com.danielcorroto.directorius.controller.handler.UpDownElementEventHandler;
 import com.danielcorroto.directorius.controller.type.AddressTypeEnum;
 import com.danielcorroto.directorius.controller.type.EmailTypeEnum;
@@ -49,6 +52,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -117,6 +121,7 @@ public class ContactWindowController {
 		mainFunctions();
 		fullNameAutoloadFunction();
 		photoFunctions();
+		selectElementFunctions();
 		addElementFunctions();
 		editElementFunctions();
 		removeElementFunctions();
@@ -324,6 +329,50 @@ public class ContactWindowController {
 	}
 
 	/**
+	 * Setea la funcionalidad de los elementos seleccionados
+	 */
+	private void selectElementFunctions() {
+		// Selección de categoría
+		List<Node> categoryNodes = new ArrayList<>();
+		categoryNodes.add(window.getListViewCategory());
+		categoryNodes.add(window.getEditCategory());
+		categoryNodes.add(window.getRemoveCategory());
+		categoryNodes.add(window.getUpCategory());
+		categoryNodes.add(window.getDownCategory());
+		window.getListViewCategory().getSelectionModel().selectedItemProperty().addListener(new ElementEnablerChangeListener<>(categoryNodes.toArray(new Node[categoryNodes.size()])));
+		
+
+		// Selección de teléfono
+		List<Node> phoneNodes = new ArrayList<>();
+		phoneNodes.add(window.getListViewPhone());
+		phoneNodes.add(window.getEditPhone());
+		phoneNodes.add(window.getRemovePhone());
+		phoneNodes.add(window.getUpPhone());
+		phoneNodes.add(window.getDownPhone());
+		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ElementEnablerChangeListener<>(phoneNodes.toArray(new Node[phoneNodes.size()])));
+		
+
+		// Selección de email
+		List<Node> emailNodes = new ArrayList<>();
+		emailNodes.add(window.getListViewEmail());
+		emailNodes.add(window.getEditEmail());
+		emailNodes.add(window.getRemoveEmail());
+		emailNodes.add(window.getUpEmail());
+		emailNodes.add(window.getDownEmail());
+		window.getListViewEmail().getSelectionModel().selectedItemProperty().addListener(new ElementEnablerChangeListener<>(emailNodes.toArray(new Node[emailNodes.size()])));
+		
+
+		// Selección de dirección
+		List<Node> addressNodes = new ArrayList<>();
+		addressNodes.add(window.getListViewAddress());
+		addressNodes.add(window.getEditAddress());
+		addressNodes.add(window.getRemoveAddress());
+		addressNodes.add(window.getUpAddress());
+		addressNodes.add(window.getDownAddress());
+		window.getListViewAddress().getSelectionModel().selectedItemProperty().addListener(new ElementEnablerChangeListener<>(addressNodes.toArray(new Node[addressNodes.size()])));
+	}
+	
+	/**
 	 * Setea la funcionalidad de los botones de añadir teléfono/email/dirección
 	 */
 	private void addElementFunctions() {
@@ -407,15 +456,6 @@ public class ContactWindowController {
 	 */
 	private void editElementFunctions() {
 		// Editar categoría
-		window.getListViewCategory().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (newValue != null) {
-					window.getEditCategory().setDisable(false);
-				}
-			}
-		});
 		window.getEditCategory().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -435,15 +475,6 @@ public class ContactWindowController {
 		});
 
 		// Editar teléfono
-		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PhoneInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends PhoneInfo> observable, PhoneInfo oldValue, PhoneInfo newValue) {
-				if (newValue != null) {
-					window.getEditPhone().setDisable(false);
-				}
-			}
-		});
 		window.getEditPhone().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -463,15 +494,6 @@ public class ContactWindowController {
 		});
 
 		// Editar email
-		window.getListViewEmail().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EmailInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends EmailInfo> observable, EmailInfo oldValue, EmailInfo newValue) {
-				if (newValue != null) {
-					window.getEditEmail().setDisable(false);
-				}
-			}
-		});
 		window.getEditEmail().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -491,15 +513,6 @@ public class ContactWindowController {
 		});
 
 		// Editar dirección
-		window.getListViewAddress().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AddressInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends AddressInfo> observable, AddressInfo oldValue, AddressInfo newValue) {
-				if (newValue != null) {
-					window.getEditAddress().setDisable(false);
-				}
-			}
-		});
 		window.getEditAddress().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -618,15 +631,6 @@ public class ContactWindowController {
 	 */
 	private void removeElementFunctions() {
 		// Eliminar categoría
-		window.getListViewCategory().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (newValue != null) {
-					window.getRemoveCategory().setDisable(false);
-				}
-			}
-		});
 		window.getRemoveCategory().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -650,15 +654,6 @@ public class ContactWindowController {
 		});
 
 		// Eliminar teléfono
-		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PhoneInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends PhoneInfo> observable, PhoneInfo oldValue, PhoneInfo newValue) {
-				if (newValue != null) {
-					window.getRemovePhone().setDisable(false);
-				}
-			}
-		});
 		window.getRemovePhone().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -682,15 +677,6 @@ public class ContactWindowController {
 		});
 
 		// Eliminar email
-		window.getListViewEmail().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EmailInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends EmailInfo> observable, EmailInfo oldValue, EmailInfo newValue) {
-				if (newValue != null) {
-					window.getRemoveEmail().setDisable(false);
-				}
-			}
-		});
 		window.getRemoveEmail().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -714,15 +700,6 @@ public class ContactWindowController {
 		});
 
 		// Eliminar dirección
-		window.getListViewAddress().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AddressInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends AddressInfo> observable, AddressInfo oldValue, AddressInfo newValue) {
-				if (newValue != null) {
-					window.getRemoveAddress().setDisable(false);
-				}
-			}
-		});
 		window.getRemoveAddress().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -753,51 +730,15 @@ public class ContactWindowController {
 	 */
 	private void upElementFunctions() {
 		// Subir categoría
-		window.getListViewCategory().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (newValue != null) {
-					window.getUpCategory().setDisable(false);
-				}
-			}
-		});
 		window.getUpCategory().setOnAction(new UpDownElementEventHandler<>(window.getListViewCategory(), true));
 		
 		// Subir teléfono
-		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PhoneInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends PhoneInfo> observable, PhoneInfo oldValue, PhoneInfo newValue) {
-				if (newValue != null) {
-					window.getUpPhone().setDisable(false);
-				}
-			}
-		});
 		window.getUpPhone().setOnAction(new UpDownElementEventHandler<>(window.getListViewPhone(), true));
 		
 		// Subir email
-		window.getListViewEmail().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EmailInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends EmailInfo> observable, EmailInfo oldValue, EmailInfo newValue) {
-				if (newValue != null) {
-					window.getUpEmail().setDisable(false);
-				}
-			}
-		});
 		window.getUpEmail().setOnAction(new UpDownElementEventHandler<>(window.getListViewEmail(), true));
 		
 		// Subir dirección
-		window.getListViewAddress().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AddressInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends AddressInfo> observable, AddressInfo oldValue, AddressInfo newValue) {
-				if (newValue != null) {
-					window.getUpAddress().setDisable(false);
-				}
-			}
-		});
 		window.getUpAddress().setOnAction(new UpDownElementEventHandler<>(window.getListViewAddress(), true));
 	}
 
@@ -807,52 +748,16 @@ public class ContactWindowController {
 	 * seleccionado
 	 */
 	private void downElementFunctions() {
-		// Subir categoría
-		window.getListViewCategory().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (newValue != null) {
-					window.getDownCategory().setDisable(false);
-				}
-			}
-		});
+		// Bajar categoría
 		window.getDownCategory().setOnAction(new UpDownElementEventHandler<>(window.getListViewCategory(), false));
 		
-		// Subir teléfono
-		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PhoneInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends PhoneInfo> observable, PhoneInfo oldValue, PhoneInfo newValue) {
-				if (newValue != null) {
-					window.getDownPhone().setDisable(false);
-				}
-			}
-		});
+		// Bajar teléfono
 		window.getDownPhone().setOnAction(new UpDownElementEventHandler<>(window.getListViewPhone(), false));
 		
-		// Subir email
-		window.getListViewEmail().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<EmailInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends EmailInfo> observable, EmailInfo oldValue, EmailInfo newValue) {
-				if (newValue != null) {
-					window.getDownEmail().setDisable(false);
-				}
-			}
-		});
+		// Bajar email
 		window.getDownEmail().setOnAction(new UpDownElementEventHandler<>(window.getListViewEmail(), false));
 		
-		// Subir dirección
-		window.getListViewAddress().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AddressInfo>() {
-
-			@Override
-			public void changed(ObservableValue<? extends AddressInfo> observable, AddressInfo oldValue, AddressInfo newValue) {
-				if (newValue != null) {
-					window.getDownAddress().setDisable(false);
-				}
-			}
-		});
+		// Bajar dirección
 		window.getDownAddress().setOnAction(new UpDownElementEventHandler<>(window.getListViewAddress(), false));
 	}
 
