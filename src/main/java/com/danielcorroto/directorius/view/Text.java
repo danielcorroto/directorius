@@ -170,8 +170,6 @@ public interface Text {
 
 	public static final String I18N_CONTACT_SAVE = "contact.save";
 
-	public static final String I18N_CONTACT_CANCEL = "contact.cancel";
-
 	public static final String I18N_CONTACT_DATE_FORMAT = "contact.date.format";
 
 	public static final String I18N_CONTACT_AGE_FORMAT = "contact.age.format";

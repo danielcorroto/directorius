@@ -455,10 +455,15 @@ public class MainWindowController extends Application {
 			if (simplevcard != null) {
 				vcard = manager.readContact(simplevcard.getUid());
 			}
-			new ContactWindowController(manager, vcard).start(new Stage());
+			ContactWindowController cwc = new ContactWindowController(manager, vcard);
+			cwc.start();
 
 			// Carga la nueva lista
-			reloadContactListView();
+			vcard = cwc.getVcard();
+			if (vcard != null) {
+				reloadContactListView();
+				selectListViewElement(vcard);
+			}
 		} catch (Exception e) {
 			LOGGER.severe("Error al abrir la ventana Añadir/Editar contacto...", e);
 			new AlertExceptionWindow(e).showAndWait();

@@ -9,15 +9,18 @@ import com.danielcorroto.directorius.controller.data.AddressInfo;
 import com.danielcorroto.directorius.controller.data.EmailInfo;
 import com.danielcorroto.directorius.controller.data.PhoneInfo;
 
+import ezvcard.VCard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -30,18 +33,11 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-/**
- * Gestiona la creación de la ventana de creación/edición de contactos
- * 
- * @author Daniel Corroto Quirós
- *
- */
-public class ContactWindow {
+public class ContactDialog extends Dialog<VCard> {
 	/**
 	 * Porcentajes para los elementos del panel principal
 	 */
@@ -49,10 +45,6 @@ public class ContactWindow {
 
 	private static final int BUTTON_IMAGE_SIZE = 24;
 
-	/**
-	 * Stage de la ventana
-	 */
-	private Stage stage;
 	/**
 	 * Caja de texto para informar del nombre
 	 */
@@ -158,33 +150,33 @@ public class ContactWindow {
 	 */
 	private ListView<AddressInfo> listViewAddress;
 	/**
-	 * Botón para cerrar el diálogo
-	 */
-	private Button cancel;
-	/**
 	 * Botón para guardar el contacto y cerrar el diálogo
 	 */
 	private Button save;
+	/**
+	 * Tipo de botón de guardar el contacto y cerrar el diálogo
+	 */
+	private ButtonType saveButtonType;
 
 	/**
 	 * Para i18n
 	 */
 	private ResourceBundle rb;
 
-	public ContactWindow() {
+	/**
+	 * Constructor por defecto. Crea el panel de diálogo
+	 */
+	public ContactDialog() {
 		super();
 		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
+		build();
 	}
 
 	/**
 	 * Construcción de la ventana de creación/edición de contactos
 	 * 
-	 * @param stage
-	 *            Stage de la ventana
 	 */
-	public void build(Stage stage) {
-		this.stage = stage;
-
+	public void build() {
 		// Crear gridPane
 		GridPane gridPane = new GridPane();
 		ColumnConstraints[] columnConstraints = new ColumnConstraints[PERSONALPANE_PERCENTAGE.length];
@@ -313,34 +305,27 @@ public class ContactWindow {
 		addressButtons.getChildren().add(removeAddress);
 		gridPane.add(addressButtons, 2, 8);
 
-		// Botones de cancelar y guardar
-		HBox buttons = new HBox();
-		buttons.setAlignment(Pos.CENTER);
-		buttons.setSpacing(100);
-		cancel = new Button(rb.getString(Text.I18N_CONTACT_CANCEL));
-		buttons.getChildren().add(cancel);
-		save = new Button(rb.getString(Text.I18N_CONTACT_SAVE));
+		// Botones de mostrar/cerrar
+		saveButtonType = new ButtonType(rb.getString(Text.I18N_CONTACT_SAVE), ButtonData.OK_DONE);
+		this.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE, saveButtonType);
+		save = (Button) this.getDialogPane().lookupButton(saveButtonType);
 		save.setDisable(true);
-		buttons.getChildren().add(save);
 
 		// Crear ventana
 		VBox main = new VBox();
 		main.getChildren().add(gridPane);
-		main.getChildren().add(buttons);
 
 		// Crear scene y stage
-		Scene scene = new Scene(main);
-		stage.setScene(scene);
+		getDialogPane().setContent(main);
 
 		// Setea propiedades
+		Stage stage = (Stage) this.getDialogPane().getScene().getWindow();
 		double width = Screen.getPrimary().getBounds().getWidth();
 		double height = Screen.getPrimary().getBounds().getHeight();
-		stage.setWidth(width / 2);
-		stage.setHeight(height - 100);
-		stage.setTitle(rb.getString(Text.I18N_MENU_CONTACT_ADD));
+		this.getDialogPane().setMaxWidth(width / 2);
+		this.getDialogPane().setMaxHeight(height - 100);
 		Image logo = new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO));
 		stage.getIcons().add(logo);
-		stage.initModality(Modality.APPLICATION_MODAL);
 	}
 
 	/**
@@ -529,16 +514,6 @@ public class ContactWindow {
 		};
 
 		return cellFactory;
-	}
-
-	/**
-	 * Setea el título de la ventana
-	 * 
-	 * @param title
-	 *            Título
-	 */
-	public void setTitle(String title) {
-		stage.setTitle(title);
 	}
 
 	/**
@@ -776,15 +751,6 @@ public class ContactWindow {
 	}
 
 	/**
-	 * Obtiene el componente Button para cancelar la edición
-	 * 
-	 * @return Componente para cancelar la edición
-	 */
-	public Button getCancel() {
-		return cancel;
-	}
-
-	/**
 	 * Obtiene el componente Button para guardar un contacto
 	 * 
 	 * @return Componente para guardar contacto
@@ -794,21 +760,12 @@ public class ContactWindow {
 	}
 
 	/**
-	 * Obtiene el componente Stage
+	 * Obtiene el componente ButtonType para guardar un contacto
 	 * 
-	 * @return Componente base de la ventana
+	 * @return Componente del tipo de botón para guardar un contacto
 	 */
-	public Stage getStage() {
-		return stage;
-	}
-
-	/**
-	 * Obtiene el componente Button para cerrar la ventana
-	 * 
-	 * @return Componente para cerrar la ventana
-	 */
-	public void close() {
-		stage.close();
+	public ButtonType getSaveButtonType() {
+		return saveButtonType;
 	}
 
 }
