@@ -138,7 +138,7 @@ public class BirthdayWindow extends Dialog<VCard> {
 						if (empty || item == null || item.getFormattedName() == null) {
 							setText(null);
 						} else {
-							setText(item.getFormattedName().getValue() + System.getProperty("line.separator") + DisplayUtil.buildBirthday(item, rb));
+							setText(item.getFormattedName().getValue() + System.getProperty("line.separator") + DisplayUtil.buildBirthday(item, true, rb));
 						}
 					}
 				};

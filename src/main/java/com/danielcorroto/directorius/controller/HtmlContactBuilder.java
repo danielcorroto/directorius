@@ -66,7 +66,7 @@ public class HtmlContactBuilder {
 
 		// Personal
 		html = html.replace(HtmlTemplate.FULL_NAME, vcard.getFormattedName().getValue());
-		html = html.replace(HtmlTemplate.BIRTHDAY, DisplayUtil.buildBirthday(vcard, rb));
+		html = html.replace(HtmlTemplate.BIRTHDAY, DisplayUtil.buildBirthday(vcard, false, rb));
 		html = html.replace(HtmlTemplate.NOTES, buildNotes(vcard));
 		html = html.replace(HtmlTemplate.GROUP_CATEGORY, buildGroupCategory(vcard));
 

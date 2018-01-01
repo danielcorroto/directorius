@@ -22,6 +22,11 @@ import ezvcard.VCard;
  */
 public class DisplayUtil {
 	/**
+	 * Milisegundos de medio año (366 * 86400 * 1000 / 2)
+	 */
+	private static final long HALF_YEAR_MILLIS = 15811200000L;
+
+	/**
 	 * Campo de fecha desconocido
 	 */
 	private static final String UNKNOWN_DATE_DATA = "??";
@@ -123,11 +128,13 @@ public class DisplayUtil {
 	 * 
 	 * @param vcard
 	 *            Información del contacto
+	 * @param nextBday
+	 *            Indica si hay que calcular la edad para el próximo cumpleaños
 	 * @param rb
 	 *            Recurso para i18n
 	 * @return Código HTML de la fecha de nacimiento del contacto
 	 */
-	public static String buildBirthday(VCard vcard, ResourceBundle rb) {
+	public static String buildBirthday(VCard vcard, boolean nextBday, ResourceBundle rb) {
 		if (vcard.getBirthday() == null) {
 			return "";
 		}
@@ -145,7 +152,7 @@ public class DisplayUtil {
 			month = c.get(Calendar.MONTH) + 1;
 			day = c.get(Calendar.DATE);
 
-			age = getAgeFrom(year, month, day);
+			age = getAgeFrom(year, month, day, nextBday);
 		}
 
 		// Fecha parcial
@@ -196,9 +203,12 @@ public class DisplayUtil {
 	 *            Mes de nacimiento (1-12)
 	 * @param day
 	 *            Día de nacimiento (1-31)
+	 * @param nextBday
+	 *            Indica si hay que calcular la edad para el próximo cumpleaños
+	 *            si cae próximo
 	 * @return Edad
 	 */
-	private static int getAgeFrom(int year, int month, int day) {
+	private static int getAgeFrom(int year, int month, int day, boolean nextBday) {
 		int age = 0;
 		Calendar dob = Calendar.getInstance();
 		dob.set(Calendar.YEAR, year);
@@ -206,22 +216,25 @@ public class DisplayUtil {
 		dob.set(Calendar.DATE, day);
 		Calendar now = Calendar.getInstance();
 		if (dob.after(now)) {
-			throw new IllegalArgumentException("Can't be born in the future");
+			throw new IllegalArgumentException("Fecha de nacimiento en el futuro");
 		}
 		int year1 = now.get(Calendar.YEAR);
 		int year2 = dob.get(Calendar.YEAR);
 		age = year1 - year2;
-		int month1 = now.get(Calendar.MONTH);
-		int month2 = dob.get(Calendar.MONTH);
-		if (month2 > month1) {
-			age--;
-		} else if (month1 == month2) {
-			int day1 = now.get(Calendar.DAY_OF_MONTH);
-			int day2 = dob.get(Calendar.DAY_OF_MONTH);
-			if (day2 > day1) {
-				age--;
+
+		if (nextBday) {
+			// Comprueba si hay que sumar un año porque el cumpleaños caiga en
+			// el
+			// próximo año
+			Calendar currentDob = Calendar.getInstance();
+			currentDob.set(Calendar.MONTH, month - 1);
+			currentDob.set(Calendar.DATE, day);
+
+			if (Math.abs(currentDob.getTime().getTime() - now.getTime().getTime()) > HALF_YEAR_MILLIS) {
+				age++;
 			}
 		}
+
 		return age;
 	}
 
