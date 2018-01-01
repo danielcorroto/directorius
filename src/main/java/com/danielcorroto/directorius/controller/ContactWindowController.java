@@ -24,6 +24,7 @@ import com.danielcorroto.directorius.controller.type.EmailTypeEnum;
 import com.danielcorroto.directorius.controller.type.PhoneTypeEnum;
 import com.danielcorroto.directorius.model.ContactManager;
 import com.danielcorroto.directorius.model.CustomParameter;
+import com.danielcorroto.directorius.model.Utils;
 import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.view.AlertExceptionWindow;
 import com.danielcorroto.directorius.view.ContactDialog;
@@ -143,7 +144,27 @@ public class ContactWindowController {
 	 * Carga la información del contacto en el formulario
 	 */
 	private void loadVCard() {
-		// Nombre
+		String fullName = loadVCardName();
+		loadVCardBirthday();
+		loadVCardCategory();
+		loadVCardNote();
+		loadVCardPhoto();
+		loadVCardPhone();
+		loadVCardEmail();
+		loadVCardAddress();
+
+		// Valores de la ventana
+		window.setTitle(rb.getString(Text.I18N_MENU_CONTACT_EDIT) + ": " + fullName);
+		window.getSave().setDisable(false);
+	}
+
+	/**
+	 * Carga la información del nombre del contacto en el formulario
+	 * 
+	 * @return Nombre completo del contacto
+	 */
+	private String loadVCardName() {
+
 		if (vcard.getStructuredName() != null) {
 			if (vcard.getStructuredName().getGiven() != null) {
 				window.getNameTextField().setText(vcard.getStructuredName().getGiven());
@@ -157,8 +178,13 @@ public class ContactWindowController {
 			fullName = vcard.getFormattedName().getValue();
 			window.getFullNameTextField().setText(fullName);
 		}
+		return fullName;
+	}
 
-		// Fecha
+	/**
+	 * Carga la información del cumpleaños del contacto en el formulario
+	 */
+	private void loadVCardBirthday() {
 		if (vcard.getBirthday() != null) {
 			Integer year = null;
 			Integer month = null;
@@ -191,20 +217,32 @@ public class ContactWindowController {
 				window.getComboBoxDay().getSelectionModel().select(String.valueOf(day));
 			}
 		}
+	}
 
-		// Categorías
+	/**
+	 * Carga la información de la categoría del contacto en el formulario
+	 */
+	private void loadVCardCategory() {
 		if (vcard.getCategories() != null && !vcard.getCategories().getValues().isEmpty()) {
 			for (String category : vcard.getCategories().getValues()) {
 				addCategoryElement(category);
 			}
 		}
+	}
 
-		// Notas
+	/**
+	 * Carga la información de la nota del contacto en el formulario
+	 */
+	private void loadVCardNote() {
 		if (vcard.getNotes() != null && !vcard.getNotes().isEmpty()) {
 			window.getNotesTextArea().setText(vcard.getNotes().get(0).getValue());
 		}
+	}
 
-		// Foto
+	/**
+	 * Carga la información de la foto del contacto en el formulario
+	 */
+	private void loadVCardPhoto() {
 		if (vcard.getPhotos() != null && !vcard.getPhotos().isEmpty()) {
 			String url = vcard.getPhotos().get(0).getUrl();
 			imageFile = new File(manager.getPhotoDir() + url);
@@ -216,8 +254,12 @@ public class ContactWindowController {
 				imageFile = null;
 			}
 		}
+	}
 
-		// Teléfonos
+	/**
+	 * Carga la información del teléfono del contacto en el formulario
+	 */
+	private void loadVCardPhone() {
 		if (vcard.getTelephoneNumbers() != null && !vcard.getTelephoneNumbers().isEmpty()) {
 			for (Telephone phone : vcard.getTelephoneNumbers()) {
 				TelephoneType type = phone.getTypes().get(0);
@@ -225,8 +267,12 @@ public class ContactWindowController {
 				addPhoneElement(info);
 			}
 		}
+	}
 
-		// Emails
+	/**
+	 * Carga la información del email del contacto en el formulario
+	 */
+	private void loadVCardEmail() {
 		if (vcard.getEmails() != null && !vcard.getEmails().isEmpty()) {
 			for (Email email : vcard.getEmails()) {
 				EmailType type = email.getTypes().get(0);
@@ -234,8 +280,12 @@ public class ContactWindowController {
 				addEmailElement(info);
 			}
 		}
+	}
 
-		// Direcciones
+	/**
+	 * Carga la información de la dirección del contacto en el formulario
+	 */
+	private void loadVCardAddress() {
 		if (vcard.getAddresses() != null && !vcard.getAddresses().isEmpty()) {
 			for (Address address : vcard.getAddresses()) {
 				AddressType type = address.getTypes().get(0);
@@ -244,10 +294,6 @@ public class ContactWindowController {
 				addAddressElement(info);
 			}
 		}
-
-		// Valores de la ventana
-		window.setTitle(rb.getString(Text.I18N_MENU_CONTACT_EDIT) + ": " + fullName);
-		window.getSave().setDisable(false);
 	}
 
 	/**
@@ -739,143 +785,15 @@ public class ContactWindowController {
 			newContact = true;
 		}
 
-		// Nombre
-		vcard.setFormattedName(window.getFullNameTextField().getText().trim());
-		StructuredName sn = new StructuredName();
-		sn.setGiven(window.getNameTextField().getText().trim());
-		sn.setFamily(window.getSurnameTextField().getText().trim());
-		vcard.setStructuredName(sn);
-
-		// Fecha
-		String year = window.getComboBoxYear().getSelectionModel().getSelectedItem();
-		String month = window.getComboBoxMonth().getSelectionModel().getSelectedItem();
-		String day = window.getComboBoxDay().getSelectionModel().getSelectedItem();
-
-		if (year != null && !year.isEmpty() && month != null && !month.isEmpty() && day != null && !day.isEmpty()) {
-			// Fecha completa
-			Calendar c = Calendar.getInstance();
-			c.set(Calendar.YEAR, Integer.parseInt(year));
-			c.set(Calendar.MONTH, Integer.parseInt(month) - 1);
-			c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
-			Birthday bday = new Birthday(c.getTime());
-			vcard.setBirthday(bday);
-		} else if ((year != null && !year.isEmpty()) || (month != null && !month.isEmpty()) || (day != null && !day.isEmpty())) {
-			// Fecha parcial
-			PartialDate.Builder b = PartialDate.builder();
-			if (year != null && !year.isEmpty()) {
-				b.year(Integer.parseInt(year));
-			}
-			if (month != null && !month.isEmpty()) {
-				b.month(Integer.parseInt(month));
-			}
-			if (day != null && !day.isEmpty()) {
-				b.date(Integer.parseInt(day));
-			}
-
-			Birthday bday = new Birthday(b.build());
-			vcard.setBirthday(bday);
-		}
-
-		// Notas
-		if (!window.getNotesTextArea().getText().isEmpty()) {
-			vcard.getNotes().clear();
-			vcard.getNotes().add(new Note(window.getNotesTextArea().getText().trim()));
-		}
-
-		// Foto
-		if (imageFile != null) {
-			try {
-				String fileName = vcard.getUid().getValue().replaceAll("urn:uuid:", "");
-				fileName = manager.savePhotoFile(imageFile, fileName);
-				if (fileName != null) {
-					// Si se incluye una nueva foto
-					if (vcard.getPhotos() != null && !vcard.getPhotos().isEmpty()) {
-						String previousUrl = vcard.getPhotos().get(0).getUrl();
-						if (!previousUrl.equals(fileName)) {
-							// Se elimina la foto antigua si se ha
-							// cambiado la extensión. Si no se ha
-							// cambiado la extensión ya ha sido
-							// sobreescrita
-							manager.removePhotoFile(previousUrl);
-						}
-						vcard.getPhotos().clear();
-					}
-					Photo photo = new Photo(fileName, getImageTypeFromFileName(fileName));
-					vcard.addPhoto(photo);
-				}
-			} catch (IOException e) {
-				LOGGER.severe("No se ha podido guardar la foto de " + vcard.getUid(), e);
-				new AlertExceptionWindow(e).showAndWait();
-			}
-		} else {
-			// No se ha seleccionado foto
-			if (vcard.getPhotos() != null && !vcard.getPhotos().isEmpty()) {
-				String previousUrl = vcard.getPhotos().get(0).getUrl();
-				try {
-					manager.removePhotoFile(previousUrl);
-				} catch (IOException e) {
-					LOGGER.severe("No se ha podido eliminar la foto de " + vcard.getUid(), e);
-					new AlertExceptionWindow(e).showAndWait();
-				}
-				vcard.getPhotos().clear();
-			}
-		}
-
-		// Categorías
-		if (vcard.getCategoriesList() != null && !vcard.getCategoriesList().isEmpty()) {
-			vcard.getCategoriesList().clear();
-		}
-		if (!window.getListViewCategory().getItems().isEmpty()) {
-			Categories categories = new Categories();
-			vcard.setCategories(categories);
-			for (String category : window.getListViewCategory().getItems()) {
-				categories.getValues().add(category);
-			}
-		}
-
-		// Teléfono
-		if (vcard.getTelephoneNumbers() != null && !vcard.getTelephoneNumbers().isEmpty()) {
-			vcard.getTelephoneNumbers().clear();
-		}
-		for (PhoneInfo phone : window.getListViewPhone().getItems()) {
-			Telephone phoneCard = new Telephone(phone.getNumber().trim());
-			phoneCard.getTypes().add(phone.getType().getTelephoneType());
-			if (phone.getTag() != null && !phone.getTag().trim().isEmpty()) {
-				phoneCard.addParameter(CustomParameter.TELEPHONE_TAG, phone.getTag().trim());
-			}
-			vcard.addTelephoneNumber(phoneCard);
-		}
-
-		// Email
-		if (vcard.getEmails() != null && !vcard.getEmails().isEmpty()) {
-			vcard.getEmails().clear();
-		}
-		for (EmailInfo email : window.getListViewEmail().getItems()) {
-			Email emailCard = new Email(email.getEmail().trim());
-			emailCard.getTypes().add(email.getType().getEmailType());
-			if (email.getTag() != null && !email.getTag().trim().isEmpty()) {
-				emailCard.addParameter(CustomParameter.EMAIL_TAG, email.getTag().trim());
-			}
-			vcard.addEmail(emailCard);
-		}
-
-		// Dirección
-		if (vcard.getAddresses() != null && !vcard.getAddresses().isEmpty()) {
-			vcard.getAddresses().clear();
-		}
-		for (AddressInfo address : window.getListViewAddress().getItems()) {
-			Address addressCard = new Address();
-			addressCard.setStreetAddress(address.getStreet());
-			addressCard.setLocality(address.getLocality());
-			addressCard.setRegion(address.getRegion());
-			addressCard.setPostalCode(address.getPostalCode());
-			addressCard.setCountry(address.getCountry());
-			addressCard.getTypes().add(address.getType().getAddressType());
-			if (address.getTag() != null && !address.getTag().trim().isEmpty()) {
-				addressCard.addParameter(CustomParameter.ADDRESS_TAG, address.getTag().trim());
-			}
-			vcard.addAddress(addressCard);
-		}
+		// Almacenamiento de la información
+		saveName();
+		saveBirthday();
+		saveNotes();
+		savePhoto();
+		saveCagetory();
+		savePhone();
+		saveEmail();
+		saveAddress();
 
 		// Fecha de edición
 		vcard.setRevision(new Date());
@@ -897,6 +815,184 @@ public class ContactWindowController {
 			}
 		}
 
+	}
+
+	/**
+	 * Almacena la información del nombre
+	 */
+	private void saveName() {
+		vcard.setFormattedName(window.getFullNameTextField().getText().trim());
+		StructuredName sn = new StructuredName();
+		sn.setGiven(window.getNameTextField().getText().trim());
+		sn.setFamily(window.getSurnameTextField().getText().trim());
+		vcard.setStructuredName(sn);
+	}
+
+	/**
+	 * Almacena la información de cumpleaños
+	 */
+	private void saveBirthday() {
+		String year = window.getComboBoxYear().getSelectionModel().getSelectedItem();
+		String month = window.getComboBoxMonth().getSelectionModel().getSelectedItem();
+		String day = window.getComboBoxDay().getSelectionModel().getSelectedItem();
+
+		if (year != null && !year.isEmpty() && month != null && !month.isEmpty() && day != null && !day.isEmpty()) {
+			// Fecha completa
+			Calendar c = Calendar.getInstance();
+			c.set(Calendar.YEAR, Integer.parseInt(year));
+			c.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+			c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+			Birthday bday = new Birthday(c.getTime());
+			vcard.setBirthday(bday);
+		} else if (!Utils.isBlank(year) || !Utils.isBlank(month) || !Utils.isBlank(day)) {
+			// Fecha parcial
+			PartialDate.Builder b = PartialDate.builder();
+			if (year != null && !year.isEmpty()) {
+				b.year(Integer.parseInt(year));
+			}
+			if (month != null && !month.isEmpty()) {
+				b.month(Integer.parseInt(month));
+			}
+			if (day != null && !day.isEmpty()) {
+				b.date(Integer.parseInt(day));
+			}
+
+			Birthday bday = new Birthday(b.build());
+			vcard.setBirthday(bday);
+		}
+	}
+
+	/**
+	 * Almacena la información de las notas
+	 */
+	private void saveNotes() {
+		if (!window.getNotesTextArea().getText().isEmpty()) {
+			vcard.getNotes().clear();
+			vcard.getNotes().add(new Note(window.getNotesTextArea().getText().trim()));
+		}
+	}
+
+	/**
+	 * Almacena la información de la foto
+	 */
+	private void savePhoto() {
+		if (imageFile != null) {
+			try {
+				String fileName = vcard.getUid().getValue().replaceAll("urn:uuid:", "");
+				fileName = manager.savePhotoFile(imageFile, fileName);
+				if (fileName == null) {
+					return;
+				}
+				// Si se incluye una nueva foto
+				if (vcard.getPhotos() != null && !vcard.getPhotos().isEmpty()) {
+					String previousUrl = vcard.getPhotos().get(0).getUrl();
+					if (!previousUrl.equals(fileName)) {
+						// Se elimina la foto antigua si se ha
+						// cambiado la extensión. Si no se ha
+						// cambiado la extensión ya ha sido
+						// sobreescrita
+						manager.removePhotoFile(previousUrl);
+					}
+					vcard.getPhotos().clear();
+				}
+				Photo photo = new Photo(fileName, getImageTypeFromFileName(fileName));
+				vcard.addPhoto(photo);
+			} catch (IOException e) {
+				LOGGER.severe("No se ha podido guardar la foto de " + vcard.getUid(), e);
+				new AlertExceptionWindow(e).showAndWait();
+			}
+		} else {
+			// No se ha seleccionado foto
+			cleanPhoto();
+		}
+	}
+
+	/**
+	 * Elimina la foto del directorio y de la información de contacto
+	 */
+	private void cleanPhoto() {
+		if (vcard.getPhotos() != null && !vcard.getPhotos().isEmpty()) {
+			String previousUrl = vcard.getPhotos().get(0).getUrl();
+			try {
+				manager.removePhotoFile(previousUrl);
+			} catch (IOException e) {
+				LOGGER.severe("No se ha podido eliminar la foto de " + vcard.getUid(), e);
+				new AlertExceptionWindow(e).showAndWait();
+			}
+			vcard.getPhotos().clear();
+		}
+	}
+
+	/**
+	 * Almacena la información de la categoría
+	 */
+	private void saveCagetory() {
+		if (vcard.getCategoriesList() != null && !vcard.getCategoriesList().isEmpty()) {
+			vcard.getCategoriesList().clear();
+		}
+		if (!window.getListViewCategory().getItems().isEmpty()) {
+			Categories categories = new Categories();
+			vcard.setCategories(categories);
+			for (String category : window.getListViewCategory().getItems()) {
+				categories.getValues().add(category);
+			}
+		}
+	}
+
+	/**
+	 * Almacena la información del teléfono
+	 */
+	private void savePhone() {
+		if (vcard.getTelephoneNumbers() != null && !vcard.getTelephoneNumbers().isEmpty()) {
+			vcard.getTelephoneNumbers().clear();
+		}
+		for (PhoneInfo phone : window.getListViewPhone().getItems()) {
+			Telephone phoneCard = new Telephone(phone.getNumber().trim());
+			phoneCard.getTypes().add(phone.getType().getTelephoneType());
+			if (phone.getTag() != null && !phone.getTag().trim().isEmpty()) {
+				phoneCard.addParameter(CustomParameter.TELEPHONE_TAG, phone.getTag().trim());
+			}
+			vcard.addTelephoneNumber(phoneCard);
+		}
+	}
+
+	/**
+	 * Almacena la información del email
+	 */
+	private void saveEmail() {
+		if (vcard.getEmails() != null && !vcard.getEmails().isEmpty()) {
+			vcard.getEmails().clear();
+		}
+		for (EmailInfo email : window.getListViewEmail().getItems()) {
+			Email emailCard = new Email(email.getEmail().trim());
+			emailCard.getTypes().add(email.getType().getEmailType());
+			if (email.getTag() != null && !email.getTag().trim().isEmpty()) {
+				emailCard.addParameter(CustomParameter.EMAIL_TAG, email.getTag().trim());
+			}
+			vcard.addEmail(emailCard);
+		}
+	}
+
+	/**
+	 * Almacena la información de la dirección
+	 */
+	private void saveAddress() {
+		if (vcard.getAddresses() != null && !vcard.getAddresses().isEmpty()) {
+			vcard.getAddresses().clear();
+		}
+		for (AddressInfo address : window.getListViewAddress().getItems()) {
+			Address addressCard = new Address();
+			addressCard.setStreetAddress(address.getStreet());
+			addressCard.setLocality(address.getLocality());
+			addressCard.setRegion(address.getRegion());
+			addressCard.setPostalCode(address.getPostalCode());
+			addressCard.setCountry(address.getCountry());
+			addressCard.getTypes().add(address.getType().getAddressType());
+			if (address.getTag() != null && !address.getTag().trim().isEmpty()) {
+				addressCard.addParameter(CustomParameter.ADDRESS_TAG, address.getTag().trim());
+			}
+			vcard.addAddress(addressCard);
+		}
 	}
 
 	/**

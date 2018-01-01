@@ -6,7 +6,7 @@ package com.danielcorroto.directorius.view;
  * @author Daniel Corroto Quirós
  *
  */
-public interface ResourcePath {
+public class ResourcePath {
 	/**
 	 * CSS de Bootstrap
 	 */

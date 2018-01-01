@@ -344,10 +344,10 @@ public class ContactManager {
 	 * @throws IOException
 	 */
 	public String savePhotoFile(File source, String destPath) throws IOException {
-		FileChannel sourceChannel = null;
-		FileChannel destChannel = null;
-		FileInputStream fis = null;
-		FileOutputStream fos = null;
+		// FileChannel sourceChannel = null;
+		// FileChannel destChannel = null;
+		// FileInputStream fis = null;
+		// FileOutputStream fos = null;
 		String result = null;
 
 		String extension = source.getName().substring(source.getName().lastIndexOf('.'));
@@ -370,35 +370,11 @@ public class ContactManager {
 			return null;
 		}
 
-		try {
-			fis = new FileInputStream(source);
-			sourceChannel = fis.getChannel();
-
-			fos = new FileOutputStream(dest);
-			destChannel = fos.getChannel();
-
+		try (FileInputStream fis = new FileInputStream(source);
+				FileChannel sourceChannel = fis.getChannel();
+				FileOutputStream fos = new FileOutputStream(dest);
+				FileChannel destChannel = fos.getChannel()) {
 			destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
-		} finally {
-			try {
-				fis.close();
-			} catch (Exception e) {
-				LOGGER.warning("No se puede cerrar el stream", e);
-			}
-			try {
-				fos.close();
-			} catch (Exception e) {
-				LOGGER.warning("No se puede cerrar el stream", e);
-			}
-			try {
-				sourceChannel.close();
-			} catch (Exception e) {
-				LOGGER.warning("No se puede cerrar el canal", e);
-			}
-			try {
-				destChannel.close();
-			} catch (Exception e) {
-				LOGGER.warning("No se puede cerrar el canal", e);
-			}
 		}
 
 		return result;
@@ -538,17 +514,8 @@ public class ContactManager {
 			}
 
 			// Obtiene fecha de nacimiento
-			Calendar bdayCalendar = Calendar.getInstance();
-			if (card.getBirthday().getDate() != null) {
-				bdayCalendar.setTime(card.getBirthday().getDate());
-			} else if (card.getBirthday().getPartialDate() != null) {
-				// La fecha parcial es válida si hay día y mes
-				if (card.getBirthday().getPartialDate().getMonth() == null || card.getBirthday().getPartialDate().getDate() == null) {
-					continue;
-				}
-				bdayCalendar.set(Calendar.MONTH, card.getBirthday().getPartialDate().getMonth() - 1);
-				bdayCalendar.set(Calendar.DATE, card.getBirthday().getPartialDate().getDate());
-			} else {
+			Calendar bdayCalendar = getBirthday(card);
+			if (bdayCalendar == null) {
 				continue;
 			}
 
@@ -572,7 +539,46 @@ public class ContactManager {
 			}
 		}
 
-		// Rellena lista de resultados ordenada
+		return buildBirthdayResult(map);
+	}
+
+	/**
+	 * Obtiene la fecha de nacimiento.
+	 * 
+	 * @param card
+	 *            Información del contacto
+	 * @return Fecha de nacimiento. Si no se informa del año se obtiene la fecha
+	 *         de cumpleaños del año presente. Si no se informa día o mes se
+	 *         devuelve null
+	 */
+	private Calendar getBirthday(VCard card) {
+		Calendar bdayCalendar = Calendar.getInstance();
+		if (card.getBirthday().getDate() != null) {
+			bdayCalendar.setTime(card.getBirthday().getDate());
+		} else if (card.getBirthday().getPartialDate() != null) {
+			// La fecha parcial es válida si hay día y mes
+			if (card.getBirthday().getPartialDate().getMonth() == null || card.getBirthday().getPartialDate().getDate() == null) {
+				bdayCalendar = null;
+			} else {
+				bdayCalendar.set(Calendar.MONTH, card.getBirthday().getPartialDate().getMonth() - 1);
+				bdayCalendar.set(Calendar.DATE, card.getBirthday().getPartialDate().getDate());
+			}
+		} else {
+			bdayCalendar = null;
+		}
+
+		return bdayCalendar;
+	}
+
+	/**
+	 * Construye la lista ordenada de contactos según fecha de cumpleaños y
+	 * nombre
+	 * 
+	 * @param map
+	 *            Mapa con las fechas y contactos de los cumpleaños
+	 * @return Lista ordenada de contactos según fecha de cumpleaños y nombre
+	 */
+	private List<VCard> buildBirthdayResult(Map<Date, Set<VCard>> map) {
 		List<VCard> result = new ArrayList<>();
 		for (Entry<Date, Set<VCard>> entry : map.entrySet()) {
 			for (VCard card : entry.getValue()) {

@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import com.danielcorroto.directorius.controller.data.AddressInfo;
 import com.danielcorroto.directorius.controller.data.EmailInfo;
 import com.danielcorroto.directorius.controller.data.PhoneInfo;
+import com.danielcorroto.directorius.model.Utils;
 import com.danielcorroto.directorius.view.Text;
 
 import ezvcard.VCard;
@@ -80,28 +81,28 @@ public class DisplayUtil {
 	 */
 	public static String getAddressInfo(AddressInfo info, ResourceBundle rb) {
 		StringBuilder builder = new StringBuilder();
-		if (info.getStreet() != null && !info.getStreet().trim().isEmpty()) {
+		if (!Utils.isBlank(info.getStreet())) {
 			builder.append(info.getStreet().trim());
 		}
-		if (info.getLocality() != null && !info.getLocality().trim().isEmpty()) {
+		if (!Utils.isBlank(info.getLocality())) {
 			if (builder.length() != 0) {
 				builder.append(", ");
 			}
 			builder.append(info.getLocality().trim());
 		}
-		if (info.getRegion() != null && !info.getRegion().trim().isEmpty()) {
+		if (!Utils.isBlank(info.getRegion())) {
 			if (builder.length() != 0) {
 				builder.append(", ");
 			}
 			builder.append(info.getRegion().trim());
 		}
-		if (info.getPostalCode() != null && !info.getPostalCode().trim().isEmpty()) {
+		if (!Utils.isBlank(info.getPostalCode())) {
 			if (builder.length() != 0) {
 				builder.append(", ");
 			}
 			builder.append(info.getPostalCode().trim());
 		}
-		if (info.getCountry() != null && !info.getCountry().trim().isEmpty()) {
+		if (!Utils.isBlank(info.getCountry())) {
 			if (builder.length() != 0) {
 				builder.append(", ");
 			}
@@ -109,7 +110,7 @@ public class DisplayUtil {
 		}
 
 		builder.append(" (" + rb.getString(info.getType().getI18n()) + ")");
-		if (info.getTag() != null && !info.getTag().isEmpty()) {
+		if (!Utils.isBlank(info.getTag())) {
 			builder.append(" - " + info.getTag());
 		}
 		return builder.toString();

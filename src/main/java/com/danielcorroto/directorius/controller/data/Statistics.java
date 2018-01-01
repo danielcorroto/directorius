@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.danielcorroto.directorius.model.Utils;
+
 import ezvcard.VCard;
 import ezvcard.property.Address;
 import ezvcard.property.Email;
@@ -70,35 +72,44 @@ public class Statistics {
 			allContactsBirthday++;
 		}
 		if (vcard.getCategories() != null && !vcard.getCategories().getValues().isEmpty()) {
-			for (String category : vcard.getCategories().getValues()) {
-				Integer count = categoryMap.get(category);
-				if (count == null) {
-					count = 0;
-				}
-				categoryMap.put(category, count + 1);
-			}
+			mapCategories(vcard);
 		}
-		if (vcard.getPhotos() != null && !vcard.getPhotos().isEmpty()) {
+		if (!Utils.isEmpty(vcard.getPhotos())) {
 			allContactsPhoto++;
 		}
-
-		if (vcard.getTelephoneNumbers() != null && !vcard.getTelephoneNumbers().isEmpty()) {
+		if (!Utils.isEmpty(vcard.getTelephoneNumbers())) {
 			allContactsPhone++;
 			for (Telephone phone : vcard.getTelephoneNumbers()) {
 				phoneSet.add(phone.getText().replace(" ", ""));
 			}
 		}
-		if (vcard.getEmails() != null && !vcard.getEmails().isEmpty()) {
+		if (!Utils.isEmpty(vcard.getEmails())) {
 			allContactsEmail++;
 			for (Email email : vcard.getEmails()) {
 				emailSet.add(email.getValue().replace(" ", ""));
 			}
 		}
-		if (vcard.getAddresses() != null && !vcard.getAddresses().isEmpty()) {
+		if (!Utils.isEmpty(vcard.getAddresses())) {
 			allContactsAddress++;
 			for (Address address : vcard.getAddresses()) {
 				addressSet.add(address);
 			}
+		}
+	}
+
+	/**
+	 * Mapea la información por categoría
+	 * 
+	 * @param vcard
+	 *            Información del contacto
+	 */
+	private void mapCategories(VCard vcard) {
+		for (String category : vcard.getCategories().getValues()) {
+			Integer count = categoryMap.get(category);
+			if (count == null) {
+				count = 0;
+			}
+			categoryMap.put(category, count + 1);
 		}
 	}
 

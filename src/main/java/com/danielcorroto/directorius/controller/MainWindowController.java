@@ -214,16 +214,17 @@ public class MainWindowController extends Application {
 			public void handle(ActionEvent event) {
 				File f = createFileChooser(false);
 
-				if (f != null) {
-					try {
-						manager = ContactManager.loadFile(f.getAbsolutePath());
-						if (manager != null) {
-							loadManager();
-						}
-					} catch (Exception e) {
-						LOGGER.severe("Error al cargar el fichero " + f, e);
-						new AlertExceptionWindow(e).showAndWait();
+				if (f == null) {
+					return;
+				}
+				try {
+					manager = ContactManager.loadFile(f.getAbsolutePath());
+					if (manager != null) {
+						loadManager();
 					}
+				} catch (Exception e) {
+					LOGGER.severe("Error al cargar el fichero " + f, e);
+					new AlertExceptionWindow(e).showAndWait();
 				}
 			}
 		});
@@ -321,16 +322,11 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					List<VCard> cards = manager.getBirthday(new Date(), new Date());
-					Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_TODAY).showAndWait();
-					if (card.isPresent()) {
-						setWebViewInfo(card.get());
-						selectListViewElement(card.get());
-					}
-				} catch (Exception e) {
-					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
-					new AlertExceptionWindow(e).showAndWait();
+				List<VCard> cards = manager.getBirthday(new Date(), new Date());
+				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_TODAY).showAndWait();
+				if (card.isPresent()) {
+					setWebViewInfo(card.get());
+					selectListViewElement(card.get());
 				}
 			}
 		});
@@ -340,18 +336,13 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					Calendar end = Calendar.getInstance();
-					end.add(Calendar.DATE, 7);
-					List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
-					Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
-					if (card.isPresent()) {
-						setWebViewInfo(card.get());
-						selectListViewElement(card.get());
-					}
-				} catch (Exception e) {
-					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
-					new AlertExceptionWindow(e).showAndWait();
+				Calendar end = Calendar.getInstance();
+				end.add(Calendar.DATE, 7);
+				List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
+				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
+				if (card.isPresent()) {
+					setWebViewInfo(card.get());
+					selectListViewElement(card.get());
 				}
 			}
 		});
@@ -361,18 +352,13 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					Calendar end = Calendar.getInstance();
-					end.add(Calendar.MONTH, 1);
-					List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
-					Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINMONTH).showAndWait();
-					if (card.isPresent()) {
-						setWebViewInfo(card.get());
-						selectListViewElement(card.get());
-					}
-				} catch (Exception e) {
-					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
-					new AlertExceptionWindow(e).showAndWait();
+				Calendar end = Calendar.getInstance();
+				end.add(Calendar.MONTH, 1);
+				List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
+				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINMONTH).showAndWait();
+				if (card.isPresent()) {
+					setWebViewInfo(card.get());
+					selectListViewElement(card.get());
 				}
 			}
 		});
@@ -382,20 +368,15 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					Calendar start = Calendar.getInstance();
-					start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-					Calendar end = Calendar.getInstance();
-					end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-					List<VCard> cards = manager.getBirthday(start.getTime(), end.getTime());
-					Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_THISWEEK).showAndWait();
-					if (card.isPresent()) {
-						setWebViewInfo(card.get());
-						selectListViewElement(card.get());
-					}
-				} catch (Exception e) {
-					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
-					new AlertExceptionWindow(e).showAndWait();
+				Calendar start = Calendar.getInstance();
+				start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+				Calendar end = Calendar.getInstance();
+				end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+				List<VCard> cards = manager.getBirthday(start.getTime(), end.getTime());
+				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_THISWEEK).showAndWait();
+				if (card.isPresent()) {
+					setWebViewInfo(card.get());
+					selectListViewElement(card.get());
 				}
 			}
 		});
@@ -405,20 +386,15 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					Calendar start = Calendar.getInstance();
-					start.set(Calendar.DATE, 1);
-					Calendar end = Calendar.getInstance();
-					end.set(Calendar.DATE, end.getActualMaximum(Calendar.DATE));
-					List<VCard> cards = manager.getBirthday(start.getTime(), end.getTime());
-					Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_THISMONTH).showAndWait();
-					if (card.isPresent()) {
-						setWebViewInfo(card.get());
-						selectListViewElement(card.get());
-					}
-				} catch (Exception e) {
-					LOGGER.severe("Error al abrir la ventana Cumpleaños", e);
-					new AlertExceptionWindow(e).showAndWait();
+				Calendar start = Calendar.getInstance();
+				start.set(Calendar.DATE, 1);
+				Calendar end = Calendar.getInstance();
+				end.set(Calendar.DATE, end.getActualMaximum(Calendar.DATE));
+				List<VCard> cards = manager.getBirthday(start.getTime(), end.getTime());
+				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_THISMONTH).showAndWait();
+				if (card.isPresent()) {
+					setWebViewInfo(card.get());
+					selectListViewElement(card.get());
 				}
 			}
 		});

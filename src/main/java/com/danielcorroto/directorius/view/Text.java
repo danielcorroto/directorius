@@ -6,7 +6,7 @@ package com.danielcorroto.directorius.view;
  * @author Daniel Corroto Quirós
  *
  */
-public interface Text {
+public class Text {
 	/**
 	 * Nombre de la aplicación
 	 */

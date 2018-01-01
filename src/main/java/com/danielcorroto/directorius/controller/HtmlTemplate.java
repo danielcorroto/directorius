@@ -6,7 +6,7 @@ package com.danielcorroto.directorius.controller;
  * @author Daniel Corroto Quirós
  *
  */
-public interface HtmlTemplate {
+public class HtmlTemplate {
 	/**
 	 * Ruta del CSS de Bootstrap
 	 */
