@@ -17,6 +17,7 @@ import com.danielcorroto.directorius.controller.data.AddressInfo;
 import com.danielcorroto.directorius.controller.data.EmailInfo;
 import com.danielcorroto.directorius.controller.data.PhoneInfo;
 import com.danielcorroto.directorius.controller.handler.ElementEnablerChangeListener;
+import com.danielcorroto.directorius.controller.handler.RemoveElementContactEventHandler;
 import com.danielcorroto.directorius.controller.handler.UpDownElementEventHandler;
 import com.danielcorroto.directorius.controller.type.AddressTypeEnum;
 import com.danielcorroto.directorius.controller.type.EmailTypeEnum;
@@ -53,8 +54,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
@@ -339,8 +338,8 @@ public class ContactWindowController {
 		categoryNodes.add(window.getRemoveCategory());
 		categoryNodes.add(window.getUpCategory());
 		categoryNodes.add(window.getDownCategory());
-		window.getListViewCategory().getSelectionModel().selectedItemProperty().addListener(new ElementEnablerChangeListener<>(categoryNodes.toArray(new Node[categoryNodes.size()])));
-		
+		window.getListViewCategory().getSelectionModel().selectedItemProperty()
+				.addListener(new ElementEnablerChangeListener<>(categoryNodes.toArray(new Node[categoryNodes.size()])));
 
 		// Selección de teléfono
 		List<Node> phoneNodes = new ArrayList<>();
@@ -350,7 +349,6 @@ public class ContactWindowController {
 		phoneNodes.add(window.getUpPhone());
 		phoneNodes.add(window.getDownPhone());
 		window.getListViewPhone().getSelectionModel().selectedItemProperty().addListener(new ElementEnablerChangeListener<>(phoneNodes.toArray(new Node[phoneNodes.size()])));
-		
 
 		// Selección de email
 		List<Node> emailNodes = new ArrayList<>();
@@ -360,7 +358,6 @@ public class ContactWindowController {
 		emailNodes.add(window.getUpEmail());
 		emailNodes.add(window.getDownEmail());
 		window.getListViewEmail().getSelectionModel().selectedItemProperty().addListener(new ElementEnablerChangeListener<>(emailNodes.toArray(new Node[emailNodes.size()])));
-		
 
 		// Selección de dirección
 		List<Node> addressNodes = new ArrayList<>();
@@ -371,7 +368,7 @@ public class ContactWindowController {
 		addressNodes.add(window.getDownAddress());
 		window.getListViewAddress().getSelectionModel().selectedItemProperty().addListener(new ElementEnablerChangeListener<>(addressNodes.toArray(new Node[addressNodes.size()])));
 	}
-	
+
 	/**
 	 * Setea la funcionalidad de los botones de añadir teléfono/email/dirección
 	 */
@@ -631,96 +628,42 @@ public class ContactWindowController {
 	 */
 	private void removeElementFunctions() {
 		// Eliminar categoría
-		window.getRemoveCategory().setOnAction(new EventHandler<ActionEvent>() {
+		window.getRemoveCategory()
+				.setOnAction(new RemoveElementContactEventHandler<ActionEvent, String>(window.getListViewCategory(), rb.getString(Text.I18N_CONTACT_CATEGORY_REMOVE)) {
 
-			@Override
-			public void handle(ActionEvent event) {
-				String info = window.getListViewCategory().getSelectionModel().getSelectedItem();
-				if (info == null) {
-					return;
-				}
-
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle(rb.getString(Text.I18N_CONTACT_CATEGORY_REMOVE));
-				alert.setHeaderText(info);
-				alert.setContentText(null);
-
-				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == ButtonType.OK) {
-					int index = window.getListViewCategory().getSelectionModel().getSelectedIndex();
-					window.getListViewCategory().getItems().remove(index);
-				}
-			}
-		});
+					@Override
+					public String infoToText(String info) {
+						return info;
+					}
+				});
 
 		// Eliminar teléfono
-		window.getRemovePhone().setOnAction(new EventHandler<ActionEvent>() {
+		window.getRemovePhone().setOnAction(new RemoveElementContactEventHandler<ActionEvent, PhoneInfo>(window.getListViewPhone(), rb.getString(Text.I18N_CONTACT_PHONE_REMOVE)) {
 
 			@Override
-			public void handle(ActionEvent event) {
-				PhoneInfo info = window.getListViewPhone().getSelectionModel().getSelectedItem();
-				if (info == null) {
-					return;
-				}
-
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle(rb.getString(Text.I18N_CONTACT_PHONE_REMOVE));
-				alert.setHeaderText(DisplayUtil.getPhoneInfo(info, rb));
-				alert.setContentText(null);
-
-				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == ButtonType.OK) {
-					int index = window.getListViewPhone().getSelectionModel().getSelectedIndex();
-					window.getListViewPhone().getItems().remove(index);
-				}
+			public String infoToText(PhoneInfo info) {
+				return DisplayUtil.getPhoneInfo(info, rb);
 			}
 		});
 
 		// Eliminar email
-		window.getRemoveEmail().setOnAction(new EventHandler<ActionEvent>() {
+		window.getRemoveEmail().setOnAction(new RemoveElementContactEventHandler<ActionEvent, EmailInfo>(window.getListViewEmail(), rb.getString(Text.I18N_CONTACT_EMAIL_REMOVE)) {
 
 			@Override
-			public void handle(ActionEvent event) {
-				EmailInfo info = window.getListViewEmail().getSelectionModel().getSelectedItem();
-				if (info == null) {
-					return;
-				}
-
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle(rb.getString(Text.I18N_CONTACT_EMAIL_REMOVE));
-				alert.setHeaderText(DisplayUtil.getEmailInfo(info, rb));
-				alert.setContentText(null);
-
-				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == ButtonType.OK) {
-					int index = window.getListViewEmail().getSelectionModel().getSelectedIndex();
-					window.getListViewEmail().getItems().remove(index);
-				}
+			public String infoToText(EmailInfo info) {
+				return DisplayUtil.getEmailInfo(info, rb);
 			}
 		});
 
 		// Eliminar dirección
-		window.getRemoveAddress().setOnAction(new EventHandler<ActionEvent>() {
+		window.getRemoveAddress()
+				.setOnAction(new RemoveElementContactEventHandler<ActionEvent, AddressInfo>(window.getListViewAddress(), rb.getString(Text.I18N_CONTACT_ADDRESS_REMOVE)) {
 
-			@Override
-			public void handle(ActionEvent event) {
-				AddressInfo info = window.getListViewAddress().getSelectionModel().getSelectedItem();
-				if (info == null) {
-					return;
-				}
-
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle(rb.getString(Text.I18N_CONTACT_ADDRESS_REMOVE));
-				alert.setHeaderText(DisplayUtil.getAddressInfo(info, rb));
-				alert.setContentText(null);
-
-				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == ButtonType.OK) {
-					int index = window.getListViewAddress().getSelectionModel().getSelectedIndex();
-					window.getListViewAddress().getItems().remove(index);
-				}
-			}
-		});
+					@Override
+					public String infoToText(AddressInfo info) {
+						return DisplayUtil.getAddressInfo(info, rb);
+					}
+				});
 	}
 
 	/**
@@ -731,13 +674,13 @@ public class ContactWindowController {
 	private void upElementFunctions() {
 		// Subir categoría
 		window.getUpCategory().setOnAction(new UpDownElementEventHandler<>(window.getListViewCategory(), true));
-		
+
 		// Subir teléfono
 		window.getUpPhone().setOnAction(new UpDownElementEventHandler<>(window.getListViewPhone(), true));
-		
+
 		// Subir email
 		window.getUpEmail().setOnAction(new UpDownElementEventHandler<>(window.getListViewEmail(), true));
-		
+
 		// Subir dirección
 		window.getUpAddress().setOnAction(new UpDownElementEventHandler<>(window.getListViewAddress(), true));
 	}
@@ -750,13 +693,13 @@ public class ContactWindowController {
 	private void downElementFunctions() {
 		// Bajar categoría
 		window.getDownCategory().setOnAction(new UpDownElementEventHandler<>(window.getListViewCategory(), false));
-		
+
 		// Bajar teléfono
 		window.getDownPhone().setOnAction(new UpDownElementEventHandler<>(window.getListViewPhone(), false));
-		
+
 		// Bajar email
 		window.getDownEmail().setOnAction(new UpDownElementEventHandler<>(window.getListViewEmail(), false));
-		
+
 		// Bajar dirección
 		window.getDownAddress().setOnAction(new UpDownElementEventHandler<>(window.getListViewAddress(), false));
 	}
