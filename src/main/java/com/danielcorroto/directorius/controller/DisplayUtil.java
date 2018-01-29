@@ -205,7 +205,7 @@ public class DisplayUtil {
 	 *            Día de nacimiento (1-31)
 	 * @param nextBday
 	 *            Indica si hay que calcular la edad para el próximo cumpleaños
-	 *            si cae próximo
+	 *            si cae próximo. False si se calcula la edad actual
 	 * @return Edad
 	 */
 	private static int getAgeFrom(int year, int month, int day, boolean nextBday) {
@@ -232,6 +232,18 @@ public class DisplayUtil {
 
 			if (Math.abs(currentDob.getTime().getTime() - now.getTime().getTime()) > HALF_YEAR_MILLIS) {
 				age++;
+			}
+		} else {
+			int month1 = now.get(Calendar.MONTH);
+			int month2 = dob.get(Calendar.MONTH);
+			if (month2 > month1) {
+				age--;
+			} else if (month1 == month2) {
+				int day1 = now.get(Calendar.DAY_OF_MONTH);
+				int day2 = dob.get(Calendar.DAY_OF_MONTH);
+				if (day2 > day1) {
+					age--;
+				}
 			}
 		}
 
