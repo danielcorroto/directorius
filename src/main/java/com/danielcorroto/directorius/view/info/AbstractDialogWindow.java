@@ -15,6 +15,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -123,6 +124,42 @@ public abstract class AbstractDialogWindow<T> extends Dialog<T> {
 	 */
 	protected ResourceBundle getResourceBundle() {
 		return rb;
+	}
+
+	/**
+	 * Obtiene el texto sin espacios al principio o final o null. Evita
+	 * NullPointerException
+	 * 
+	 * @param str
+	 *            Cadena original
+	 * @return Cadena sin espacios al principio o final o null
+	 */
+	protected String getValue(String str) {
+		if (str == null) {
+			return null;
+		} else {
+			return str.trim();
+		}
+
+	}
+
+	/**
+	 * Obtiene el texto de un TextField o null si el objeto es nulo o el texto
+	 * es nulo. Evita NullPointerException
+	 * 
+	 * @param field
+	 *            Campo
+	 * @return Cadena del campo sin espacios al principio o final o null
+	 */
+	protected String getTextFromTextField(TextField field) {
+		if (field == null) {
+			return null;
+		} else if (field.getText() == null) {
+			return null;
+		} else {
+			return field.getText().trim();
+		}
+
 	}
 
 	/**

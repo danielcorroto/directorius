@@ -56,9 +56,9 @@ public class PhoneDialogWindow extends AbstractDialogWindow<PhoneInfo> {
 	 */
 	public PhoneDialogWindow(PhoneInfo info) {
 		super(true);
-		numberTextField.setText(info.getNumber().trim());
+		numberTextField.setText(getValue(info.getNumber()));
 		typeComboBox.getSelectionModel().select(info.getType());
-		tagTextField.setText(info.getTag());
+		tagTextField.setText(getValue(info.getTag()));
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class PhoneDialogWindow extends AbstractDialogWindow<PhoneInfo> {
 			@Override
 			public PhoneInfo call(ButtonType dialogButton) {
 				if (dialogButton == getSaveButtonType()) {
-					return new PhoneInfo(numberTextField.getText().trim(), typeComboBox.getSelectionModel().getSelectedItem(), tagTextField.getText().trim());
+					return new PhoneInfo(getTextFromTextField(numberTextField), typeComboBox.getSelectionModel().getSelectedItem(), getTextFromTextField(tagTextField));
 				}
 				return null;
 			}

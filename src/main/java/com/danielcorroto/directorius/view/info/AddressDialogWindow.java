@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import com.danielcorroto.directorius.controller.data.AddressInfo;
 import com.danielcorroto.directorius.controller.type.AddressTypeEnum;
+import com.danielcorroto.directorius.model.Utils;
 import com.danielcorroto.directorius.model.comparator.AddressTypeComparator;
 import com.danielcorroto.directorius.view.ResourcePath;
 import com.danielcorroto.directorius.view.Text;
@@ -74,13 +75,13 @@ public class AddressDialogWindow extends AbstractDialogWindow<AddressInfo> {
 	 */
 	public AddressDialogWindow(AddressInfo info) {
 		super(true);
-		streetTextField.setText(info.getStreet().trim());
-		localityTextField.setText(info.getLocality().trim());
-		regionTextField.setText(info.getRegion().trim());
-		postalCodeTextField.setText(info.getPostalCode().trim());
-		countryTextField.setText(info.getCountry().trim());
+		streetTextField.setText(getValue(info.getStreet()));
+		localityTextField.setText(getValue(info.getLocality()));
+		regionTextField.setText(getValue(info.getRegion()));
+		postalCodeTextField.setText(getValue(info.getPostalCode()));
+		countryTextField.setText(getValue(info.getCountry()));
 		typeComboBox.getSelectionModel().select(info.getType());
-		tagTextField.setText(info.getTag());
+		tagTextField.setText(getValue(info.getTag()));
 	}
 
 	/**
@@ -191,23 +192,23 @@ public class AddressDialogWindow extends AbstractDialogWindow<AddressInfo> {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!streetTextField.getText().trim().isEmpty()) {
+				if (!Utils.isBlank(streetTextField.getText())) {
 					saveButton.setDisable(false);
 					return;
 				}
-				if (!localityTextField.getText().trim().isEmpty()) {
+				if (!Utils.isBlank(localityTextField.getText())) {
 					saveButton.setDisable(false);
 					return;
 				}
-				if (!regionTextField.getText().trim().isEmpty()) {
+				if (!Utils.isBlank(regionTextField.getText())) {
 					saveButton.setDisable(false);
 					return;
 				}
-				if (!postalCodeTextField.getText().trim().isEmpty()) {
+				if (!Utils.isBlank(postalCodeTextField.getText())) {
 					saveButton.setDisable(false);
 					return;
 				}
-				if (!countryTextField.getText().trim().isEmpty()) {
+				if (!Utils.isBlank(countryTextField.getText())) {
 					saveButton.setDisable(false);
 					return;
 				}
@@ -229,13 +230,14 @@ public class AddressDialogWindow extends AbstractDialogWindow<AddressInfo> {
 			@Override
 			public AddressInfo call(ButtonType dialogButton) {
 				if (dialogButton == getSaveButtonType()) {
-					return new AddressInfo(streetTextField.getText().trim(), localityTextField.getText().trim(), regionTextField.getText().trim(),
-							postalCodeTextField.getText().trim(), countryTextField.getText().trim(), typeComboBox.getSelectionModel().getSelectedItem(),
-							tagTextField.getText().trim());
+					return new AddressInfo(getTextFromTextField(streetTextField), getTextFromTextField(localityTextField), getTextFromTextField(regionTextField),
+							getTextFromTextField(postalCodeTextField), getTextFromTextField(countryTextField), typeComboBox.getSelectionModel().getSelectedItem(),
+							getTextFromTextField(tagTextField));
 				}
 				return null;
 			}
 		};
 		return result;
 	}
+
 }

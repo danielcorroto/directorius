@@ -56,9 +56,9 @@ public class EmailDialogWindow extends AbstractDialogWindow<EmailInfo> {
 	 */
 	public EmailDialogWindow(EmailInfo info) {
 		super(true);
-		emailTextField.setText(info.getEmail().trim());
+		emailTextField.setText(getValue(info.getEmail()));
 		typeComboBox.getSelectionModel().select(info.getType());
-		tagTextField.setText(info.getTag());
+		tagTextField.setText(getValue(info.getTag()));
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class EmailDialogWindow extends AbstractDialogWindow<EmailInfo> {
 			@Override
 			public EmailInfo call(ButtonType dialogButton) {
 				if (dialogButton == getSaveButtonType()) {
-					return new EmailInfo(emailTextField.getText().trim(), typeComboBox.getSelectionModel().getSelectedItem(), tagTextField.getText().trim());
+					return new EmailInfo(getTextFromTextField(emailTextField), typeComboBox.getSelectionModel().getSelectedItem(), getTextFromTextField(tagTextField));
 				}
 				return null;
 			}
