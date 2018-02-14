@@ -30,7 +30,7 @@ import javafx.util.Callback;
  * @author Daniel Corroto Quirós
  *
  */
-public class StatisticWindow extends Dialog<Void> {
+public class StatisticDialog extends Dialog<Void> {
 	/**
 	 * Porcentajes para los elementos del panel de estadísticas
 	 */
@@ -47,7 +47,7 @@ public class StatisticWindow extends Dialog<Void> {
 	 * @param stat
 	 *            Datos estadísticos
 	 */
-	public StatisticWindow(Statistics stat) {
+	public StatisticDialog(Statistics stat) {
 		super();
 		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
 

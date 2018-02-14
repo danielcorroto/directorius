@@ -27,7 +27,7 @@ import javafx.util.Callback;
  * @author Daniel Corroto Quirós
  *
  */
-public class EmailDialogWindow extends AbstractDialogWindow<EmailInfo> {
+public class EmailDialog extends AbstractDialog<EmailInfo> {
 	/**
 	 * Campo del email
 	 */
@@ -44,7 +44,7 @@ public class EmailDialogWindow extends AbstractDialogWindow<EmailInfo> {
 	/**
 	 * Constructor por defecto de la ventana
 	 */
-	public EmailDialogWindow() {
+	public EmailDialog() {
 		super(false);
 	}
 
@@ -54,7 +54,7 @@ public class EmailDialogWindow extends AbstractDialogWindow<EmailInfo> {
 	 * @param info
 	 *            Información del email
 	 */
-	public EmailDialogWindow(EmailInfo info) {
+	public EmailDialog(EmailInfo info) {
 		super(true);
 		emailTextField.setText(getValue(info.getEmail()));
 		typeComboBox.getSelectionModel().select(info.getType());
@@ -118,7 +118,7 @@ public class EmailDialogWindow extends AbstractDialogWindow<EmailInfo> {
 
 	@Override
 	protected InputStream getGraphicStream() {
-		return EmailDialogWindow.class.getResourceAsStream(ResourcePath.IMG_EDIT_CONTACT_EMAIL_ADD);
+		return EmailDialog.class.getResourceAsStream(ResourcePath.IMG_EDIT_CONTACT_EMAIL_ADD);
 	}
 
 	@Override

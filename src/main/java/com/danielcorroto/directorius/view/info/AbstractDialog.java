@@ -22,7 +22,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-public abstract class AbstractDialogWindow<T> extends Dialog<T> {
+public abstract class AbstractDialog<T> extends Dialog<T> {
 	/**
 	 * Gap horizontal en el grid
 	 */
@@ -48,7 +48,7 @@ public abstract class AbstractDialogWindow<T> extends Dialog<T> {
 	 * @param edit
 	 *            Indica si es una edición de contacto (true) o creación (false)
 	 */
-	public AbstractDialogWindow(boolean edit) {
+	public AbstractDialog(boolean edit) {
 		super();
 		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
 

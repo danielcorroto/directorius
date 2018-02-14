@@ -21,14 +21,14 @@ import javafx.stage.Stage;
  * @author Daniel Corroto Quirós
  *
  */
-public class AlertExceptionWindow extends Alert {
+public class AlertExceptionDialog extends Alert {
 	/**
 	 * Constructor por defecto
 	 * 
 	 * @param e
 	 *            Excepción a mostrar
 	 */
-	public AlertExceptionWindow(Exception e) {
+	public AlertExceptionDialog(Exception e) {
 		super(AlertType.ERROR);
 		build(e);
 	}

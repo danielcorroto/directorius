@@ -31,7 +31,7 @@ import javafx.util.Callback;
  * @author Daniel Corroto Quirós
  *
  */
-public class BirthdayWindow extends Dialog<VCard> {
+public class BirthdayDialog extends Dialog<VCard> {
 
 	/**
 	 * Para i18n
@@ -46,7 +46,7 @@ public class BirthdayWindow extends Dialog<VCard> {
 	 * @param i18nTitle
 	 *            Titulo en i18n
 	 */
-	public BirthdayWindow(List<VCard> cards, String i18nTitle) {
+	public BirthdayDialog(List<VCard> cards, String i18nTitle) {
 		super();
 		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
 

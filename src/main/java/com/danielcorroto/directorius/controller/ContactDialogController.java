@@ -26,13 +26,13 @@ import com.danielcorroto.directorius.model.ContactManager;
 import com.danielcorroto.directorius.model.CustomParameter;
 import com.danielcorroto.directorius.model.Utils;
 import com.danielcorroto.directorius.model.log.Logger;
-import com.danielcorroto.directorius.view.AlertExceptionWindow;
+import com.danielcorroto.directorius.view.AlertExceptionDialog;
 import com.danielcorroto.directorius.view.ContactDialog;
 import com.danielcorroto.directorius.view.Text;
-import com.danielcorroto.directorius.view.info.AddressDialogWindow;
-import com.danielcorroto.directorius.view.info.CategoryDialogWindow;
-import com.danielcorroto.directorius.view.info.EmailDialogWindow;
-import com.danielcorroto.directorius.view.info.PhoneDialogWindow;
+import com.danielcorroto.directorius.view.info.AddressDialog;
+import com.danielcorroto.directorius.view.info.CategoryDialog;
+import com.danielcorroto.directorius.view.info.EmailDialog;
+import com.danielcorroto.directorius.view.info.PhoneDialog;
 
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
@@ -68,11 +68,11 @@ import javafx.util.Callback;
  * @author Daniel Corroto Quirós
  *
  */
-public class ContactWindowController {
+public class ContactDialogController {
 	/**
 	 * Logger
 	 */
-	private static final Logger LOGGER = Logger.getLogger(ContactWindowController.class);
+	private static final Logger LOGGER = Logger.getLogger(ContactDialogController.class);
 	/**
 	 * Clase de la vista
 	 */
@@ -104,7 +104,7 @@ public class ContactWindowController {
 	 * @param vcard
 	 *            Información del contacto editado o null si es nuevo
 	 */
-	public ContactWindowController(ContactManager manager, VCard vcard) {
+	public ContactDialogController(ContactManager manager, VCard vcard) {
 		super();
 		this.manager = manager;
 		this.vcard = vcard;
@@ -250,7 +250,7 @@ public class ContactWindowController {
 				loadImage();
 			} catch (IOException e) {
 				LOGGER.severe("No se ha podido cargar la foto de " + vcard.getUid(), e);
-				new AlertExceptionWindow(e).showAndWait();
+				new AlertExceptionDialog(e).showAndWait();
 				imageFile = null;
 			}
 		}
@@ -342,7 +342,7 @@ public class ContactWindowController {
 					loadImage();
 				} catch (IOException e) {
 					LOGGER.severe("Fichero no encontrado " + imageFile.getAbsolutePath(), e);
-					new AlertExceptionWindow(e).showAndWait();
+					new AlertExceptionDialog(e).showAndWait();
 					imageFile = null;
 				}
 			}
@@ -424,7 +424,7 @@ public class ContactWindowController {
 
 			@Override
 			public void handle(ActionEvent event) {
-				CategoryDialogWindow dialog = new CategoryDialogWindow(manager.getCategories());
+				CategoryDialog dialog = new CategoryDialog(manager.getCategories());
 				Optional<String> result = dialog.showAndWait();
 
 				result.ifPresent(new Consumer<String>() {
@@ -442,7 +442,7 @@ public class ContactWindowController {
 
 			@Override
 			public void handle(ActionEvent event) {
-				PhoneDialogWindow dialog = new PhoneDialogWindow();
+				PhoneDialog dialog = new PhoneDialog();
 				Optional<PhoneInfo> result = dialog.showAndWait();
 
 				result.ifPresent(new Consumer<PhoneInfo>() {
@@ -460,7 +460,7 @@ public class ContactWindowController {
 
 			@Override
 			public void handle(ActionEvent event) {
-				EmailDialogWindow dialog = new EmailDialogWindow();
+				EmailDialog dialog = new EmailDialog();
 				Optional<EmailInfo> result = dialog.showAndWait();
 
 				result.ifPresent(new Consumer<EmailInfo>() {
@@ -478,7 +478,7 @@ public class ContactWindowController {
 
 			@Override
 			public void handle(ActionEvent event) {
-				AddressDialogWindow dialog = new AddressDialogWindow();
+				AddressDialog dialog = new AddressDialog();
 				Optional<AddressInfo> result = dialog.showAndWait();
 
 				result.ifPresent(new Consumer<AddressInfo>() {
@@ -585,7 +585,7 @@ public class ContactWindowController {
 			return;
 		}
 
-		CategoryDialogWindow dialog = new CategoryDialogWindow(info, manager.getCategories());
+		CategoryDialog dialog = new CategoryDialog(info, manager.getCategories());
 		Optional<String> result = dialog.showAndWait();
 
 		result.ifPresent(new Consumer<String>() {
@@ -608,7 +608,7 @@ public class ContactWindowController {
 			return;
 		}
 
-		PhoneDialogWindow dialog = new PhoneDialogWindow(info);
+		PhoneDialog dialog = new PhoneDialog(info);
 		Optional<PhoneInfo> result = dialog.showAndWait();
 
 		result.ifPresent(new Consumer<PhoneInfo>() {
@@ -631,7 +631,7 @@ public class ContactWindowController {
 			return;
 		}
 
-		EmailDialogWindow dialog = new EmailDialogWindow(info);
+		EmailDialog dialog = new EmailDialog(info);
 		Optional<EmailInfo> result = dialog.showAndWait();
 
 		result.ifPresent(new Consumer<EmailInfo>() {
@@ -654,7 +654,7 @@ public class ContactWindowController {
 			return;
 		}
 
-		AddressDialogWindow dialog = new AddressDialogWindow(info);
+		AddressDialog dialog = new AddressDialog(info);
 		Optional<AddressInfo> result = dialog.showAndWait();
 
 		result.ifPresent(new Consumer<AddressInfo>() {
@@ -804,14 +804,14 @@ public class ContactWindowController {
 				manager.createContact(vcard);
 			} catch (IOException e) {
 				LOGGER.severe("No se ha podido guardar el contacto " + vcard.getFormattedName().getValue(), e);
-				new AlertExceptionWindow(e).showAndWait();
+				new AlertExceptionDialog(e).showAndWait();
 			}
 		} else {
 			try {
 				manager.updateContact(vcard);
 			} catch (IOException e) {
 				LOGGER.severe("No se ha podido actualizar el contacto " + vcard.getUid(), e);
-				new AlertExceptionWindow(e).showAndWait();
+				new AlertExceptionDialog(e).showAndWait();
 			}
 		}
 
@@ -899,7 +899,7 @@ public class ContactWindowController {
 				vcard.addPhoto(photo);
 			} catch (IOException e) {
 				LOGGER.severe("No se ha podido guardar la foto de " + vcard.getUid(), e);
-				new AlertExceptionWindow(e).showAndWait();
+				new AlertExceptionDialog(e).showAndWait();
 			}
 		} else {
 			// No se ha seleccionado foto
@@ -917,7 +917,7 @@ public class ContactWindowController {
 				manager.removePhotoFile(previousUrl);
 			} catch (IOException e) {
 				LOGGER.severe("No se ha podido eliminar la foto de " + vcard.getUid(), e);
-				new AlertExceptionWindow(e).showAndWait();
+				new AlertExceptionDialog(e).showAndWait();
 			}
 			vcard.getPhotos().clear();
 		}

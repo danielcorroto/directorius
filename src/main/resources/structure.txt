@@ -1,0 +1,11 @@
+MainWindow - MainWindowController
+|-- AboutWindow
+|-- AlertExceptionDialog
+|-- BirthdayDialog
+|-- ContactDialog - ContactDialogController
+|   |-- AddressDialog
+|   |-- AlertExceptionDialog
+|   |-- CategoryDialog
+|   |-- EmailDialog
+|   `-- PhoneDialog
+`-- StatisticDialog

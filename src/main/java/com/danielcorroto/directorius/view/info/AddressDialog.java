@@ -30,7 +30,7 @@ import javafx.util.Callback;
  * @author Daniel Corroto Quirós
  *
  */
-public class AddressDialogWindow extends AbstractDialogWindow<AddressInfo> {
+public class AddressDialog extends AbstractDialog<AddressInfo> {
 	/**
 	 * Campo de la calle
 	 */
@@ -63,7 +63,7 @@ public class AddressDialogWindow extends AbstractDialogWindow<AddressInfo> {
 	/**
 	 * Constructor por defecto de la ventana
 	 */
-	public AddressDialogWindow() {
+	public AddressDialog() {
 		super(false);
 	}
 
@@ -73,7 +73,7 @@ public class AddressDialogWindow extends AbstractDialogWindow<AddressInfo> {
 	 * @param info
 	 *            Información de la dirección
 	 */
-	public AddressDialogWindow(AddressInfo info) {
+	public AddressDialog(AddressInfo info) {
 		super(true);
 		streetTextField.setText(getValue(info.getStreet()));
 		localityTextField.setText(getValue(info.getLocality()));
@@ -141,7 +141,7 @@ public class AddressDialogWindow extends AbstractDialogWindow<AddressInfo> {
 
 	@Override
 	protected InputStream getGraphicStream() {
-		return AddressDialogWindow.class.getResourceAsStream(ResourcePath.IMG_EDIT_CONTACT_ADDRESS_ADD);
+		return AddressDialog.class.getResourceAsStream(ResourcePath.IMG_EDIT_CONTACT_ADDRESS_ADD);
 	}
 
 	@Override

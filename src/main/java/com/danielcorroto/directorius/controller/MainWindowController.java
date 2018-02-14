@@ -17,10 +17,10 @@ import com.danielcorroto.directorius.model.SimpleVCard;
 import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 import com.danielcorroto.directorius.view.AboutWindow;
-import com.danielcorroto.directorius.view.AlertExceptionWindow;
-import com.danielcorroto.directorius.view.BirthdayWindow;
+import com.danielcorroto.directorius.view.AlertExceptionDialog;
+import com.danielcorroto.directorius.view.BirthdayDialog;
 import com.danielcorroto.directorius.view.MainWindow;
-import com.danielcorroto.directorius.view.StatisticWindow;
+import com.danielcorroto.directorius.view.StatisticDialog;
 import com.danielcorroto.directorius.view.Text;
 
 import ezvcard.VCard;
@@ -98,7 +98,7 @@ public class MainWindowController extends Application {
 			}
 		} catch (Exception e) {
 			LOGGER.severe("Error en la aplicación principal", e);
-			new AlertExceptionWindow(e).showAndWait();
+			new AlertExceptionDialog(e).showAndWait();
 		}
 	}
 
@@ -116,7 +116,7 @@ public class MainWindowController extends Application {
 		end.add(Calendar.DATE, 7);
 		List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
 		if (cards != null && !cards.isEmpty()) {
-			Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
+			Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
 			if (card.isPresent()) {
 				setWebViewInfo(card.get());
 				selectListViewElement(card.get());
@@ -204,7 +204,7 @@ public class MainWindowController extends Application {
 					}
 				} catch (Exception e) {
 					LOGGER.severe("Error al cargar el fichero " + f, e);
-					new AlertExceptionWindow(e).showAndWait();
+					new AlertExceptionDialog(e).showAndWait();
 				}
 			}
 		});
@@ -224,7 +224,7 @@ public class MainWindowController extends Application {
 					}
 				} catch (Exception e) {
 					LOGGER.severe("Error al cargar el fichero " + f, e);
-					new AlertExceptionWindow(e).showAndWait();
+					new AlertExceptionDialog(e).showAndWait();
 				}
 			}
 		});
@@ -304,10 +304,10 @@ public class MainWindowController extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					new StatisticWindow(manager.getStatistic()).showAndWait();
+					new StatisticDialog(manager.getStatistic()).showAndWait();
 				} catch (Exception e) {
 					LOGGER.severe("Error al abrir la ventana Estadísticas", e);
-					new AlertExceptionWindow(e).showAndWait();
+					new AlertExceptionDialog(e).showAndWait();
 				}
 			}
 		});
@@ -323,7 +323,7 @@ public class MainWindowController extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				List<VCard> cards = manager.getBirthday(new Date(), new Date());
-				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_TODAY).showAndWait();
+				Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_TODAY).showAndWait();
 				if (card.isPresent()) {
 					setWebViewInfo(card.get());
 					selectListViewElement(card.get());
@@ -339,7 +339,7 @@ public class MainWindowController extends Application {
 				Calendar end = Calendar.getInstance();
 				end.add(Calendar.DATE, 7);
 				List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
-				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
+				Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
 				if (card.isPresent()) {
 					setWebViewInfo(card.get());
 					selectListViewElement(card.get());
@@ -355,7 +355,7 @@ public class MainWindowController extends Application {
 				Calendar end = Calendar.getInstance();
 				end.add(Calendar.MONTH, 1);
 				List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
-				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_WITHINMONTH).showAndWait();
+				Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_WITHINMONTH).showAndWait();
 				if (card.isPresent()) {
 					setWebViewInfo(card.get());
 					selectListViewElement(card.get());
@@ -373,7 +373,7 @@ public class MainWindowController extends Application {
 				Calendar end = Calendar.getInstance();
 				end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 				List<VCard> cards = manager.getBirthday(start.getTime(), end.getTime());
-				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_THISWEEK).showAndWait();
+				Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_THISWEEK).showAndWait();
 				if (card.isPresent()) {
 					setWebViewInfo(card.get());
 					selectListViewElement(card.get());
@@ -391,7 +391,7 @@ public class MainWindowController extends Application {
 				Calendar end = Calendar.getInstance();
 				end.set(Calendar.DATE, end.getActualMaximum(Calendar.DATE));
 				List<VCard> cards = manager.getBirthday(start.getTime(), end.getTime());
-				Optional<VCard> card = new BirthdayWindow(cards, Text.I18N_MENU_BIRTHDAY_THISMONTH).showAndWait();
+				Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_THISMONTH).showAndWait();
 				if (card.isPresent()) {
 					setWebViewInfo(card.get());
 					selectListViewElement(card.get());
@@ -412,7 +412,7 @@ public class MainWindowController extends Application {
 					new AboutWindow().start(new Stage());
 				} catch (Exception e) {
 					LOGGER.severe("Error al abrir la ventana Acerca de...", e);
-					new AlertExceptionWindow(e).showAndWait();
+					new AlertExceptionDialog(e).showAndWait();
 				}
 			}
 		});
@@ -431,7 +431,7 @@ public class MainWindowController extends Application {
 			if (simplevcard != null) {
 				vcard = manager.readContact(simplevcard.getUid());
 			}
-			ContactWindowController cwc = new ContactWindowController(manager, vcard);
+			ContactDialogController cwc = new ContactDialogController(manager, vcard);
 			cwc.start();
 
 			// Carga la nueva lista
@@ -442,7 +442,7 @@ public class MainWindowController extends Application {
 			}
 		} catch (Exception e) {
 			LOGGER.severe("Error al abrir la ventana Añadir/Editar contacto...", e);
-			new AlertExceptionWindow(e).showAndWait();
+			new AlertExceptionDialog(e).showAndWait();
 		}
 	}
 
@@ -566,7 +566,7 @@ public class MainWindowController extends Application {
 				manager.deleteContact(card.getUid());
 			} catch (IOException e) {
 				LOGGER.severe("Error al borrar contacto " + card.getFormattedName().getValue(), e);
-				new AlertExceptionWindow(e).showAndWait();
+				new AlertExceptionDialog(e).showAndWait();
 			}
 			reloadContactListView();
 		}

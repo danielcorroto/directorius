@@ -27,7 +27,7 @@ import javafx.util.Callback;
  * @author Daniel Corroto Quirós
  *
  */
-public class PhoneDialogWindow extends AbstractDialogWindow<PhoneInfo> {
+public class PhoneDialog extends AbstractDialog<PhoneInfo> {
 	/**
 	 * Campo del número de teléfono
 	 */
@@ -44,7 +44,7 @@ public class PhoneDialogWindow extends AbstractDialogWindow<PhoneInfo> {
 	/**
 	 * Constructor por defecto de la ventana
 	 */
-	public PhoneDialogWindow() {
+	public PhoneDialog() {
 		super(false);
 	}
 
@@ -54,7 +54,7 @@ public class PhoneDialogWindow extends AbstractDialogWindow<PhoneInfo> {
 	 * @param info
 	 *            Información del teléfono
 	 */
-	public PhoneDialogWindow(PhoneInfo info) {
+	public PhoneDialog(PhoneInfo info) {
 		super(true);
 		numberTextField.setText(getValue(info.getNumber()));
 		typeComboBox.getSelectionModel().select(info.getType());
@@ -118,7 +118,7 @@ public class PhoneDialogWindow extends AbstractDialogWindow<PhoneInfo> {
 
 	@Override
 	protected InputStream getGraphicStream() {
-		return PhoneDialogWindow.class.getResourceAsStream(ResourcePath.IMG_EDIT_CONTACT_PHONE_ADD);
+		return PhoneDialog.class.getResourceAsStream(ResourcePath.IMG_EDIT_CONTACT_PHONE_ADD);
 	}
 
 	@Override

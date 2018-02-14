@@ -21,7 +21,7 @@ import javafx.util.Callback;
  * @author Daniel Corroto Quirós
  *
  */
-public class CategoryDialogWindow extends AbstractDialogWindow<String> {
+public class CategoryDialog extends AbstractDialog<String> {
 	/**
 	 * Campo del email
 	 */
@@ -30,7 +30,7 @@ public class CategoryDialogWindow extends AbstractDialogWindow<String> {
 	/**
 	 * Constructor por defecto de la ventana
 	 */
-	public CategoryDialogWindow(Collection<String> categories) {
+	public CategoryDialog(Collection<String> categories) {
 		super(false);
 		ObservableList<String> elementList = FXCollections.observableArrayList(categories);
 		categoryComboBox.setItems(elementList);
@@ -42,7 +42,7 @@ public class CategoryDialogWindow extends AbstractDialogWindow<String> {
 	 * @param category
 	 *            Información de la categoría
 	 */
-	public CategoryDialogWindow(String category, Collection<String> categories) {
+	public CategoryDialog(String category, Collection<String> categories) {
 		super(true);
 		ObservableList<String> elementList = FXCollections.observableArrayList(categories);
 		categoryComboBox.setItems(elementList);
@@ -60,7 +60,7 @@ public class CategoryDialogWindow extends AbstractDialogWindow<String> {
 
 	@Override
 	protected InputStream getGraphicStream() {
-		return EmailDialogWindow.class.getResourceAsStream(ResourcePath.IMG_EDIT_CONTACT_CATEGORY_ADD);
+		return EmailDialog.class.getResourceAsStream(ResourcePath.IMG_EDIT_CONTACT_CATEGORY_ADD);
 	}
 
 	@Override
