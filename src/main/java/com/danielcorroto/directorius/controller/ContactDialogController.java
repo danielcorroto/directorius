@@ -358,18 +358,7 @@ public class ContactDialogController {
 	private void loadImage() throws IOException {
 		InputStream is = new FileInputStream(imageFile);
 		Image image = new Image(is);
-		window.getImageView().setImage(image);
-
-		window.getImageView().setImage(image);
-		window.getImageView().maxHeight(200 - 10);
-		int yoursize = 200;
-		if (window.getImageView().maxHeight(200 - 10) > yoursize) {
-			window.getImageView().setFitHeight(200 - 10);
-		}
-		window.getImageView().setPreserveRatio(true);
-		window.getImageView().setSmooth(true);
-		window.getImageView().setCache(true);
-
+		window.setPhoto(image);
 		is.close();
 	}
 

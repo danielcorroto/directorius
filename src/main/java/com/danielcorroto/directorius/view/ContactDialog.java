@@ -24,6 +24,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -51,13 +52,18 @@ public class ContactDialog extends Dialog<VCard> {
 	/**
 	 * Tamaño de la cabecera del diálogo
 	 */
-	private static final int DIALOG_HEADER = 25;
+	private static final int INSET_PADDING = 25;
 
 	/**
 	 * Tamaño (ancho y alto) de la imagen en el botón
 	 */
 	private static final int BUTTON_IMAGE_SIZE = 24;
 
+	/**
+	 * Grid para ubicar todos los campos
+	 */
+	private GridPane gridPane;
+	
 	/**
 	 * Caja de texto para informar del nombre
 	 */
@@ -223,7 +229,7 @@ public class ContactDialog extends Dialog<VCard> {
 	 */
 	public void build() {
 		// Crear gridPane
-		GridPane gridPane = new GridPane();
+		gridPane = new GridPane();
 		ColumnConstraints[] columnConstraints = new ColumnConstraints[PERSONALPANE_PERCENTAGE.length];
 		for (int i = 0; i < PERSONALPANE_PERCENTAGE.length; i++) {
 			columnConstraints[i] = new ColumnConstraints();
@@ -232,7 +238,7 @@ public class ContactDialog extends Dialog<VCard> {
 		gridPane.getColumnConstraints().addAll(columnConstraints);
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
-		gridPane.setPadding(new Insets(25, 25, 25, 25));
+		gridPane.setPadding(new Insets(INSET_PADDING, INSET_PADDING, INSET_PADDING, INSET_PADDING));
 
 		// Datos personales
 		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_NAME), 0);
@@ -317,20 +323,23 @@ public class ContactDialog extends Dialog<VCard> {
 		save.setDisable(true);
 
 		// Crear ventana
-		VBox main = new VBox();
-		main.getChildren().add(gridPane);
+		ScrollPane scroll = new ScrollPane(gridPane);
+		/*VBox main = new VBox();
+		main.getChildren().add(gridPane);*/
 
 		// Crear scene y stage
-		getDialogPane().setContent(main);
+		getDialogPane().setContent(scroll);
 
 		// Setea propiedades
 		Stage stage = (Stage) this.getDialogPane().getScene().getWindow();
 		double width = Screen.getPrimary().getBounds().getWidth();
 		double height = Screen.getPrimary().getBounds().getHeight();
+		gridPane.setMaxWidth(width / 2 - INSET_PADDING);
+		gridPane.setMaxHeight(height - 2 * MARGIN_HEIGHT);
 		this.getDialogPane().setMaxWidth(width / 2);
 		this.getDialogPane().setMaxHeight(height - MARGIN_HEIGHT);
 		stage.setX(width / 4);
-		stage.setY((MARGIN_HEIGHT - DIALOG_HEADER) / 2);
+		stage.setY((MARGIN_HEIGHT - INSET_PADDING) / 2);
 		Image logo = new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO));
 		stage.getIcons().add(logo);
 	}
@@ -578,6 +587,19 @@ public class ContactDialog extends Dialog<VCard> {
 		};
 
 		return cellFactory;
+	}
+	
+	public void setPhoto(Image image) {
+		imageView.setImage(image);
+		double size = gridPane.getMaxWidth() * PERSONALPANE_PERCENTAGE[2] / 100 - INSET_PADDING;
+		imageView.maxHeight(size - 10);
+		double yoursize = size;
+		if (imageView.maxHeight(size - 10) > yoursize) {
+			imageView.setFitHeight(size - 10);
+		}
+		imageView.setPreserveRatio(true);
+		imageView.setSmooth(true);
+		imageView.setCache(true);
 	}
 
 	/**
