@@ -22,6 +22,7 @@ import ezvcard.parameter.EmailType;
 import ezvcard.parameter.TelephoneType;
 import ezvcard.property.Address;
 import ezvcard.property.Email;
+import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 
 /**
@@ -66,6 +67,8 @@ public class HtmlContactBuilder {
 
 		// Personal
 		html = html.replace(HtmlTemplate.FULL_NAME, vcard.getFormattedName().getValue());
+		html = html.replace(HtmlTemplate.NAME, buildName(vcard.getStructuredName(), rb));
+		html = html.replace(HtmlTemplate.SURNAME, buildSurname(vcard.getStructuredName(), rb));
 		html = html.replace(HtmlTemplate.BIRTHDAY, DisplayUtil.buildBirthday(vcard, false, rb));
 		html = html.replace(HtmlTemplate.NOTES, buildNotes(vcard));
 		html = html.replace(HtmlTemplate.GROUP_CATEGORY, buildGroupCategory(vcard));
@@ -122,6 +125,42 @@ public class HtmlContactBuilder {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Genera el nombre del contacto
+	 * 
+	 * @param structuredName
+	 *            Información de nombre del contacto
+	 * @param rb
+	 *            Recurso para i18n
+	 * @return Cadena vacía o "Nombre: &lt;nombre_del_contacto&gt;"
+	 */
+	private static String buildName(StructuredName structuredName, ResourceBundle rb) {
+		if (structuredName.getGiven() == null || structuredName.getGiven().isEmpty()) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder(rb.getString(Text.I18N_CONTACT_NAME));
+		sb.append(": ").append(structuredName.getGiven());
+		return sb.toString();
+	}
+
+	/**
+	 * Genera el apellido del contacto
+	 * 
+	 * @param structuredName
+	 *            Información de nombre del contacto
+	 * @param rb
+	 *            Recurso para i18n
+	 * @return Cadena vacía o "Apellido: &lt;nombre_del_contacto&gt;"
+	 */
+	private static String buildSurname(StructuredName structuredName, ResourceBundle rb) {
+		if (structuredName.getFamily() == null || structuredName.getFamily().isEmpty()) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder(rb.getString(Text.I18N_CONTACT_SURNAME));
+		sb.append(": ").append(structuredName.getFamily());
+		return sb.toString();
 	}
 
 	/**

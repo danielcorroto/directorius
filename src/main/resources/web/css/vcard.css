@@ -4,6 +4,10 @@
 .badge {
 	margin-right: 5px;
 }
+h6.name {
+	color: gray;
+	font-size: 0.75em;
+}
 
 /* PIE */
 .height-footer {
