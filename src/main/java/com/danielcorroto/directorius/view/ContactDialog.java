@@ -42,7 +42,20 @@ public class ContactDialog extends Dialog<VCard> {
 	 * Porcentajes para los elementos del panel principal
 	 */
 	private static final int[] PERSONALPANE_PERCENTAGE = new int[] { 25, 45, 30 };
+	
+	/**
+	 * Tamaño que queda como margen superior e inferior del diálogo
+	 */
+	private static final int MARGIN_HEIGHT = 100;
+	
+	/**
+	 * Tamaño de la cabecera del diálogo
+	 */
+	private static final int DIALOG_HEADER = 25;
 
+	/**
+	 * Tamaño (ancho y alto) de la imagen en el botón
+	 */
 	private static final int BUTTON_IMAGE_SIZE = 24;
 
 	/**
@@ -315,7 +328,9 @@ public class ContactDialog extends Dialog<VCard> {
 		double width = Screen.getPrimary().getBounds().getWidth();
 		double height = Screen.getPrimary().getBounds().getHeight();
 		this.getDialogPane().setMaxWidth(width / 2);
-		this.getDialogPane().setMaxHeight(height - 100);
+		this.getDialogPane().setMaxHeight(height - MARGIN_HEIGHT);
+		stage.setX(width / 4);
+		stage.setY((MARGIN_HEIGHT - DIALOG_HEADER) / 2);
 		Image logo = new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO));
 		stage.getIcons().add(logo);
 	}
