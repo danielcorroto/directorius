@@ -324,8 +324,6 @@ public class ContactDialog extends Dialog<VCard> {
 
 		// Crear ventana
 		ScrollPane scroll = new ScrollPane(gridPane);
-		/*VBox main = new VBox();
-		main.getChildren().add(gridPane);*/
 
 		// Crear scene y stage
 		getDialogPane().setContent(scroll);
@@ -340,6 +338,7 @@ public class ContactDialog extends Dialog<VCard> {
 		this.getDialogPane().setMaxHeight(height - MARGIN_HEIGHT);
 		stage.setX(width / 4);
 		stage.setY((MARGIN_HEIGHT - INSET_PADDING) / 2);
+		this.setTitle(rb.getString(Text.I18N_MENU_CONTACT_ADD));
 		Image logo = new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO));
 		stage.getIcons().add(logo);
 	}
