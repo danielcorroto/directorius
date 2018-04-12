@@ -3,8 +3,10 @@ package com.danielcorroto.directorius.controller;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -89,8 +91,7 @@ public class MainWindowController extends Application {
 			menuItemHelpFunction();
 			addContactButtonFunction();
 			listViewFunction();
-			searchTextFieldFunction();
-			searchTypeComboBoxFunction();
+			searchFunctions();
 
 			manager = ContactManager.autoLoadFile();
 			if (manager != null) {
@@ -111,6 +112,7 @@ public class MainWindowController extends Application {
 		window.setDisable(false);
 		// Carga datos
 		setListViewItems(manager.getAllSimpleVCard());
+		loadCategorySearchList();
 		// Carga ventana de cumpleaños
 		Calendar end = Calendar.getInstance();
 		end.add(Calendar.DATE, 7);
@@ -437,6 +439,7 @@ public class MainWindowController extends Application {
 			// Carga la nueva lista
 			vcard = cwc.getVcard();
 			if (vcard != null) {
+				loadCategorySearchList();
 				reloadContactListView();
 				selectListViewElement(vcard);
 			}
@@ -447,13 +450,29 @@ public class MainWindowController extends Application {
 	}
 
 	/**
+	 * Carga los datos en la lista de categorías
+	 */
+	private void loadCategorySearchList() {
+		// Selecciona los valores
+		List<String> categories = new ArrayList<>(manager.getCategories());
+		categories.add("");
+		Collections.sort(categories);
+		// Esteblece los valores
+		ObservableList<String> searchCategoryOptions = FXCollections.observableArrayList();
+		searchCategoryOptions.addAll(categories);
+		window.getSearchCategoryComboBox().setItems(searchCategoryOptions);
+		;
+	}
+
+	/**
 	 * Recarga la lista de contactos a partir de los parámetros de los elementos
 	 * de la búsqueda
 	 */
 	private void reloadContactListView() {
+		String category = window.getSearchCategoryComboBox().getValue();
 		String text = window.getSearchTextField().getText();
 		SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
-		Set<SimpleVCard> list = manager.search(text.trim(), type);
+		Set<SimpleVCard> list = manager.search(text.trim(), type, category);
 		setListViewItems(list);
 	}
 
@@ -568,10 +587,34 @@ public class MainWindowController extends Application {
 				LOGGER.severe("Error al borrar contacto " + card.getFormattedName().getValue(), e);
 				new AlertExceptionDialog(e).showAndWait();
 			}
+			loadCategorySearchList();
 			reloadContactListView();
 		}
 	}
+	
+	private void searchFunctions() {
+		searchCategoryComboBoxFunction();
+		searchTextFieldFunction();
+		searchTypeComboBoxFunction();
+	}
 
+	/**
+	 * Setea la funcionalidad del combo de categoría de búsqueda: busca contactos y
+	 * los muestre en el ListView
+	 */
+	private void searchCategoryComboBoxFunction() {
+		window.getSearchCategoryComboBox().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				String text = window.getSearchTextField().getText();
+				SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
+				Set<SimpleVCard> list = manager.search(text.trim(), type, newValue);
+				setListViewItems(list);
+			}
+		});
+	}
+	
 	/**
 	 * Setea la funcionalidad de la caja de búsqueda: busca contactos y los
 	 * muestra en el ListView
@@ -582,8 +625,9 @@ public class MainWindowController extends Application {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				Set<SimpleVCard> list;
+				String category = window.getSearchCategoryComboBox().getValue();
 				SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
-				list = manager.search(newValue.trim(), type);
+				list = manager.search(newValue.trim(), type, category);
 				setListViewItems(list);
 			}
 		});
@@ -605,7 +649,8 @@ public class MainWindowController extends Application {
 					return;
 				}
 
-				Set<SimpleVCard> list = manager.search(text.trim(), newValue);
+				String category = window.getSearchCategoryComboBox().getValue();
+				Set<SimpleVCard> list = manager.search(text.trim(), newValue, category);
 				setListViewItems(list);
 			}
 		});

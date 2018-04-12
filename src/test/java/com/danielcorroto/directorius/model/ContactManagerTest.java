@@ -453,6 +453,30 @@ public class ContactManagerTest extends TestCase {
 	}
 
 	/**
+	 * Prueba la búsqueda de contactos por todos los campos indicando la categoría
+	 * 
+	 * @throws IOException
+	 */
+	public void testSearchWithCategory() throws IOException {
+		ContactManager cm = new ContactManager(createTempFile().getAbsolutePath());
+		VCard vcard1 = TestUtil.createVCardAll("test", "rqewrqw", null, null, null, null, null, null);
+		cm.createContact(vcard1);
+		VCard vcard2 = TestUtil.createVCardAll("Otros", "fdsa a", new String[]{"cat1","cat2"}, null, null, null, null, null);
+		cm.createContact(vcard2);
+		VCard vcard3 = TestUtil.createVCardAll("MáS", "rqwer", new String[]{"cat3"}, null, null, new String[] { "asr@u.net" }, null, null);
+		cm.createContact(vcard3);
+		VCard vcard4 = TestUtil.createVCardAll("MenoS", "rqwer", new String[]{"aa"}, null, null, new String[] { "asr@u.net" }, null, null);
+		cm.createContact(vcard4);
+
+		Set<SimpleVCard> result = cm.search("", SearchTypeEnum.ALL, "cat");
+
+		Iterator<SimpleVCard> iterator = result.iterator();
+		assertEquals(2, result.size());
+		assertEquals(vcard3.getFormattedName().getValue(), iterator.next().getFormattedName().getValue());
+		assertEquals(vcard2.getFormattedName().getValue(), iterator.next().getFormattedName().getValue());
+	}
+
+	/**
 	 * Prueba la búsqueda de contactos por todos los campos
 	 * 
 	 * @throws IOException
@@ -466,7 +490,7 @@ public class ContactManagerTest extends TestCase {
 		VCard vcard3 = TestUtil.createVCardAll("MáS", "rqwer", null, null, null, new String[] { "asr@u.net" }, null, null);
 		cm.createContact(vcard3);
 
-		Set<SimpleVCard> result = cm.search("U", SearchTypeEnum.ALL);
+		Set<SimpleVCard> result = cm.search("U", SearchTypeEnum.ALL, null);
 
 		Iterator<SimpleVCard> iterator = result.iterator();
 		assertEquals(1, result.size());
@@ -487,7 +511,7 @@ public class ContactManagerTest extends TestCase {
 		VCard vcard3 = TestUtil.createVCardCategories("MáS", "rqwer");
 		cm.createContact(vcard3);
 
-		Set<SimpleVCard> result = cm.search("S", SearchTypeEnum.CATEGORY);
+		Set<SimpleVCard> result = cm.search("S", SearchTypeEnum.CATEGORY, null);
 
 		Iterator<SimpleVCard> iterator = result.iterator();
 		assertEquals(1, result.size());
@@ -510,7 +534,7 @@ public class ContactManagerTest extends TestCase {
 		VCard vcard3 = TestUtil.createVCard("MáS");
 		cm.createContact(vcard3);
 
-		Set<SimpleVCard> result = cm.search("S", SearchTypeEnum.NAME);
+		Set<SimpleVCard> result = cm.search("S", SearchTypeEnum.NAME, null);
 
 		Iterator<SimpleVCard> iterator = result.iterator();
 		assertEquals(2, result.size());
@@ -532,7 +556,7 @@ public class ContactManagerTest extends TestCase {
 		VCard vcard3 = TestUtil.createVCardPhones("MáS 95 2", "689 5214");
 		cm.createContact(vcard3);
 
-		Set<SimpleVCard> result = cm.search("95 2", SearchTypeEnum.PHONE);
+		Set<SimpleVCard> result = cm.search("95 2", SearchTypeEnum.PHONE, null);
 
 		Iterator<SimpleVCard> iterator = result.iterator();
 		assertEquals(1, result.size());

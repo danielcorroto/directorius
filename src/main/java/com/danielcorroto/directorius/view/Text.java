@@ -49,6 +49,8 @@ public class Text {
 	public static final String I18N_MENU_HELP = "menu.help";
 
 	public static final String I18N_MENU_HELP_ABOUT = "menu.help.about";
+	
+	public static final String I18N_TOOLBAR_SEARCHTYPE_TOOLTIP = "toolbar.searchtype.tooltip";
 
 	public static final String I18N_TOOLBAR_SEARCH = "toolbar.search";
 
@@ -60,7 +62,7 @@ public class Text {
 
 	public static final String I18N_TOOLBAR_SEARCHTYPE_TYPE_PHONE = "toolbar.searchtype.type.telephone";
 
-	public static final String I18N_TOOLBAR_SEARCHTYPE_TOOLTIP = "toolbar.searchtype.tooltip";
+	public static final String I18N_TOOLBAR_CATEGORYSEARCH_TOOLTIP = "toolbar.categorysearch.tooltip";
 
 	public static final String I18N_TOOLBAR_CONTACTADD_TOOLTIP = "toolbar.contactadd.tooltip";
 

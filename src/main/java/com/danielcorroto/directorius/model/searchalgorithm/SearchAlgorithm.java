@@ -28,14 +28,19 @@ public abstract class SearchAlgorithm {
 	 * @return Colección de contactos sencillos que cumplen las condiciones de
 	 *         búsqueda. Vacío, nunca null, si no se encuentra nada
 	 */
-	public Set<SimpleVCard> search(Collection<VCard> vcards, Collection<String> searchTexts) {
-		if (vcards == null || searchTexts == null || vcards.isEmpty() || searchTexts.isEmpty()) {
+	public Set<SimpleVCard> search(Collection<VCard> vcards, Collection<String> searchTexts, String category) {
+		if (vcards == null || searchTexts == null || vcards.isEmpty()) {
 			return new HashSet<>();
 		}
 
 		Set<SimpleVCard> result = new HashSet<>();
 
 		for (VCard vcard : vcards) {
+			// Verifica categoría
+			if (category != null && !validate(vcard, category)) {
+				continue;
+			}
+			// Verifica textos
 			boolean match = true;
 			Iterator<String> iterator = searchTexts.iterator();
 			while (match && iterator.hasNext()) {
@@ -50,6 +55,31 @@ public abstract class SearchAlgorithm {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Valida si la categoría indicada matchea con el contacto. Si el contacto
+	 * no tiene categorías sí matchea con categoría vacía
+	 * 
+	 * @param category
+	 *            Categoría buscada
+	 * @return Si coincide alguna categoría con la indicada
+	 */
+	private boolean validate(VCard vcard, String category) {
+		// La categoría indicada como vacía matchea con todo
+		if (category.trim().equals("")) {
+			return true;
+		}
+		// Si el contacto no tiene categorías no puede matchear
+		if (vcard.getCategories() == null) {
+			return false;
+		}
+		for (String current : vcard.getCategories().getValues()) {
+			if (contains(current, category)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

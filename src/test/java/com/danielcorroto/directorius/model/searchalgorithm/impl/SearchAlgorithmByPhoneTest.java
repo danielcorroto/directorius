@@ -23,7 +23,7 @@ public class SearchAlgorithmByPhoneTest extends TestCase {
 	 */
 	public void testEmptyContact() {
 		SearchAlgorithm search = new SearchAlgorithmByPhone();
-		Set<SimpleVCard> result = search.search(new ArrayList<>(), TestUtil.buildSet("910 4", "67 6"));
+		Set<SimpleVCard> result = search.search(new ArrayList<>(), TestUtil.buildSet("910 4", "67 6"), null);
 
 		assertEquals(0, result.size());
 	}
@@ -35,7 +35,7 @@ public class SearchAlgorithmByPhoneTest extends TestCase {
 		Set<VCard> cards = new HashSet<>();
 		cards.add(TestUtil.createVCardPhones("qwe", "915 9"));
 		SearchAlgorithm search = new SearchAlgorithmByPhone();
-		Set<SimpleVCard> result = search.search(cards, new HashSet<>());
+		Set<SimpleVCard> result = search.search(cards, new HashSet<>(), null);
 
 		assertEquals(0, result.size());
 	}
@@ -49,7 +49,7 @@ public class SearchAlgorithmByPhoneTest extends TestCase {
 		cards.add(TestUtil.createVCardPhones("asd fgh", "9 10 9"));
 		cards.add(TestUtil.createVCardPhones("zxc vbn", "45678", "910 4"));
 		SearchAlgorithm search = new SearchAlgorithmByPhone();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("91 0"));
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("91 0"), null);
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
@@ -67,7 +67,7 @@ public class SearchAlgorithmByPhoneTest extends TestCase {
 		cards.add(TestUtil.createVCardPhones("asd fgh", "9 10 88"));
 		cards.add(TestUtil.createVCardPhones("zxc vbn", "45678", "910 49 8 80"));
 		SearchAlgorithm search = new SearchAlgorithmByPhone();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("91 0", "88"));
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("91 0", "88"), null);
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 

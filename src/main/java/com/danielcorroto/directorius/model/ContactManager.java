@@ -229,15 +229,14 @@ public class ContactManager {
 	 *            Busca los contatos que coinciden con todas las búsqudas
 	 * @param type
 	 *            Tipo de búsqueda: nombre, todo el texto, etc
+	 * @param category
+	 *            Categoria del contacto
 	 * @return Lista de contactos encontrados
 	 */
-	public Set<SimpleVCard> search(String text, SearchTypeEnum type) {
-		if (text == null || text.trim().isEmpty()) {
-			return getAllSimpleVCard();
-		}
+	public Set<SimpleVCard> search(String text, SearchTypeEnum type, String category) {
 		Set<String> searchTexts = splitSearchText(text);
 		SearchAlgorithm searchAlgorithm = type.getSearchAlgorithm();
-		Set<SimpleVCard> result = searchAlgorithm.search(vcardMap.values(), searchTexts);
+		Set<SimpleVCard> result = searchAlgorithm.search(vcardMap.values(), searchTexts, category);
 		Set<SimpleVCard> sorted = new TreeSet<>(new FullNameSimpleVCardComparator());
 		sorted.addAll(result);
 		return sorted;

@@ -57,7 +57,7 @@ public class MainWindow {
 	/**
 	 * Porcentajes para los elementos de la toolbar
 	 */
-	private static final int[] TOOLBAR_PERCENTAGES = new int[] { 70, 20, 10 };
+	private static final int[] TOOLBAR_PERCENTAGES = new int[] { 20, 50, 20, 10 };
 	/**
 	 * Margen para los elementos de la toolbar
 	 */
@@ -83,6 +83,10 @@ public class MainWindow {
 	 * Botón añadir contacto
 	 */
 	private Button addContactButton;
+	/**
+	 * Combo para realizar una búsqueda por categorías
+	 */
+	private ComboBox<String> searchCategoryComboBox;
 	/**
 	 * Caja de texto para realizar búsqueda de contactos
 	 */
@@ -207,6 +211,15 @@ public class MainWindow {
 	 */
 	public Button getAddContactButton() {
 		return addContactButton;
+	}
+
+	/**
+	 * Obtiene el componente ComboBox para realizar búsquedas
+	 * 
+	 * @return Componente para realizar búsquedas
+	 */
+	public ComboBox<String> getSearchCategoryComboBox() {
+		return searchCategoryComboBox;
 	}
 
 	/**
@@ -360,13 +373,22 @@ public class MainWindow {
 		HBox.setHgrow(gridPane, Priority.ALWAYS);
 		toolbar = new ToolBar(gridPane);
 
+		// Combo categorías
+		searchCategoryComboBox = new ComboBox<>();
+		searchCategoryComboBox.setMaxWidth(Double.POSITIVE_INFINITY);
+		searchCategoryComboBox.setTooltip(new Tooltip(rb.getString(Text.I18N_TOOLBAR_CATEGORYSEARCH_TOOLTIP)));
+		gridPane.add(searchCategoryComboBox, 0, 0);
+		GridPane.setMargin(searchCategoryComboBox, TOOLBAR_MARGIN);
+		GridPane.setHalignment(searchCategoryComboBox, HPos.CENTER);
+		HBox.setHgrow(searchCategoryComboBox, Priority.ALWAYS);
+
 		// Buscador
 		searchTextField = new TextField();
 		searchTextField.setPromptText(rb.getString(Text.I18N_TOOLBAR_SEARCH));
 		searchTextField.setTooltip(new Tooltip(rb.getString(Text.I18N_TOOLBAR_SEARCH)));
-		gridPane.add(searchTextField, 0, 0);
+		gridPane.add(searchTextField, 1, 0);
 		GridPane.setMargin(searchTextField, TOOLBAR_MARGIN);
-		GridPane.setHalignment(searchTextField, HPos.CENTER);
+		GridPane.setHalignment(searchTextField, HPos.LEFT);
 		HBox.setHgrow(searchTextField, Priority.ALWAYS);
 
 		// Combo tipo de búsqueda
@@ -379,7 +401,7 @@ public class MainWindow {
 		searchTypeComboBox.setCellFactory(createSearchTypeComboBoxCellFactory());
 		searchTypeComboBox.setValue(SearchTypeEnum.getDefault());
 		searchTypeComboBox.setTooltip(new Tooltip(rb.getString(Text.I18N_TOOLBAR_SEARCHTYPE_TOOLTIP)));
-		gridPane.add(searchTypeComboBox, 1, 0);
+		gridPane.add(searchTypeComboBox, 2, 0);
 		GridPane.setMargin(searchTypeComboBox, TOOLBAR_MARGIN);
 		GridPane.setHalignment(searchTypeComboBox, HPos.CENTER);
 		HBox.setHgrow(searchTypeComboBox, Priority.ALWAYS);
@@ -391,7 +413,7 @@ public class MainWindow {
 		addButtonImage.setFitHeight(TOOLBAR_IMAGE_SIZE);
 		addContactButton.setGraphic(addButtonImage);
 		addContactButton.setTooltip(new Tooltip(rb.getString(Text.I18N_TOOLBAR_CONTACTADD_TOOLTIP)));
-		gridPane.add(addContactButton, 2, 0);
+		gridPane.add(addContactButton, 3, 0);
 		GridPane.setMargin(addContactButton, TOOLBAR_MARGIN);
 		GridPane.setHalignment(addContactButton, HPos.RIGHT);
 		HBox.setHgrow(addContactButton, Priority.ALWAYS);
