@@ -57,7 +57,7 @@ public class MainWindow {
 	/**
 	 * Porcentajes para los elementos de la toolbar
 	 */
-	private static final int[] TOOLBAR_PERCENTAGES = new int[] { 20, 50, 20, 10 };
+	private static final int[] TOOLBAR_PERCENTAGES = new int[] { 20, 55, 15, 10 };
 	/**
 	 * Margen para los elementos de la toolbar
 	 */
@@ -397,6 +397,7 @@ public class MainWindow {
 			searchTypeOptions.add(searchType);
 		}
 		searchTypeComboBox = new ComboBox<>(searchTypeOptions);
+		searchTypeComboBox.setMaxWidth(Double.POSITIVE_INFINITY);
 		searchTypeComboBox.setButtonCell(createSearchTypeComboBoxCellFactory().call(null));
 		searchTypeComboBox.setCellFactory(createSearchTypeComboBoxCellFactory());
 		searchTypeComboBox.setValue(SearchTypeEnum.getDefault());
