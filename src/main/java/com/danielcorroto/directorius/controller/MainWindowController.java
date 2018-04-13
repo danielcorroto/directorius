@@ -97,6 +97,8 @@ public class MainWindowController extends Application {
 			if (manager != null) {
 				loadManager();
 			}
+			
+			window.getSearchTextField().requestFocus();
 		} catch (Exception e) {
 			LOGGER.severe("Error en la aplicación principal", e);
 			new AlertExceptionDialog(e).showAndWait();
