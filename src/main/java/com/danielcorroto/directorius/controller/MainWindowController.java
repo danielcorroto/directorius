@@ -441,6 +441,9 @@ public class MainWindowController extends Application {
 			public void handle(MouseEvent event) {
 				if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
 					SimpleVCard simplevcard = window.getListViewSelectedItem();
+					if (simplevcard == null) {
+						return;
+					}
 					loadContactWindow(simplevcard);
 				}
 
