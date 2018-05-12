@@ -468,7 +468,8 @@ public class ContactManagerTest extends TestCase {
 		VCard vcard4 = TestUtil.createVCardAll("MenoS", "rqwer", new String[]{"aa"}, null, null, new String[] { "asr@u.net" }, null, null);
 		cm.createContact(vcard4);
 
-		Set<SimpleVCard> result = cm.search("", SearchTypeEnum.ALL, "cat");
+		SearchFilter filter = new SearchFilter("cat", "", SearchTypeEnum.ALL);
+		Set<SimpleVCard> result = cm.search(filter);
 
 		Iterator<SimpleVCard> iterator = result.iterator();
 		assertEquals(2, result.size());
@@ -490,7 +491,8 @@ public class ContactManagerTest extends TestCase {
 		VCard vcard3 = TestUtil.createVCardAll("MáS", "rqwer", null, null, null, new String[] { "asr@u.net" }, null, null);
 		cm.createContact(vcard3);
 
-		Set<SimpleVCard> result = cm.search("U", SearchTypeEnum.ALL, null);
+		SearchFilter filter = new SearchFilter(null, "U", SearchTypeEnum.ALL);
+		Set<SimpleVCard> result = cm.search(filter);
 
 		Iterator<SimpleVCard> iterator = result.iterator();
 		assertEquals(1, result.size());
@@ -511,7 +513,8 @@ public class ContactManagerTest extends TestCase {
 		VCard vcard3 = TestUtil.createVCardCategories("MáS", "rqwer");
 		cm.createContact(vcard3);
 
-		Set<SimpleVCard> result = cm.search("S", SearchTypeEnum.CATEGORY, null);
+		SearchFilter filter = new SearchFilter(null, "S", SearchTypeEnum.CATEGORY);
+		Set<SimpleVCard> result = cm.search(filter);
 
 		Iterator<SimpleVCard> iterator = result.iterator();
 		assertEquals(1, result.size());
@@ -534,7 +537,8 @@ public class ContactManagerTest extends TestCase {
 		VCard vcard3 = TestUtil.createVCard("MáS");
 		cm.createContact(vcard3);
 
-		Set<SimpleVCard> result = cm.search("S", SearchTypeEnum.NAME, null);
+		SearchFilter filter = new SearchFilter(null, "S", SearchTypeEnum.NAME);
+		Set<SimpleVCard> result = cm.search(filter);
 
 		Iterator<SimpleVCard> iterator = result.iterator();
 		assertEquals(2, result.size());
@@ -556,7 +560,8 @@ public class ContactManagerTest extends TestCase {
 		VCard vcard3 = TestUtil.createVCardPhones("MáS 95 2", "689 5214");
 		cm.createContact(vcard3);
 
-		Set<SimpleVCard> result = cm.search("95 2", SearchTypeEnum.PHONE, null);
+		SearchFilter filter = new SearchFilter(null, "95 2", SearchTypeEnum.PHONE);
+		Set<SimpleVCard> result = cm.search(filter);
 
 		Iterator<SimpleVCard> iterator = result.iterator();
 		assertEquals(1, result.size());

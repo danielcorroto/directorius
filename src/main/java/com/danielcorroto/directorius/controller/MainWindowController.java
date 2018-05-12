@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import java.util.SortedSet;
 
 import com.danielcorroto.directorius.model.ContactManager;
+import com.danielcorroto.directorius.model.SearchFilter;
 import com.danielcorroto.directorius.model.SimpleVCard;
 import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
@@ -400,17 +401,13 @@ public class MainWindowController extends Application {
 		}
 	}
 	
-	// TODO por aquí (refactorizar búsqueda con un filtro
-
 	/**
 	 * Recarga la lista de contactos a partir de los parámetros de los elementos
 	 * de la búsqueda
 	 */
 	private void reloadContactListView() {
-		String category = window.getSearchCategoryComboBox().getValue();
-		String text = window.getSearchTextField().getText();
-		SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
-		SortedSet<SimpleVCard> list = manager.search(text.trim(), type, category);
+		SearchFilter filter = window.getSearchFilter();
+		SortedSet<SimpleVCard> list = manager.search(filter);
 		window.establishContacts(list);
 	}
 
@@ -549,9 +546,9 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				String text = window.getSearchTextField().getText();
-				SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
-				SortedSet<SimpleVCard> list = manager.search(text.trim(), type, newValue);
+				// TODO verificar
+				SearchFilter filter = window.getSearchFilter();
+				SortedSet<SimpleVCard> list = manager.search(filter);
 				window.establishContacts(list);
 			}
 		});
@@ -566,10 +563,9 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				SortedSet<SimpleVCard> list;
-				String category = window.getSearchCategoryComboBox().getValue();
-				SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
-				list = manager.search(newValue.trim(), type, category);
+				// TODO comprobar
+				SearchFilter filter = window.getSearchFilter();
+				SortedSet<SimpleVCard> list = manager.search(filter);
 				window.establishContacts(list);
 			}
 		});
@@ -591,8 +587,8 @@ public class MainWindowController extends Application {
 					return;
 				}
 
-				String category = window.getSearchCategoryComboBox().getValue();
-				SortedSet<SimpleVCard> list = manager.search(text.trim(), newValue, category);
+				SearchFilter filter = window.getSearchFilter();
+				SortedSet<SimpleVCard> list = manager.search(filter);
 				window.establishContacts(list);
 			}
 		});

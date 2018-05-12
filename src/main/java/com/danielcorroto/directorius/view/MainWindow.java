@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import java.util.SortedSet;
 
 import com.danielcorroto.directorius.controller.HtmlContactBuilder;
+import com.danielcorroto.directorius.model.SearchFilter;
 import com.danielcorroto.directorius.model.SimpleVCard;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 
@@ -274,6 +275,18 @@ public class MainWindow {
 	 */
 	public Button getAddContactButton() {
 		return addContactButton;
+	}
+	
+	/**
+	 * Obtiene el filtro de búsqueda a partir de los valores de la ventana
+	 * @return Filtro de búsqueda
+	 */
+	public SearchFilter getSearchFilter() {
+		String category = searchCategoryComboBox.getValue();
+		String text = searchTextField.getText();
+		SearchTypeEnum type = searchTypeComboBox.getValue();
+		
+		return new SearchFilter(category, text, type);
 	}
 
 	/**

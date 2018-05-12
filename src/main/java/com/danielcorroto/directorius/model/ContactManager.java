@@ -35,7 +35,6 @@ import com.danielcorroto.directorius.model.comparator.FullNameSimpleVCardCompara
 import com.danielcorroto.directorius.model.comparator.FullNameVCardComparator;
 import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.model.searchalgorithm.SearchAlgorithm;
-import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
@@ -225,19 +224,13 @@ public class ContactManager {
 	/**
 	 * Realiza una búsqueda en los contactos
 	 * 
-	 * @param text
-	 *            Texto a buscar. Los literales pueden ir entre comillas dobles.
-	 *            Busca los contatos que coinciden con todas las búsqudas
-	 * @param type
-	 *            Tipo de búsqueda: nombre, todo el texto, etc
-	 * @param category
-	 *            Categoria del contacto
+	 * @param filter Filtro a partir del cual se debe realizar la búsqueda
 	 * @return Lista de contactos encontrados
 	 */
-	public SortedSet<SimpleVCard> search(String text, SearchTypeEnum type, String category) {
-		Set<String> searchTexts = splitSearchText(text);
-		SearchAlgorithm searchAlgorithm = type.getSearchAlgorithm();
-		Set<SimpleVCard> result = searchAlgorithm.search(vcardMap.values(), searchTexts, category);
+	public SortedSet<SimpleVCard> search(SearchFilter filter) {
+		Set<String> searchTexts = splitSearchText(filter.getText());
+		SearchAlgorithm searchAlgorithm = filter.getType().getSearchAlgorithm();
+		Set<SimpleVCard> result = searchAlgorithm.search(vcardMap.values(), searchTexts, filter.getCategory());
 		SortedSet<SimpleVCard> sorted = new TreeSet<>(new FullNameSimpleVCardComparator());
 		sorted.addAll(result);
 		return sorted;
