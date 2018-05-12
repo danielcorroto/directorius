@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -86,7 +87,7 @@ public class ContactManager {
 	/**
 	 * Colección de categorías
 	 */
-	private Set<String> categoriesSet;
+	private SortedSet<String> categoriesSet;
 
 	/**
 	 * Constructor vacío. Utilizar {@link #loadFile(String)} para cargar datos
@@ -215,8 +216,8 @@ public class ContactManager {
 	 * 
 	 * @return Información sencilla (nombre+uid) de todos los contactos
 	 */
-	public Set<SimpleVCard> getAllSimpleVCard() {
-		Set<SimpleVCard> set = new TreeSet<>(new FullNameSimpleVCardComparator());
+	public SortedSet<SimpleVCard> getAllSimpleVCard() {
+		SortedSet<SimpleVCard> set = new TreeSet<>(new FullNameSimpleVCardComparator());
 		set.addAll(simpleVcardMap.values());
 		return set;
 	}
@@ -233,11 +234,11 @@ public class ContactManager {
 	 *            Categoria del contacto
 	 * @return Lista de contactos encontrados
 	 */
-	public Set<SimpleVCard> search(String text, SearchTypeEnum type, String category) {
+	public SortedSet<SimpleVCard> search(String text, SearchTypeEnum type, String category) {
 		Set<String> searchTexts = splitSearchText(text);
 		SearchAlgorithm searchAlgorithm = type.getSearchAlgorithm();
 		Set<SimpleVCard> result = searchAlgorithm.search(vcardMap.values(), searchTexts, category);
-		Set<SimpleVCard> sorted = new TreeSet<>(new FullNameSimpleVCardComparator());
+		SortedSet<SimpleVCard> sorted = new TreeSet<>(new FullNameSimpleVCardComparator());
 		sorted.addAll(result);
 		return sorted;
 	}
@@ -270,7 +271,7 @@ public class ContactManager {
 		return res;
 	}
 
-	public Set<String> getCategories() {
+	public SortedSet<String> getCategories() {
 		return new TreeSet<>(categoriesSet);
 	}
 

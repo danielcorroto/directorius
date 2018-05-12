@@ -1,11 +1,15 @@
 package com.danielcorroto.directorius.view;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.SortedSet;
 
+import com.danielcorroto.directorius.controller.HtmlContactBuilder;
 import com.danielcorroto.directorius.model.SimpleVCard;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 
+import ezvcard.VCard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -187,6 +191,65 @@ public class MainWindow {
 	}
 
 	/**
+	 * Establece la lista de contactos y el contador de contactos
+	 * 
+	 * @param contacts
+	 *            Colección ordenada de contactos
+	 */
+	public void establishContacts(SortedSet<SimpleVCard> contacts) {
+		ObservableList<SimpleVCard> elementList = FXCollections.observableArrayList(contacts);
+		listView.setItems(elementList);
+
+		String contactsSize = MessageFormat.format(rb.getString(Text.I18N_CONTACTS_SIZE), contacts.size());
+		contactsSizeLabel.setText(contactsSize);
+	}
+
+	/**
+	 * Busca la información completa del contacto, genera la página de
+	 * información y la muestra
+	 * 
+	 * @param VCard
+	 *            Información del contacto
+	 * @param photoDir
+	 *            Directorio de fotografías
+	 */
+	public void establishContactInfo(VCard vcard, String photoDir) {
+		String html = HtmlContactBuilder.build(vcard, photoDir);
+
+		webView.getEngine().loadContent(html);
+		webView.getEngine().setJavaScriptEnabled(true);
+	}
+
+	/**
+	 * Selecciona en la lista de contactos el indicado
+	 * 
+	 * @param vcard
+	 *            Contacto a seleccionar en la lista
+	 */
+	public void selectContactInList(VCard vcard) {
+		for (SimpleVCard simpleVCard : listView.getItems()) {
+			if (simpleVCard.getUid().equals(vcard.getUid())) {
+				listView.getSelectionModel().select(simpleVCard);
+				listView.scrollTo(simpleVCard);
+			}
+		}
+	}
+
+	/**
+	 * Carga los datos en la lista de categorías del buscador
+	 * 
+	 * @param categories
+	 *            Lista de categorías (no ordenadas)
+	 */
+	public void loadCategorySearchList(SortedSet<String> categories) {
+		// Esteblece los valores
+		ObservableList<String> searchCategoryOptions = FXCollections.observableArrayList();
+		searchCategoryOptions.add("");
+		searchCategoryOptions.addAll(categories);
+		searchCategoryComboBox.setItems(searchCategoryOptions);
+	}
+
+	/**
 	 * Obtiene el componente ListView para listar contactos
 	 * 
 	 * @return Componente de listar contactos
@@ -196,12 +259,12 @@ public class MainWindow {
 	}
 
 	/**
-	 * Obtiene el componente Label para mostrar la cantiad de contactos
+	 * Obtiene el contacto seleccionado del componente ListView
 	 * 
-	 * @return Componente para mostrar la cantiad de contactos
+	 * @return Contacto seleccionado
 	 */
-	public Label getContactsSizeLabel() {
-		return contactsSizeLabel;
+	public SimpleVCard getListViewSelectedItem() {
+		return listView.getSelectionModel().getSelectedItem();
 	}
 
 	/**
@@ -238,15 +301,6 @@ public class MainWindow {
 	 */
 	public ComboBox<SearchTypeEnum> getSearchTypeComboBox() {
 		return searchTypeComboBox;
-	}
-
-	/**
-	 * Obtiene el componente WebView para mostrar la información del contacto
-	 * 
-	 * @return Componente para mostrar información del contacto
-	 */
-	public WebView getWebView() {
-		return webView;
 	}
 
 	/**

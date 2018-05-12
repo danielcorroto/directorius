@@ -2,17 +2,13 @@ package com.danielcorroto.directorius.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.SortedSet;
 
 import com.danielcorroto.directorius.model.ContactManager;
 import com.danielcorroto.directorius.model.SimpleVCard;
@@ -30,8 +26,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -85,10 +79,7 @@ public class MainWindowController extends Application {
 			window = new MainWindow();
 			window.build(primaryStage);
 
-			menuItemFileFunction();
-			menuItemContactFunction();
-			menuItemBirthdayFunction();
-			menuItemHelpFunction();
+			setupMenuItemFunction();
 			addContactButtonFunction();
 			listViewFunction();
 			searchFunctions();
@@ -97,7 +88,7 @@ public class MainWindowController extends Application {
 			if (manager != null) {
 				loadManager();
 			}
-			
+
 			window.getSearchTextField().requestFocus();
 		} catch (Exception e) {
 			LOGGER.severe("Error en la aplicación principal", e);
@@ -113,8 +104,8 @@ public class MainWindowController extends Application {
 		// Habilita ventana
 		window.setDisable(false);
 		// Carga datos
-		setListViewItems(manager.getAllSimpleVCard());
-		loadCategorySearchList();
+		window.establishContacts(manager.getAllSimpleVCard());
+		window.loadCategorySearchList(manager.getCategories());
 		// Carga ventana de cumpleaños
 		Calendar end = Calendar.getInstance();
 		end.add(Calendar.DATE, 7);
@@ -122,72 +113,27 @@ public class MainWindowController extends Application {
 		if (cards != null && !cards.isEmpty()) {
 			Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
 			if (card.isPresent()) {
-				setWebViewInfo(card.get());
-				selectListViewElement(card.get());
+				window.establishContactInfo(card.get(), manager.getPhotoDir());
+				window.selectContactInList(card.get());
 			}
 		}
 	}
-
+	
 	/**
-	 * Setea la colección de contactos en la ListView y la cantidad de los
-	 * mismos
-	 * 
-	 * @param list
-	 *            Colección de contactos a mostrar
+	 * Setea la funcionalidad de los menús
 	 */
-	private void setListViewItems(Collection<SimpleVCard> list) {
-		ObservableList<SimpleVCard> elementList = FXCollections.observableArrayList(list);
-		window.getListView().setItems(elementList);
-
-		String contactsSize = MessageFormat.format(rb.getString(Text.I18N_CONTACTS_SIZE), list.size());
-		window.getContactsSizeLabel().setText(contactsSize);
-	}
-
-	/**
-	 * Busca la información completa del contacto, genera la página de
-	 * información y la muestra
-	 * 
-	 * @param simpleVCard
-	 *            Información sencilla del contacto
-	 */
-	private void setWebViewInfo(SimpleVCard simpleVCard) {
-		VCard vcard = manager.readContact(simpleVCard.getUid());
-		setWebViewInfo(vcard);
-	}
-
-	/**
-	 * Busca la información completa del contacto, genera la página de
-	 * información y la muestra
-	 * 
-	 * @param VCard
-	 *            Información del contacto
-	 */
-	private void setWebViewInfo(VCard vcard) {
-		String html = HtmlContactBuilder.build(vcard, manager.getPhotoDir());
-
-		window.getWebView().getEngine().loadContent(html);
-		window.getWebView().getEngine().setJavaScriptEnabled(true);
-	}
-
-	/**
-	 * Selecciona en la lista de contactos el indicado
-	 * 
-	 * @param vcard
-	 *            Contacto a seleccionar en la lista
-	 */
-	private void selectListViewElement(VCard vcard) {
-		for (SimpleVCard simpleVCard : window.getListView().getItems()) {
-			if (simpleVCard.getUid().equals(vcard.getUid())) {
-				window.getListView().getSelectionModel().select(simpleVCard);
-				window.getListView().scrollTo(simpleVCard);
-			}
-		}
+	private void setupMenuItemFunction() {
+		setupMenuItemFileFunction();
+		setupMenuItemContactFunction();
+		setupMenuItemBirthdayFunction();
+		setupMenuItemHelpFunction();
 	}
 
 	/**
 	 * Setea la funcionalidad de los items del menú Archivo
 	 */
-	private void menuItemFileFunction() {
+	private void setupMenuItemFileFunction() {
+		// Nuevo fichero
 		window.getMenuItems().getFileNew().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -212,6 +158,7 @@ public class MainWindowController extends Application {
 				}
 			}
 		});
+		// Cargar fichero
 		window.getMenuItems().getFileOpen().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -232,6 +179,7 @@ public class MainWindowController extends Application {
 				}
 			}
 		});
+		// Salir
 		window.getMenuItems().getFileExit().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -272,7 +220,8 @@ public class MainWindowController extends Application {
 	/**
 	 * Setea la funcionalidad de los items del menú Contactos
 	 */
-	private void menuItemContactFunction() {
+	private void setupMenuItemContactFunction() {
+		// Añadir contacto
 		window.getMenuItems().getContactAdd().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -280,29 +229,29 @@ public class MainWindowController extends Application {
 				loadContactWindow(null);
 			}
 		});
-
+		// Editar contacto
 		window.getMenuItems().getContactEdit().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				if (window.getListView().getSelectionModel().getSelectedItem() == null) {
+				if (window.getListViewSelectedItem() == null) {
 					return;
 				}
 
-				SimpleVCard simplevcard = window.getListView().getSelectionModel().getSelectedItem();
+				SimpleVCard simplevcard = window.getListViewSelectedItem();
 				loadContactWindow(simplevcard);
 			}
 		});
-
+		// Eliminar contacto
 		window.getMenuItems().getContactRemove().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				SimpleVCard simpleCard = window.getListView().getSelectionModel().getSelectedItem();
+				SimpleVCard simpleCard = window.getListViewSelectedItem();
 				removeContact(simpleCard);
 			}
 		});
-
+		// Estadísticas de contacto
 		window.getMenuItems().getContactStatistics().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -320,7 +269,7 @@ public class MainWindowController extends Application {
 	/**
 	 * Setea la funcionalidad de los items del menú Cumpleaños
 	 */
-	private void menuItemBirthdayFunction() {
+	private void setupMenuItemBirthdayFunction() {
 		// Cumpleaños hoy
 		window.getMenuItems().getBirthdayToday().setOnAction(new EventHandler<ActionEvent>() {
 
@@ -329,8 +278,8 @@ public class MainWindowController extends Application {
 				List<VCard> cards = manager.getBirthday(new Date(), new Date());
 				Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_TODAY).showAndWait();
 				if (card.isPresent()) {
-					setWebViewInfo(card.get());
-					selectListViewElement(card.get());
+					window.establishContactInfo(card.get(), manager.getPhotoDir());
+					window.selectContactInList(card.get());
 				}
 			}
 		});
@@ -345,8 +294,8 @@ public class MainWindowController extends Application {
 				List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
 				Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_WITHINWEEK).showAndWait();
 				if (card.isPresent()) {
-					setWebViewInfo(card.get());
-					selectListViewElement(card.get());
+					window.establishContactInfo(card.get(), manager.getPhotoDir());
+					window.selectContactInList(card.get());
 				}
 			}
 		});
@@ -361,8 +310,8 @@ public class MainWindowController extends Application {
 				List<VCard> cards = manager.getBirthday(new Date(), end.getTime());
 				Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_WITHINMONTH).showAndWait();
 				if (card.isPresent()) {
-					setWebViewInfo(card.get());
-					selectListViewElement(card.get());
+					window.establishContactInfo(card.get(), manager.getPhotoDir());
+					window.selectContactInList(card.get());
 				}
 			}
 		});
@@ -379,8 +328,8 @@ public class MainWindowController extends Application {
 				List<VCard> cards = manager.getBirthday(start.getTime(), end.getTime());
 				Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_THISWEEK).showAndWait();
 				if (card.isPresent()) {
-					setWebViewInfo(card.get());
-					selectListViewElement(card.get());
+					window.establishContactInfo(card.get(), manager.getPhotoDir());
+					window.selectContactInList(card.get());
 				}
 			}
 		});
@@ -397,8 +346,8 @@ public class MainWindowController extends Application {
 				List<VCard> cards = manager.getBirthday(start.getTime(), end.getTime());
 				Optional<VCard> card = new BirthdayDialog(cards, Text.I18N_MENU_BIRTHDAY_THISMONTH).showAndWait();
 				if (card.isPresent()) {
-					setWebViewInfo(card.get());
-					selectListViewElement(card.get());
+					window.establishContactInfo(card.get(), manager.getPhotoDir());
+					window.selectContactInList(card.get());
 				}
 			}
 		});
@@ -407,7 +356,7 @@ public class MainWindowController extends Application {
 	/**
 	 * Setea la funcionalidad de los items del menú Ayuda
 	 */
-	private void menuItemHelpFunction() {
+	private void setupMenuItemHelpFunction() {
 		window.getMenuItems().getHelpAbout().setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -441,30 +390,17 @@ public class MainWindowController extends Application {
 			// Carga la nueva lista
 			vcard = cwc.getVcard();
 			if (vcard != null) {
-				loadCategorySearchList();
+				window.loadCategorySearchList(manager.getCategories());
 				reloadContactListView();
-				selectListViewElement(vcard);
+				window.selectContactInList(vcard);
 			}
 		} catch (Exception e) {
 			LOGGER.severe("Error al abrir la ventana Añadir/Editar contacto...", e);
 			new AlertExceptionDialog(e).showAndWait();
 		}
 	}
-
-	/**
-	 * Carga los datos en la lista de categorías
-	 */
-	private void loadCategorySearchList() {
-		// Selecciona los valores
-		List<String> categories = new ArrayList<>(manager.getCategories());
-		categories.add("");
-		Collections.sort(categories);
-		// Esteblece los valores
-		ObservableList<String> searchCategoryOptions = FXCollections.observableArrayList();
-		searchCategoryOptions.addAll(categories);
-		window.getSearchCategoryComboBox().setItems(searchCategoryOptions);
-		;
-	}
+	
+	// TODO por aquí (refactorizar búsqueda con un filtro
 
 	/**
 	 * Recarga la lista de contactos a partir de los parámetros de los elementos
@@ -474,8 +410,8 @@ public class MainWindowController extends Application {
 		String category = window.getSearchCategoryComboBox().getValue();
 		String text = window.getSearchTextField().getText();
 		SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
-		Set<SimpleVCard> list = manager.search(text.trim(), type, category);
-		setListViewItems(list);
+		SortedSet<SimpleVCard> list = manager.search(text.trim(), type, category);
+		window.establishContacts(list);
 	}
 
 	/**
@@ -494,7 +430,8 @@ public class MainWindowController extends Application {
 			@Override
 			public void changed(ObservableValue<? extends SimpleVCard> observable, SimpleVCard oldValue, SimpleVCard newValue) {
 				if (newValue != null) {
-					setWebViewInfo(newValue);
+					VCard vcard = manager.readContact(newValue.getUid());
+					window.establishContactInfo(vcard, manager.getPhotoDir());
 				}
 			}
 		});
@@ -503,7 +440,7 @@ public class MainWindowController extends Application {
 			@Override
 			public void handle(MouseEvent event) {
 				if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
-					SimpleVCard simplevcard = window.getListView().getSelectionModel().getSelectedItem();
+					SimpleVCard simplevcard = window.getListViewSelectedItem();
 					loadContactWindow(simplevcard);
 				}
 
@@ -589,11 +526,11 @@ public class MainWindowController extends Application {
 				LOGGER.severe("Error al borrar contacto " + card.getFormattedName().getValue(), e);
 				new AlertExceptionDialog(e).showAndWait();
 			}
-			loadCategorySearchList();
+			window.loadCategorySearchList(manager.getCategories());
 			reloadContactListView();
 		}
 	}
-	
+
 	private void searchFunctions() {
 		searchCategoryComboBoxFunction();
 		searchTextFieldFunction();
@@ -601,8 +538,8 @@ public class MainWindowController extends Application {
 	}
 
 	/**
-	 * Setea la funcionalidad del combo de categoría de búsqueda: busca contactos y
-	 * los muestre en el ListView
+	 * Setea la funcionalidad del combo de categoría de búsqueda: busca
+	 * contactos y los muestre en el ListView
 	 */
 	private void searchCategoryComboBoxFunction() {
 		window.getSearchCategoryComboBox().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -611,12 +548,12 @@ public class MainWindowController extends Application {
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				String text = window.getSearchTextField().getText();
 				SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
-				Set<SimpleVCard> list = manager.search(text.trim(), type, newValue);
-				setListViewItems(list);
+				SortedSet<SimpleVCard> list = manager.search(text.trim(), type, newValue);
+				window.establishContacts(list);
 			}
 		});
 	}
-	
+
 	/**
 	 * Setea la funcionalidad de la caja de búsqueda: busca contactos y los
 	 * muestra en el ListView
@@ -626,11 +563,11 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				Set<SimpleVCard> list;
+				SortedSet<SimpleVCard> list;
 				String category = window.getSearchCategoryComboBox().getValue();
 				SearchTypeEnum type = window.getSearchTypeComboBox().getValue();
 				list = manager.search(newValue.trim(), type, category);
-				setListViewItems(list);
+				window.establishContacts(list);
 			}
 		});
 	}
@@ -652,8 +589,8 @@ public class MainWindowController extends Application {
 				}
 
 				String category = window.getSearchCategoryComboBox().getValue();
-				Set<SimpleVCard> list = manager.search(text.trim(), newValue, category);
-				setListViewItems(list);
+				SortedSet<SimpleVCard> list = manager.search(text.trim(), newValue, category);
+				window.establishContacts(list);
 			}
 		});
 	}
