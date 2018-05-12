@@ -1,5 +1,10 @@
 package com.danielcorroto.directorius.model;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 
 /**
@@ -8,6 +13,12 @@ import com.danielcorroto.directorius.model.type.SearchTypeEnum;
  * @author Daniel Corroto Quirós
  */
 public class SearchFilter {
+	/**
+	 * Patrón para cortar una cadena a partir del espacio pero sin incluir las
+	 * comillas
+	 */
+	private static final Pattern searchPattern = Pattern.compile("\"([^\"]*)\"|(\\S+)"); // Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
+
 	/**
 	 * Categoría buscada
 	 */
@@ -63,6 +74,32 @@ public class SearchFilter {
 	 */
 	public String getText() {
 		return text;
+	}
+
+	/**
+	 * Separa en cadenas la cadena separada por espacios pero agrupando cadenas
+	 * rodeadas por comillas dobles. Por ejemplo:
+	 * <ul>
+	 * <li>qwerty -> [querty]
+	 * <li>qwerty "asdf ñlkj" -> [qwerty, asdf ñlkj]
+	 * <li>qwerty "asdf ñlkj" "zxcv mnb" -> [qwerty, asdf ñlkj, zxcv mnb]
+	 * </ul>
+	 * 
+	 * @return Cadenas separadas
+	 */
+	public Set<String> getSplittedText() {
+		Set<String> res = new HashSet<>();
+
+		Matcher m = searchPattern.matcher(text);
+		while (m.find()) {
+			if (m.group(1) != null) {
+				res.add(m.group(1));
+			} else {
+				res.add(m.group(2).replace("\"", ""));
+			}
+		}
+
+		return res;
 	}
 
 	/**

@@ -546,7 +546,6 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				// TODO verificar
 				SearchFilter filter = window.getSearchFilter();
 				SortedSet<SimpleVCard> list = manager.search(filter);
 				window.establishContacts(list);
@@ -563,7 +562,6 @@ public class MainWindowController extends Application {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				// TODO comprobar
 				SearchFilter filter = window.getSearchFilter();
 				SortedSet<SimpleVCard> list = manager.search(filter);
 				window.establishContacts(list);

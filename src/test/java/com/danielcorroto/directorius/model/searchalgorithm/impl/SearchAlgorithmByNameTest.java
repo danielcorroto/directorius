@@ -23,7 +23,7 @@ public class SearchAlgorithmByNameTest extends TestCase {
 	 */
 	public void testEmptyContact() {
 		SearchAlgorithm search = new SearchAlgorithmByName();
-		Set<SimpleVCard> result = search.search(new ArrayList<>(), TestUtil.buildSet("a", "b"), null);
+		Set<SimpleVCard> result = search.search(new ArrayList<>(), TestUtil.buildFilter("a b", null));
 
 		assertEquals(0, result.size());
 	}
@@ -35,9 +35,11 @@ public class SearchAlgorithmByNameTest extends TestCase {
 		Set<VCard> cards = new HashSet<>();
 		cards.add(TestUtil.createVCard("qwe"));
 		SearchAlgorithm search = new SearchAlgorithmByName();
-		Set<SimpleVCard> result = search.search(cards, new HashSet<>(), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("", null));
 
-		assertEquals(0, result.size());
+		assertEquals(1, result.size());
+		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
+		assertTrue(names.contains("qwe"));
 	}
 
 	/**
@@ -49,7 +51,7 @@ public class SearchAlgorithmByNameTest extends TestCase {
 		cards.add(TestUtil.createVCard("asd fgh"));
 		cards.add(TestUtil.createVCard("zxc vbn"));
 		SearchAlgorithm search = new SearchAlgorithmByName();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe"), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwe", null));
 
 		assertEquals(1, result.size());
 		assertEquals("qwe rty", result.iterator().next().getFormattedName().getValue());
@@ -64,7 +66,7 @@ public class SearchAlgorithmByNameTest extends TestCase {
 		cards.add(TestUtil.createVCard("asd fgh"));
 		cards.add(TestUtil.createVCard("zxc vbn"));
 		SearchAlgorithm search = new SearchAlgorithmByName();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwÉ"), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwÉ", null));
 
 		assertEquals(1, result.size());
 		assertEquals("qwè rty", result.iterator().next().getFormattedName().getValue());
@@ -79,7 +81,7 @@ public class SearchAlgorithmByNameTest extends TestCase {
 		cards.add(TestUtil.createVCard("qwe fgh"));
 		cards.add(TestUtil.createVCard("er rte rqwet"));
 		SearchAlgorithm search = new SearchAlgorithmByName();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe", "r rt"), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwe \"r rt\"", null));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 

@@ -23,7 +23,7 @@ public class SearchAlgorithmByCategoryTest extends TestCase {
 	 */
 	public void testEmptyContact() {
 		SearchAlgorithm search = new SearchAlgorithmByCategory();
-		Set<SimpleVCard> result = search.search(new ArrayList<>(), TestUtil.buildSet("a", "b"), null);
+		Set<SimpleVCard> result = search.search(new ArrayList<>(), TestUtil.buildFilter("a b", null));
 
 		assertEquals(0, result.size());
 	}
@@ -35,9 +35,11 @@ public class SearchAlgorithmByCategoryTest extends TestCase {
 		Set<VCard> cards = new HashSet<>();
 		cards.add(TestUtil.createVCardCategories("qwe", "cat1"));
 		SearchAlgorithm search = new SearchAlgorithmByCategory();
-		Set<SimpleVCard> result = search.search(cards, new HashSet<>(), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("", null));
 
-		assertEquals(0, result.size());
+		assertEquals(1, result.size());
+		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
+		assertTrue(names.contains("qwe"));
 	}
 
 	/**
@@ -49,7 +51,7 @@ public class SearchAlgorithmByCategoryTest extends TestCase {
 		cards.add(TestUtil.createVCardCategories("asd fgh", " aqwea"));
 		cards.add(TestUtil.createVCardCategories("zxc vbn", "def", "qwe"));
 		SearchAlgorithm search = new SearchAlgorithmByCategory();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe"), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwe", null));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
@@ -67,7 +69,7 @@ public class SearchAlgorithmByCategoryTest extends TestCase {
 		cards.add(TestUtil.createVCardCategories("asd fgh", " aqwèa"));
 		cards.add(TestUtil.createVCardCategories("zxc vbn", "def", "qwe"));
 		SearchAlgorithm search = new SearchAlgorithmByCategory();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwÉ"), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwÉ", null));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
@@ -85,7 +87,7 @@ public class SearchAlgorithmByCategoryTest extends TestCase {
 		cards.add(TestUtil.createVCardCategories("qwe fgh", "fdasf", "fasdqwer rtr"));
 		cards.add(TestUtil.createVCardCategories("errte rqwet", "fsdar rtqwe"));
 		SearchAlgorithm search = new SearchAlgorithmByCategory();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe", "r rt"), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwe \"r rt\"", null));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 

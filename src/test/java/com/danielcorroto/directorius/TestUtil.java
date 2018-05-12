@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.danielcorroto.directorius.model.CustomParameter;
+import com.danielcorroto.directorius.model.SearchFilter;
 import com.danielcorroto.directorius.model.SimpleVCard;
 
 import ezvcard.VCard;
@@ -188,5 +189,10 @@ public class TestUtil {
 			}
 		}
 		return vcard;
+	}
+	
+	public static SearchFilter buildFilter(String text, String category) {
+		SearchFilter filter = new SearchFilter(category, text, null);
+		return filter;
 	}
 }

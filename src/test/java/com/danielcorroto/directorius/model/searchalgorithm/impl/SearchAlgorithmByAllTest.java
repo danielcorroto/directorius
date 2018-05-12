@@ -23,7 +23,7 @@ public class SearchAlgorithmByAllTest extends TestCase {
 	 */
 	public void testEmptyContact() {
 		SearchAlgorithm search = new SearchAlgorithmByAll();
-		Set<SimpleVCard> result = search.search(new ArrayList<>(), TestUtil.buildSet("a", "b"), null);
+		Set<SimpleVCard> result = search.search(new ArrayList<>(), TestUtil.buildFilter("a b", null));
 
 		assertEquals(0, result.size());
 	}
@@ -35,9 +35,11 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		Set<VCard> cards = new HashSet<>();
 		cards.add(TestUtil.createVCardAll("qwe", null, null, null, null, null, null, null));
 		SearchAlgorithm search = new SearchAlgorithmByAll();
-		Set<SimpleVCard> result = search.search(cards, new HashSet<>(), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("", null));
 
-		assertEquals(0, result.size());
+		assertEquals(1, result.size());
+		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
+		assertTrue(names.contains("qwe"));
 	}
 
 	/**
@@ -66,7 +68,7 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		cards.add(TestUtil.createVCardAll("cv", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|tqwer" }));
 		cards.add(TestUtil.createVCardAll("bn", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
 		SearchAlgorithm search = new SearchAlgorithmByAll();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe"), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwe", null));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
@@ -110,7 +112,7 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		cards.add(TestUtil.createVCardAll("cv", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|tqwer" }));
 		cards.add(TestUtil.createVCardAll("bn", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
 		SearchAlgorithm search = new SearchAlgorithmByAll();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwé"), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwé", null));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
@@ -154,7 +156,7 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		cards.add(TestUtil.createVCardAll("cv", null, new String[] { "r rtds" }, null, null, null, null, new String[] { "ca|ci|re|cp|tqwer" }));
 		cards.add(TestUtil.createVCardAll("bn", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
 		SearchAlgorithm search = new SearchAlgorithmByAll();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe", "r rt"), null);
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwe \"r rt\"", null));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
@@ -190,7 +192,7 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		cards.add(TestUtil.createVCardAll("cv", null, new String[] { "r rtds" }, null, null, null, null, new String[] { "ca|ci|re|cp|tqwer" }));
 		cards.add(TestUtil.createVCardAll("bn", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
 		SearchAlgorithm search = new SearchAlgorithmByAll();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe", "r rt"), "");
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwe \"r rt\"", ""));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
@@ -226,7 +228,7 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		cards.add(TestUtil.createVCardAll("cv", null, new String[] { "r rtdaaas" }, null, null, null, null, new String[] { "ca|ci|re|cp|tqwer" }));
 		cards.add(TestUtil.createVCardAll("bn", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
 		SearchAlgorithm search = new SearchAlgorithmByAll();
-		Set<SimpleVCard> result = search.search(cards, TestUtil.buildSet("qwe", "r rt"), "aaa");
+		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwe \"r rt\"", "aaa"));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 

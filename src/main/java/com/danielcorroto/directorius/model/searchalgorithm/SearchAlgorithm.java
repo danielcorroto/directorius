@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.danielcorroto.directorius.model.SearchFilter;
 import com.danielcorroto.directorius.model.SimpleVCard;
 
 import ezvcard.VCard;
@@ -28,8 +29,12 @@ public abstract class SearchAlgorithm {
 	 * @return Colección de contactos sencillos que cumplen las condiciones de
 	 *         búsqueda. Vacío, nunca null, si no se encuentra nada
 	 */
-	public Set<SimpleVCard> search(Collection<VCard> vcards, Collection<String> searchTexts, String category) {
-		if (vcards == null || searchTexts == null || vcards.isEmpty()) {
+	public Set<SimpleVCard> search(Collection<VCard> vcards, SearchFilter filter) {
+		if (filter == null) {
+			return new HashSet<>();
+		}
+		
+		if (vcards == null || filter.getSplittedText() == null || vcards.isEmpty()) {
 			return new HashSet<>();
 		}
 
@@ -37,12 +42,12 @@ public abstract class SearchAlgorithm {
 
 		for (VCard vcard : vcards) {
 			// Verifica categoría
-			if (category != null && !validate(vcard, category)) {
+			if (filter.getCategory() != null && !validate(vcard, filter.getCategory())) {
 				continue;
 			}
 			// Verifica textos
 			boolean match = true;
-			Iterator<String> iterator = searchTexts.iterator();
+			Iterator<String> iterator = filter.getSplittedText().iterator();
 			while (match && iterator.hasNext()) {
 				String text = iterator.next();
 				if (!matchSearch(vcard, text)) {

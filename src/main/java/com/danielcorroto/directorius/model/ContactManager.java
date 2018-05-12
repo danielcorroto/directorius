@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,8 +26,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.danielcorroto.directorius.controller.data.Statistics;
 import com.danielcorroto.directorius.model.comparator.FullNameSimpleVCardComparator;
@@ -59,11 +56,6 @@ public class ContactManager {
 	 * Clave de la propiedad de la ruta fichero que contiene la agenda
 	 */
 	private static final String PROPERTIES_FILE = "file";
-	/**
-	 * Patrón para cortar una cadena a partir del espacio pero sin incluir las
-	 * comillas
-	 */
-	private static final Pattern searchPattern = Pattern.compile("\"([^\"]*)\"|(\\S+)"); // Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 	/**
 	 * Charset para la lectura/escritura de fichero
 	 */
@@ -228,40 +220,11 @@ public class ContactManager {
 	 * @return Lista de contactos encontrados
 	 */
 	public SortedSet<SimpleVCard> search(SearchFilter filter) {
-		Set<String> searchTexts = splitSearchText(filter.getText());
 		SearchAlgorithm searchAlgorithm = filter.getType().getSearchAlgorithm();
-		Set<SimpleVCard> result = searchAlgorithm.search(vcardMap.values(), searchTexts, filter.getCategory());
+		Set<SimpleVCard> result = searchAlgorithm.search(vcardMap.values(), filter);
 		SortedSet<SimpleVCard> sorted = new TreeSet<>(new FullNameSimpleVCardComparator());
 		sorted.addAll(result);
 		return sorted;
-	}
-
-	/**
-	 * Separa en cadenas la cadena separada por espacios pero agrupando cadenas
-	 * rodeadas por comillas dobles. Por ejemplo:
-	 * <ul>
-	 * <li>qwerty -> [querty]
-	 * <li>qwerty "asdf ñlkj" -> [qwerty, asdf ñlkj]
-	 * <li>qwerty "asdf ñlkj" "zxcv mnb" -> [qwerty, asdf ñlkj, zxcv mnb]
-	 * </ul>
-	 * 
-	 * @param text
-	 *            Texto a trocear
-	 * @return
-	 */
-	public Set<String> splitSearchText(String text) {
-		Set<String> res = new HashSet<>();
-
-		Matcher m = searchPattern.matcher(text);
-		while (m.find()) {
-			if (m.group(1) != null) {
-				res.add(m.group(1));
-			} else {
-				res.add(m.group(2).replace("\"", ""));
-			}
-		}
-
-		return res;
 	}
 
 	public SortedSet<String> getCategories() {
