@@ -59,7 +59,7 @@ public class SearchAlgorithmByAll extends SearchAlgorithm {
 	 * @return Si valida la búsqueda
 	 */
 	private boolean searchName(VCard vcard, String text) {
-		return vcard.getFormattedName() != null && vcard.getFormattedName().getValue() != null && contains(vcard.getFormattedName().getValue(), text);
+		return vcard.getFormattedName() != null && vcard.getFormattedName().getValue() != null && normalizeContains(vcard.getFormattedName().getValue(), text);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class SearchAlgorithmByAll extends SearchAlgorithm {
 			return false;
 		}
 		for (Note note : vcard.getNotes()) {
-			if (note != null && note.getValue() != null && contains(note.getValue(), text)) {
+			if (note != null && note.getValue() != null && normalizeContains(note.getValue(), text)) {
 				return true;
 			}
 		}
@@ -97,7 +97,7 @@ public class SearchAlgorithmByAll extends SearchAlgorithm {
 			return false;
 		}
 		for (String category : vcard.getCategories().getValues()) {
-			if (category != null && contains(category, text)) {
+			if (category != null && normalizeContains(category, text)) {
 				return true;
 			}
 		}
@@ -119,10 +119,10 @@ public class SearchAlgorithmByAll extends SearchAlgorithm {
 		}
 		for (Telephone telephone : vcard.getTelephoneNumbers()) {
 			if (telephone != null) {
-				if (telephone.getText() != null && contains(telephone.getText(), text)) {
+				if (telephone.getText() != null && normalizeContains(telephone.getText(), text)) {
 					return true;
 				}
-				if (contains(telephone.getParameter(CustomParameter.TELEPHONE_TAG), text)) {
+				if (normalizeContains(telephone.getParameter(CustomParameter.TELEPHONE_TAG), text)) {
 					return true;
 				}
 			}
@@ -145,10 +145,10 @@ public class SearchAlgorithmByAll extends SearchAlgorithm {
 		}
 		for (Email email : vcard.getEmails()) {
 			if (email != null) {
-				if (email.getValue() != null && contains(email.getValue(), text)) {
+				if (email.getValue() != null && normalizeContains(email.getValue(), text)) {
 					return true;
 				}
-				if (contains(email.getParameter(CustomParameter.EMAIL_TAG), text)) {
+				if (normalizeContains(email.getParameter(CustomParameter.EMAIL_TAG), text)) {
 					return true;
 				}
 			}
@@ -170,15 +170,15 @@ public class SearchAlgorithmByAll extends SearchAlgorithm {
 			return false;
 		}
 		for (Address address : vcard.getAddresses()) {
-			if (address.getStreetAddress() != null && contains(address.getStreetAddress(), text)) {
+			if (address.getStreetAddress() != null && normalizeContains(address.getStreetAddress(), text)) {
 				return true;
-			} else if (address.getLocality() != null && contains(address.getLocality(), text)) {
+			} else if (address.getLocality() != null && normalizeContains(address.getLocality(), text)) {
 				return true;
-			} else if (address.getRegion() != null && contains(address.getRegion(), text)) {
+			} else if (address.getRegion() != null && normalizeContains(address.getRegion(), text)) {
 				return true;
-			} else if (address.getPostalCode() != null && contains(address.getPostalCode(), text)) {
+			} else if (address.getPostalCode() != null && normalizeContains(address.getPostalCode(), text)) {
 				return true;
-			} else if (address.getCountry() != null && contains(address.getCountry(), text)) {
+			} else if (address.getCountry() != null && normalizeContains(address.getCountry(), text)) {
 				return true;
 			}
 		}

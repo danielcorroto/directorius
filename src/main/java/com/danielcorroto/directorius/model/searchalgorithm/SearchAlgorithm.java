@@ -33,7 +33,7 @@ public abstract class SearchAlgorithm {
 		if (filter == null) {
 			return new HashSet<>();
 		}
-		
+
 		if (vcards == null || filter.getSplittedText() == null || vcards.isEmpty()) {
 			return new HashSet<>();
 		}
@@ -42,7 +42,7 @@ public abstract class SearchAlgorithm {
 
 		for (VCard vcard : vcards) {
 			// Verifica categoría
-			if (filter.getCategory() != null && !validate(vcard, filter.getCategory())) {
+			if (filter.getCategory() != null && !validateCategory(vcard, filter.getCategory())) {
 				continue;
 			}
 			// Verifica textos
@@ -66,11 +66,13 @@ public abstract class SearchAlgorithm {
 	 * Valida si la categoría indicada matchea con el contacto. Si el contacto
 	 * no tiene categorías sí matchea con categoría vacía
 	 * 
+	 * @param vcard
+	 *            Información del contacto
 	 * @param category
 	 *            Categoría buscada
 	 * @return Si coincide alguna categoría con la indicada
 	 */
-	private boolean validate(VCard vcard, String category) {
+	private boolean validateCategory(VCard vcard, String category) {
 		// La categoría indicada como vacía matchea con todo
 		if (category.trim().equals("")) {
 			return true;
@@ -80,7 +82,7 @@ public abstract class SearchAlgorithm {
 			return false;
 		}
 		for (String current : vcard.getCategories().getValues()) {
-			if (contains(current, category)) {
+			if (normalizeEquals(current, category)) {
 				return true;
 			}
 		}
@@ -89,20 +91,37 @@ public abstract class SearchAlgorithm {
 
 	/**
 	 * Comprueba si la cadena contiene otra subcadena ambas normalizadas y case
-	 * insensitive
 	 * 
 	 * @param str
 	 *            Cadena
 	 * @param substring
 	 *            Subcadena buscada
-	 * @return Si str contiene substring
+	 * @return Si str contiene substring normalizadas
 	 */
-	protected boolean contains(String str, String substring) {
+	protected boolean normalizeContains(String str, String substring) {
 		if (str == null || substring == null) {
 			return false;
 		}
 		int index = normalizeAndLowercase(str).indexOf(normalizeAndLowercase(substring));
 		return index >= 0;
+	}
+
+	/**
+	 * 
+	 * Comprueba si la cadena es igual a otra subcadena ambas normalizadas y
+	 * case insensitive
+	 * 
+	 * @param str
+	 *            Cadena
+	 * @param substring
+	 *            Subcadena buscada
+	 * @return Si str es igual que substring normalizadas
+	 */
+	protected boolean normalizeEquals(String str, String substring) {
+		if (str == null || substring == null) {
+			return false;
+		}
+		return normalizeAndLowercase(str).equals(normalizeAndLowercase(substring));
 	}
 
 	/**

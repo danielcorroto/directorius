@@ -18,7 +18,7 @@ public class SearchAlgorithmByCategory extends SearchAlgorithm {
 			return false;
 		}
 		for (String category : vcard.getCategories().getValues()) {
-			if (contains(category, text)) {
+			if (normalizeContains(category, text)) {
 				return true;
 			}
 		}

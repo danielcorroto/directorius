@@ -14,7 +14,7 @@ public class SearchAlgorithmByName extends SearchAlgorithm {
 
 	@Override
 	protected boolean matchSearch(VCard vcard, String text) {
-		return vcard.getFormattedName() != null && vcard.getFormattedName().getValue() != null && contains(vcard.getFormattedName().getValue(), text);
+		return vcard.getFormattedName() != null && vcard.getFormattedName().getValue() != null && normalizeContains(vcard.getFormattedName().getValue(), text);
 	}
 
 }

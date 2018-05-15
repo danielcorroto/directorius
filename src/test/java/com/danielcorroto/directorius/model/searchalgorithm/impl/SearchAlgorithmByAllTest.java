@@ -211,7 +211,7 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		cards.add(TestUtil.createVCardAll("rty", null, null, null, null, null, null, null));
 		cards.add(TestUtil.createVCardAll("uio", "fdaqwe fd", null, null, null, null, null, null));
 		cards.add(TestUtil.createVCardAll("asd", "fdsfsf ss", null, null, null, null, null, null));
-		cards.add(TestUtil.createVCardAll("fgh", "asr rt", new String[] { "fasd qwe", "aaaa" }, null, null, null, null, null));
+		cards.add(TestUtil.createVCardAll("fgh", "asr rt", new String[] { "fasd qwe", "aaa" }, null, null, null, null, null));
 		cards.add(TestUtil.createVCardAll("jkl", null, new String[] { "fdsa fds" }, null, null, null, null, null));
 		cards.add(TestUtil.createVCardAll("zxc", null, null, new String[] { "5454 54 3 4" }, null, null, null, null));
 		cards.add(TestUtil.createVCardAll("vbn", null, null, new String[] { "8756 876 3" }, null, null, null, null));
@@ -232,9 +232,8 @@ public class SearchAlgorithmByAllTest extends TestCase {
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
-		assertEquals(3, result.size());
+		assertEquals(2, result.size());
 		assertTrue(names.contains("fgh"));
 		assertTrue(names.contains("df"));
-		assertTrue(names.contains("cv"));
 	}
 }
