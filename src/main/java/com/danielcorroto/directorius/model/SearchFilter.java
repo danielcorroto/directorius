@@ -17,7 +17,7 @@ public class SearchFilter {
 	 * Patrón para cortar una cadena a partir del espacio pero sin incluir las
 	 * comillas
 	 */
-	private static final Pattern searchPattern = Pattern.compile("\"([^\"]*)\"|(\\S+)"); // Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
+	private static final Pattern SEARCH_PATTERN = Pattern.compile("\"([^\"]*)\"|(\\S+)"); // Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 
 	/**
 	 * Categoría buscada
@@ -90,7 +90,7 @@ public class SearchFilter {
 	public Set<String> getSplittedText() {
 		Set<String> res = new HashSet<>();
 
-		Matcher m = searchPattern.matcher(text);
+		Matcher m = SEARCH_PATTERN.matcher(text);
 		while (m.find()) {
 			if (m.group(1) != null) {
 				res.add(m.group(1));
@@ -129,6 +129,19 @@ public class SearchFilter {
 	 */
 	public void setType(SearchTypeEnum type) {
 		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SearchFilter [category=");
+		builder.append(category);
+		builder.append(", text=");
+		builder.append(text);
+		builder.append(", type=");
+		builder.append(type);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }
