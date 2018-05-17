@@ -17,7 +17,7 @@ public class SearchFilter {
 	 * Patrón para cortar una cadena a partir del espacio pero sin incluir las
 	 * comillas
 	 */
-	private static final Pattern SEARCH_PATTERN = Pattern.compile("\"([^\"]*)\"|(\\S+)"); // Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
+	private static final Pattern SEARCH_PATTERN = Pattern.compile("\"([^\"]*)\"|(\\S+)");
 
 	/**
 	 * Categoría buscada

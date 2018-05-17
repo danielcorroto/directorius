@@ -300,10 +300,6 @@ public class ContactManager {
 	 * @throws IOException
 	 */
 	public String savePhotoFile(File source, String destPath) throws IOException {
-		// FileChannel sourceChannel = null;
-		// FileChannel destChannel = null;
-		// FileInputStream fis = null;
-		// FileOutputStream fos = null;
 		String result = null;
 
 		String extension = source.getName().substring(source.getName().lastIndexOf('.'));

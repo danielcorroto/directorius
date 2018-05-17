@@ -33,7 +33,7 @@ public class CustomFormatter extends Formatter {
 
 	@Override
 	public String format(LogRecord record) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(sdf.format(date)).append(" ");
 		sb.append(record.getLevel()).append(" ");
 		sb.append(record.getLoggerName()).append(" ");

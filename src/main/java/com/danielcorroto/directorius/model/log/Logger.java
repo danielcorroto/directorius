@@ -19,7 +19,7 @@ import com.danielcorroto.directorius.view.Text;
  *
  */
 public class Logger {
-	private java.util.logging.Logger logger;
+	private java.util.logging.Logger javaLogger;
 
 	private static Map<Class<?>, Logger> loggers = new HashMap<>();
 	private static Handler fileHandler = null;
@@ -54,8 +54,8 @@ public class Logger {
 			PrintStream ps = new PrintStream(filename);
 			System.setErr(ps);
 		}
-		logger = java.util.logging.Logger.getLogger(clazz.getName());
-		logger.addHandler(fileHandler);
+		javaLogger = java.util.logging.Logger.getLogger(clazz.getName());
+		javaLogger.addHandler(fileHandler);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class Logger {
 	 *            Excepción mostrada (o null si no hay)
 	 */
 	private void log(Level level, String msg, Throwable thrown) {
-		logger.log(level, msg, thrown);
+		javaLogger.log(level, msg, thrown);
 	}
 
 	/**
