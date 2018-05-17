@@ -16,6 +16,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
@@ -54,9 +56,59 @@ public class StatisticDialog extends Dialog<Void> {
 		// Título
 		this.setTitle(rb.getString(Text.I18N_MENU_CONTACT_STATISTICS));
 
-		// Tabla
-		TableView<Statistic> table = buildTable();
-		this.getDialogPane().setContent(table);
+		// Tabla general
+		TableView<Statistic> tableGeneral = buildTableGeneral(stat);
+		Tab tabGeneral = buildTab(rb.getString(Text.I18N_STATISTICS_TAB_GENERAL), tableGeneral);
+
+		// Tabla nombre
+		TableView<Statistic> tableName = buildTableName(stat);
+		Tab tabName = buildTab(rb.getString(Text.I18N_STATISTICS_TAB_NAME), tableName);
+
+		// Pestañas
+		TabPane tabPane = new TabPane();
+		tabPane.getTabs().add(tabGeneral);
+		tabPane.getTabs().add(tabName);
+		this.getDialogPane().setContent(tabPane);
+
+		// Botones de guardar/cancelar
+		this.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
+
+		// Setea propiedades
+		Stage stage = (Stage) this.getDialogPane().getScene().getWindow();
+		double width = Screen.getPrimary().getBounds().getWidth();
+		double height = Screen.getPrimary().getBounds().getHeight();
+		this.getDialogPane().setMinWidth(width / 2);
+		this.getDialogPane().setMinHeight(height - 100);
+		Image logo = new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO));
+		stage.getIcons().add(logo);
+	}
+
+	/**
+	 * Construye la pestaña
+	 * 
+	 * @param title
+	 *            Título de la pestaña
+	 * @param table
+	 *            Tabla que se añade a la pestaña
+	 * @return Pestaña creada
+	 */
+	private Tab buildTab(String title, TableView<Statistic> table) {
+		Tab tab = new Tab();
+		tab.setClosable(false);
+		tab.setText(title);
+		tab.setContent(table);
+		return tab;
+	}
+
+	/**
+	 * Crea la tabla de estadísticas generales
+	 * 
+	 * @param stat
+	 *            Datos estadísticos
+	 * @return Tabla con las estadísticas
+	 */
+	private TableView<Statistic> buildTableGeneral(Statistics stat) {
+		TableView<Statistic> tableGeneral = buildTable();
 
 		// Rellenar la tabla
 		ObservableList<Statistic> data = FXCollections.observableArrayList();
@@ -73,24 +125,35 @@ public class StatisticDialog extends Dialog<Void> {
 		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_UNIQUETELEPHONE), stat.getUniquePhones(), stat.getUniquePhones()));
 		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_UNIQUEEMAIL), stat.getUniqueEmails(), stat.getUniqueEmails()));
 		data.add(new Statistic(rb.getString(Text.I18N_STATISTICS_ITEM_UNIQUEADDRES), stat.getUniqueAddresses(), stat.getUniqueAddresses()));
-		
-		table.setItems(data);
 
-		// Botones de guardar/cancelar
-		this.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
+		tableGeneral.setItems(data);
 
-		// Setea propiedades
-		Stage stage = (Stage) this.getDialogPane().getScene().getWindow();
-		double width = Screen.getPrimary().getBounds().getWidth();
-		double height = Screen.getPrimary().getBounds().getHeight();
-		this.getDialogPane().setMinWidth(width / 2);
-		this.getDialogPane().setMinHeight(height - 100);
-		Image logo = new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO));
-		stage.getIcons().add(logo);
+		return tableGeneral;
 	}
 
 	/**
-	 * Cosntruye la tabla
+	 * Crea la tabla de estadísticas generales
+	 * 
+	 * @param stat
+	 *            Datos estadísticos
+	 * @return Tabla con las estadísticas
+	 */
+	private TableView<Statistic> buildTableName(Statistics stat) {
+		TableView<Statistic> tableName = buildTable();
+		
+		// Rellenar la tabla
+		ObservableList<Statistic> data = FXCollections.observableArrayList();
+		for (Entry<String, Integer> entry : stat.getNameMap().entrySet()) {
+			data.add(new Statistic(entry.getKey(), entry.getValue(), stat.getAllContacts()));
+		}
+		
+		tableName.setItems(data);
+		
+		return tableName;
+	}
+
+	/**
+	 * Construye la tabla
 	 * 
 	 * @return Tabla para las estadísticas
 	 */
@@ -108,28 +171,28 @@ public class StatisticDialog extends Dialog<Void> {
 		percentageCol.prefWidthProperty().bind(table.widthProperty().multiply(STATISTIC_PERCENTAGE[2]));
 
 		// Visualización de las filas
-		textCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Statistic,String>, ObservableValue<String>>() {
-			
+		textCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Statistic, String>, ObservableValue<String>>() {
+
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Statistic, String> param) {
 				return new SimpleStringProperty(param.getValue().text);
 			}
 		});
-		totalCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Statistic,Number>, ObservableValue<Number>>() {
+		totalCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Statistic, Number>, ObservableValue<Number>>() {
 
 			@Override
 			public ObservableValue<Number> call(CellDataFeatures<Statistic, Number> param) {
 				return new SimpleIntegerProperty(param.getValue().total);
 			}
 		});
-		percentageCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Statistic,Number>, ObservableValue<Number>>() {
+		percentageCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Statistic, Number>, ObservableValue<Number>>() {
 
 			@Override
 			public ObservableValue<Number> call(CellDataFeatures<Statistic, Number> param) {
 				return new SimpleIntegerProperty(100 * param.getValue().total / param.getValue().max);
 			}
 		});
-		
+
 		// Seteo de columnas en tabla
 		List<TableColumn<Statistic, ?>> tableColumns = new ArrayList<>();
 		tableColumns.add(textCol);

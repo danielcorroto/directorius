@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.danielcorroto.directorius.model.Utils;
+import com.danielcorroto.directorius.model.comparator.StringLocaleComparator;
 
 import ezvcard.VCard;
 import ezvcard.property.Address;
@@ -59,6 +60,10 @@ public class Statistics {
 	 * Todas las direcciones (únicas)
 	 */
 	private Set<Address> addressSet = new HashSet<>();
+	/**
+	 * Mapeado de la cantidad de nombres iguales
+	 */
+	private Map<String, Integer> nameMap = new TreeMap<>(new StringLocaleComparator());
 
 	/**
 	 * Crea las estadísticas con la información del contacto
@@ -94,6 +99,12 @@ public class Statistics {
 			for (Address address : vcard.getAddresses()) {
 				addressSet.add(address);
 			}
+		}
+		if (vcard.getStructuredName() != null && vcard.getStructuredName().getGiven() != null) {
+			String name = vcard.getStructuredName().getGiven();
+			nameMap.computeIfAbsent(name, k -> nameMap.put(k, 0));
+			int quantity = nameMap.get(name);
+			nameMap.put(name, quantity + 1);
 		}
 	}
 
@@ -202,6 +213,15 @@ public class Statistics {
 	 */
 	public int getUniqueAddresses() {
 		return addressSet.size();
+	}
+
+	/**
+	 * Obtiene un mapa con los nombres y su cantidad
+	 * 
+	 * @return Mapa de nombres y su cantidad
+	 */
+	public Map<String, Integer> getNameMap() {
+		return nameMap;
 	}
 
 }
