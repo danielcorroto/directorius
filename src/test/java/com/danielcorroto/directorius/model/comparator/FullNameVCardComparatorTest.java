@@ -90,6 +90,20 @@ public class FullNameVCardComparatorTest extends TestCase {
 	}
 
 	/**
+	 * Prueba la ordenación con datos con tilde
+	 */
+	public void testDiacriticCaseInsensitive() {
+		Collection<VCard> vcards = createData("abéd","abÈf","abec","abÉe","abeg");
+		Iterator<VCard> iterator = vcards.iterator();
+
+		assertEquals("abec", iterator.next().getFormattedName().getValue());
+		assertEquals("abéd", iterator.next().getFormattedName().getValue());
+		assertEquals("abÉe", iterator.next().getFormattedName().getValue());
+		assertEquals("abÈf", iterator.next().getFormattedName().getValue());
+		assertEquals("abeg", iterator.next().getFormattedName().getValue());
+	}
+
+	/**
 	 * Crea un set de VCard ordenado a partir de los nombres
 	 * 
 	 * @param names
