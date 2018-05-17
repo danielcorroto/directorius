@@ -22,7 +22,7 @@ public class StringLocaleComparator implements Comparator<String> {
 			return 1;
 		} else {
 			Collator collator = Collator.getInstance(Locale.getDefault());
-			return collator.compare(arg0, arg1);
+			return collator.compare(arg0.toLowerCase(), arg1.toLowerCase());
 		}
 	}
 
