@@ -77,3 +77,13 @@ h6.name {
 	border-radius: 50%;
 	border: 5px solid rgba(255, 255, 255, 0.5);
 }
+
+/* INFORMACIÓN */
+.card.info {
+	margin: 10px 0;
+	padding: 5px;
+	font-size: 80%;
+}
+address {
+	margin-bottom: 0;
+}
