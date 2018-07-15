@@ -1,5 +1,6 @@
 package com.danielcorroto.directorius.controller.data;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -64,6 +65,10 @@ public class Statistics {
 	 * Mapeado de la cantidad de nombres iguales
 	 */
 	private Map<String, Integer> nameMap = new TreeMap<>(new StringLocaleComparator());
+	/**
+	 * Mapeado del año de nacimiento
+	 */
+	private Map<Integer, Integer> birthYearMap = new TreeMap<>();
 
 	/**
 	 * Crea las estadísticas con la información del contacto
@@ -72,39 +77,66 @@ public class Statistics {
 	 *            Información del contacto
 	 */
 	public void addContact(VCard vcard) {
+		// Total de contactos
 		allContacts++;
+		// Información de cumpleaños
 		if (vcard.getBirthday() != null && vcard.getBirthday().getDate() != null) {
 			allContactsBirthday++;
 		}
+		// Categorías
 		if (vcard.getCategories() != null && !vcard.getCategories().getValues().isEmpty()) {
 			mapCategories(vcard);
 		}
+		// Foto
 		if (!Utils.isEmpty(vcard.getPhotos())) {
 			allContactsPhoto++;
 		}
+		// Teléfonos
 		if (!Utils.isEmpty(vcard.getTelephoneNumbers())) {
 			allContactsPhone++;
 			for (Telephone phone : vcard.getTelephoneNumbers()) {
 				phoneSet.add(phone.getText().replace(" ", ""));
 			}
 		}
+		// Correos
 		if (!Utils.isEmpty(vcard.getEmails())) {
 			allContactsEmail++;
 			for (Email email : vcard.getEmails()) {
 				emailSet.add(email.getValue().replace(" ", ""));
 			}
 		}
+		// Direcciones
 		if (!Utils.isEmpty(vcard.getAddresses())) {
 			allContactsAddress++;
 			for (Address address : vcard.getAddresses()) {
 				addressSet.add(address);
 			}
 		}
+		// Nombres
 		if (vcard.getStructuredName() != null && vcard.getStructuredName().getGiven() != null) {
 			String name = vcard.getStructuredName().getGiven();
 			nameMap.computeIfAbsent(name, k -> nameMap.put(k, 0));
 			int quantity = nameMap.get(name);
 			nameMap.put(name, quantity + 1);
+		}
+		// Año de nacimiento
+		if (vcard.getBirthday() != null) {
+			Integer year = null;
+			if (vcard.getBirthday().getPartialDate() != null) {
+				year = vcard.getBirthday().getPartialDate().getYear();
+			} else if (vcard.getBirthday().getDate() != null) {
+				Calendar c = Calendar.getInstance();
+				c.setTime(vcard.getBirthday().getDate());
+				year = c.get(Calendar.YEAR);
+			}
+
+			if (year != null) {
+				int total = 0;
+				if (birthYearMap.containsKey(year)) {
+					total = birthYearMap.get(year);
+				}
+				birthYearMap.put(year, total + 1);
+			}
 		}
 	}
 
@@ -222,6 +254,15 @@ public class Statistics {
 	 */
 	public Map<String, Integer> getNameMap() {
 		return nameMap;
+	}
+
+	/**
+	 * Obtiene un mapa con los años de nacimiento y su cantidad
+	 * 
+	 * @return Mapa de año de nacimiento y su cantidad
+	 */
+	public Map<Integer, Integer> getBirthYearMap() {
+		return birthYearMap;
 	}
 
 }

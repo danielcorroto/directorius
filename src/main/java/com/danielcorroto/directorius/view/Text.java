@@ -185,6 +185,8 @@ public class Text {
 	public static final String I18N_STATISTICS_TAB_GENERAL = "statistics.tab.general";
 	
 	public static final String I18N_STATISTICS_TAB_NAME = "statistics.tab.name";
+	
+	public static final String I18N_STATISTICS_TAB_BIRTH_YEAR = "statistics.tab.birthyear";
 
 	public static final String I18N_STATISTICS_TITLE_TEXT = "statistics.title.text";
 

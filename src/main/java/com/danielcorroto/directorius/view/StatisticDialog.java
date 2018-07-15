@@ -63,11 +63,16 @@ public class StatisticDialog extends Dialog<Void> {
 		// Tabla nombre
 		TableView<Statistic> tableName = buildTableName(stat);
 		Tab tabName = buildTab(rb.getString(Text.I18N_STATISTICS_TAB_NAME), tableName);
+		
+		// Tabla Año de nacimiento
+		TableView<Statistic> tableBirthYear = buildTableBirthYear(stat);
+		Tab tabBirthYear = buildTab(rb.getString(Text.I18N_STATISTICS_TAB_BIRTH_YEAR), tableBirthYear);
 
 		// Pestañas
 		TabPane tabPane = new TabPane();
 		tabPane.getTabs().add(tabGeneral);
 		tabPane.getTabs().add(tabName);
+		tabPane.getTabs().add(tabBirthYear);
 		this.getDialogPane().setContent(tabPane);
 
 		// Botones de guardar/cancelar
@@ -132,7 +137,7 @@ public class StatisticDialog extends Dialog<Void> {
 	}
 
 	/**
-	 * Crea la tabla de estadísticas generales
+	 * Crea la tabla de estadísticas de nombre
 	 * 
 	 * @param stat
 	 *            Datos estadísticos
@@ -145,6 +150,27 @@ public class StatisticDialog extends Dialog<Void> {
 		ObservableList<Statistic> data = FXCollections.observableArrayList();
 		for (Entry<String, Integer> entry : stat.getNameMap().entrySet()) {
 			data.add(new Statistic(entry.getKey(), entry.getValue(), stat.getAllContacts()));
+		}
+		
+		tableName.setItems(data);
+		
+		return tableName;
+	}
+	
+	/**
+	 * Crea la tabla de estadísticas de año de nacimiento
+	 * 
+	 * @param stat
+	 *            Datos estadísticos
+	 * @return Tabla con las estadísticas
+	 */
+	private TableView<Statistic> buildTableBirthYear(Statistics stat) {
+		TableView<Statistic> tableName = buildTable();
+		
+		// Rellenar la tabla
+		ObservableList<Statistic> data = FXCollections.observableArrayList();
+		for (Entry<Integer, Integer> entry : stat.getBirthYearMap().entrySet()) {
+			data.add(new Statistic(entry.getKey().toString(), entry.getValue(), stat.getAllContacts()));
 		}
 		
 		tableName.setItems(data);
