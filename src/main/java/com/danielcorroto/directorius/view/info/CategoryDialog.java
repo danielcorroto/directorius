@@ -3,6 +3,7 @@ package com.danielcorroto.directorius.view.info;
 import java.io.InputStream;
 import java.util.Collection;
 
+import com.danielcorroto.directorius.component.AutoCompleteComboBox;
 import com.danielcorroto.directorius.view.ResourcePath;
 import com.danielcorroto.directorius.view.Text;
 
@@ -11,7 +12,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
@@ -25,7 +25,7 @@ public class CategoryDialog extends AbstractDialog<String> {
 	/**
 	 * Campo del email
 	 */
-	private ComboBox<String> categoryComboBox;
+	private AutoCompleteComboBox<String> categoryComboBox;
 
 	/**
 	 * Constructor por defecto de la ventana
@@ -65,7 +65,7 @@ public class CategoryDialog extends AbstractDialog<String> {
 
 	@Override
 	protected void buildGrid(GridPane grid) {
-		categoryComboBox = new ComboBox<>();
+		categoryComboBox = new AutoCompleteComboBox<>();
 		categoryComboBox.setEditable(true);
 		buildRowGridPane(grid, Text.I18N_CONTACT_CATEGORY_CATEGORY, categoryComboBox, 0);
 	}
