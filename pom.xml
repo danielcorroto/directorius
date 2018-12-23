@@ -21,7 +21,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<!-- Dependencias -->
-		<ez-vcard.version>0.10.3</ez-vcard.version>
+		<ez-vcard.version>0.10.4</ez-vcard.version>
 		<junit.version>4.12</junit.version>
 
 		<!-- Plugins -->
