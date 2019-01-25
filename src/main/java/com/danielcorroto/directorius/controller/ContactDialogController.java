@@ -50,6 +50,7 @@ import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import ezvcard.property.Uid;
 import ezvcard.util.PartialDate;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -127,6 +128,15 @@ public class ContactDialogController {
 		removeElementFunctions();
 		upElementFunctions();
 		downElementFunctions();
+		
+		// Foco en el campo inicial
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				window.getNameTextField().requestFocus();
+			}
+		});
+		
 
 		Optional<VCard> result = window.showAndWait();
 
