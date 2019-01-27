@@ -1,6 +1,11 @@
 package com.danielcorroto.directorius.model;
 
 import java.util.Collection;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import com.danielcorroto.directorius.view.Text;
+import com.danielcorroto.directorius.view.UTF8Control;
 
 /**
  * Utilidades
@@ -39,5 +44,14 @@ public class Utils {
 	 */
 	public static boolean isEmpty(final Collection<?> collection) {
 		return collection == null || collection.isEmpty();
+	}
+
+	/**
+	 * Obtiene el recurso ResourceBundle para i18n
+	 * 
+	 * @return Objeto para gestionar i18n
+	 */
+	public static ResourceBundle getResourceBundle() {
+		return ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault(), new UTF8Control());
 	}
 }

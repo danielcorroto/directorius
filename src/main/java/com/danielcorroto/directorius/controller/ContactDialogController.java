@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -109,7 +108,7 @@ public class ContactDialogController {
 		super();
 		this.manager = manager;
 		this.vcard = vcard;
-		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
+		rb = Utils.getResourceBundle();
 	}
 
 	public void start() throws Exception {

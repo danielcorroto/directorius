@@ -1,13 +1,13 @@
 package com.danielcorroto.directorius.view;
 
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import com.danielcorroto.directorius.controller.DisplayUtil;
 import com.danielcorroto.directorius.controller.data.AddressInfo;
 import com.danielcorroto.directorius.controller.data.EmailInfo;
 import com.danielcorroto.directorius.controller.data.PhoneInfo;
+import com.danielcorroto.directorius.model.Utils;
 
 import ezvcard.VCard;
 import javafx.collections.FXCollections;
@@ -43,12 +43,12 @@ public class ContactDialog extends Dialog<VCard> {
 	 * Porcentajes para los elementos del panel principal
 	 */
 	private static final int[] PERSONALPANE_PERCENTAGE = new int[] { 25, 45, 30 };
-	
+
 	/**
 	 * Tamaño que queda como margen superior e inferior del diálogo
 	 */
 	private static final int MARGIN_HEIGHT = 100;
-	
+
 	/**
 	 * Tamaño de la cabecera del diálogo
 	 */
@@ -63,7 +63,7 @@ public class ContactDialog extends Dialog<VCard> {
 	 * Grid para ubicar todos los campos
 	 */
 	private GridPane gridPane;
-	
+
 	/**
 	 * Caja de texto para informar del nombre
 	 */
@@ -219,7 +219,7 @@ public class ContactDialog extends Dialog<VCard> {
 	 */
 	public ContactDialog() {
 		super();
-		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
+		rb = Utils.getResourceBundle();
 		build();
 	}
 
@@ -294,7 +294,7 @@ public class ContactDialog extends Dialog<VCard> {
 		removePhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_PHONE_REMOVE);
 		upPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
 		downPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
-		buildMultiElement(gridPane, 6,Text.I18N_CONTACT_PHONE, listViewPhone, addPhone, editPhone, removePhone, upPhone, downPhone);
+		buildMultiElement(gridPane, 6, Text.I18N_CONTACT_PHONE, listViewPhone, addPhone, editPhone, removePhone, upPhone, downPhone);
 
 		// Email
 		addEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EMAIL_ADD, Text.I18N_CONTACT_EMAIL_ADD);
@@ -304,7 +304,7 @@ public class ContactDialog extends Dialog<VCard> {
 		removeEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_EMAIL_REMOVE);
 		upEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
 		downEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
-		buildMultiElement(gridPane, 7,Text.I18N_CONTACT_EMAIL, listViewEmail, addEmail, editEmail, removeEmail, upEmail, downEmail);
+		buildMultiElement(gridPane, 7, Text.I18N_CONTACT_EMAIL, listViewEmail, addEmail, editEmail, removeEmail, upEmail, downEmail);
 
 		// Dirección
 		addAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ADDRESS_ADD, Text.I18N_CONTACT_ADDRESS_ADD);
@@ -314,7 +314,7 @@ public class ContactDialog extends Dialog<VCard> {
 		removeAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_ADDRESS_REMOVE);
 		upAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
 		downAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
-		buildMultiElement(gridPane, 8,Text.I18N_CONTACT_ADDRESS, listViewAddress, addAddress, editAddress, removeAddress, upAddress, downAddress);
+		buildMultiElement(gridPane, 8, Text.I18N_CONTACT_ADDRESS, listViewAddress, addAddress, editAddress, removeAddress, upAddress, downAddress);
 
 		// Botones de mostrar/cerrar
 		saveButtonType = new ButtonType(rb.getString(Text.I18N_CONTACT_SAVE), ButtonData.OK_DONE);
@@ -424,7 +424,7 @@ public class ContactDialog extends Dialog<VCard> {
 	private void buildMultiElement(GridPane gridPane, int row, String i18n, ListView<?> listView, Button add, Button edit, Button remove, Button up, Button down) {
 		// Título
 		setLabel(gridPane, rb.getString(i18n), row);
-		
+
 		// Añadir
 		gridPane.add(add, 0, row);
 
@@ -473,7 +473,7 @@ public class ContactDialog extends Dialog<VCard> {
 		button.setTooltip(new Tooltip(rb.getString(i18n)));
 		return button;
 	}
-	
+
 	/**
 	 * Crea la visualización para el combobox
 	 * 
@@ -615,7 +615,7 @@ public class ContactDialog extends Dialog<VCard> {
 
 		return cellFactory;
 	}
-	
+
 	public void setPhoto(Image image) {
 		imageView.setImage(image);
 		double size = gridPane.getMaxWidth() * PERSONALPANE_PERCENTAGE[2] / 100 - INSET_PADDING;

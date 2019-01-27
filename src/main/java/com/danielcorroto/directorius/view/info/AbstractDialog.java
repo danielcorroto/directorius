@@ -1,9 +1,9 @@
 package com.danielcorroto.directorius.view.info;
 
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
+import com.danielcorroto.directorius.model.Utils;
 import com.danielcorroto.directorius.view.MainWindow;
 import com.danielcorroto.directorius.view.ResourcePath;
 import com.danielcorroto.directorius.view.Text;
@@ -50,7 +50,7 @@ public abstract class AbstractDialog<T> extends Dialog<T> {
 	 */
 	public AbstractDialog(boolean edit) {
 		super();
-		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
+		rb = Utils.getResourceBundle();
 
 		// Create the custom this.
 		this.setTitle(rb.getString(getI18NTitle(edit)));

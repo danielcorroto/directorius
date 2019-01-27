@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
@@ -13,6 +12,7 @@ import java.util.SortedSet;
 import com.danielcorroto.directorius.model.ContactManager;
 import com.danielcorroto.directorius.model.SearchFilter;
 import com.danielcorroto.directorius.model.SimpleVCard;
+import com.danielcorroto.directorius.model.Utils;
 import com.danielcorroto.directorius.model.log.Logger;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 import com.danielcorroto.directorius.view.AboutWindow;
@@ -74,7 +74,7 @@ public class MainWindowController extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
+			rb = Utils.getResourceBundle();
 
 			stage = primaryStage;
 			window = new MainWindow();

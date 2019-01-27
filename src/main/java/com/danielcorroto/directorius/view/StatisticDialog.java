@@ -3,11 +3,11 @@ package com.danielcorroto.directorius.view;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import com.danielcorroto.directorius.controller.data.Statistics;
+import com.danielcorroto.directorius.model.Utils;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -51,7 +51,7 @@ public class StatisticDialog extends Dialog<Void> {
 	 */
 	public StatisticDialog(Statistics stat) {
 		super();
-		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
+		rb = Utils.getResourceBundle();
 
 		// Título
 		this.setTitle(rb.getString(Text.I18N_MENU_CONTACT_STATISTICS));

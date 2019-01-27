@@ -1,13 +1,13 @@
 package com.danielcorroto.directorius.view;
 
 import java.text.MessageFormat;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
 
 import com.danielcorroto.directorius.controller.HtmlContactBuilder;
 import com.danielcorroto.directorius.model.SearchFilter;
 import com.danielcorroto.directorius.model.SimpleVCard;
+import com.danielcorroto.directorius.model.Utils;
 import com.danielcorroto.directorius.model.type.SearchTypeEnum;
 
 import ezvcard.VCard;
@@ -131,7 +131,7 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		super();
-		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
+		rb = Utils.getResourceBundle();
 	}
 
 	/**

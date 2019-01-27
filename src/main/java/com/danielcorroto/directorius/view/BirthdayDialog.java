@@ -1,10 +1,10 @@
 package com.danielcorroto.directorius.view;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import com.danielcorroto.directorius.controller.DisplayUtil;
+import com.danielcorroto.directorius.model.Utils;
 
 import ezvcard.VCard;
 import javafx.beans.value.ChangeListener;
@@ -48,7 +48,7 @@ public class BirthdayDialog extends Dialog<VCard> {
 	 */
 	public BirthdayDialog(List<VCard> cards, String i18nTitle) {
 		super();
-		rb = ResourceBundle.getBundle(Text.RESOURCE_BUNDLE, Locale.getDefault());
+		rb = Utils.getResourceBundle();
 
 		// Título
 		this.setTitle(rb.getString(i18nTitle));
