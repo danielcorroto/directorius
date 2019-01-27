@@ -33,6 +33,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -372,6 +373,8 @@ public class ContactDialog extends Dialog<VCard> {
 			comboBoxYearOptions.add(String.valueOf(i));
 		}
 		comboBoxYear = new ComboBox<>(comboBoxYearOptions);
+		comboBoxYear.setMaxWidth(Double.MAX_VALUE);
+		HBox.setHgrow(comboBoxYear, Priority.ALWAYS);
 
 		ObservableList<String> comboBoxMonthOptions = FXCollections.observableArrayList();
 		comboBoxMonthOptions.add("");
@@ -381,6 +384,8 @@ public class ContactDialog extends Dialog<VCard> {
 		comboBoxMonth = new ComboBox<>(comboBoxMonthOptions);
 		comboBoxMonth.setButtonCell(createMonthComboBoxCellFactory().call(null));
 		comboBoxMonth.setCellFactory(createMonthComboBoxCellFactory());
+		comboBoxMonth.setMaxWidth(Double.MAX_VALUE);
+		HBox.setHgrow(comboBoxMonth, Priority.ALWAYS);
 
 		ObservableList<String> comboBoxDayOptions = FXCollections.observableArrayList();
 		comboBoxDayOptions.add("");
@@ -388,6 +393,8 @@ public class ContactDialog extends Dialog<VCard> {
 			comboBoxDayOptions.add(String.valueOf(i));
 		}
 		comboBoxDay = new ComboBox<>(comboBoxDayOptions);
+		comboBoxDay.setMaxWidth(Double.MAX_VALUE);
+		HBox.setHgrow(comboBoxDay, Priority.ALWAYS);
 
 		HBox result = new HBox();
 		result.setSpacing(5);
