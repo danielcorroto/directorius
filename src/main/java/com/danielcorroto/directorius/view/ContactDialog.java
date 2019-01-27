@@ -379,6 +379,8 @@ public class ContactDialog extends Dialog<VCard> {
 			comboBoxMonthOptions.add(String.valueOf(i));
 		}
 		comboBoxMonth = new ComboBox<>(comboBoxMonthOptions);
+		comboBoxMonth.setButtonCell(createMonthComboBoxCellFactory().call(null));
+		comboBoxMonth.setCellFactory(createMonthComboBoxCellFactory());
 
 		ObservableList<String> comboBoxDayOptions = FXCollections.observableArrayList();
 		comboBoxDayOptions.add("");
@@ -470,6 +472,32 @@ public class ContactDialog extends Dialog<VCard> {
 		button.setGraphic(addImage);
 		button.setTooltip(new Tooltip(rb.getString(i18n)));
 		return button;
+	}
+	
+	/**
+	 * Crea la visualización para el combobox
+	 * 
+	 * @return Objeto que implementa la visualización del texto del combobox
+	 */
+	private Callback<ListView<String>, ListCell<String>> createMonthComboBoxCellFactory() {
+		Callback<ListView<String>, ListCell<String>> cellFactory = new Callback<ListView<String>, ListCell<String>>() {
+			@Override
+			public ListCell<String> call(ListView<String> l) {
+				return new ListCell<String>() {
+					@Override
+					protected void updateItem(String item, boolean empty) {
+						super.updateItem(item, empty);
+						if (item == null || item.isEmpty() || empty) {
+							setText("");
+						} else {
+							setText(rb.getString(Text.I18N_MONTH + item));
+						}
+					}
+				};
+			}
+		};
+
+		return cellFactory;
 	}
 
 	/**

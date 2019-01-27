@@ -220,4 +220,5 @@ public class Text {
 	
 	public static final String I18N_EXCEPTION_STACKTRACE = "exception.stacktrace";
 
+	public static final String I18N_MONTH = "month.";
 }
