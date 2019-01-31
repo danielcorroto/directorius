@@ -19,6 +19,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -78,6 +79,12 @@ public class AboutWindow extends Application {
 		dialog.setTitle(rb.getString(Text.I18N_MENU_HELP_ABOUT));
 		Image logo = new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO));
 		dialog.getIcons().add(logo);
+
+		scene.setOnKeyPressed(event -> {
+			if (KeyCode.ESCAPE.equals(event.getCode())) {
+				dialog.close();
+			}
+		});
 
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		dialog.showAndWait();
