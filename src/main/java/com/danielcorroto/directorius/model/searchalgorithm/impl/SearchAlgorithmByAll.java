@@ -50,7 +50,7 @@ public class SearchAlgorithmByAll extends SearchAlgorithm {
 	}
 
 	/**
-	 * Realiza la búsqueda sobre el nombre
+	 * Realiza la búsqueda sobre el nombre / apodo
 	 * 
 	 * @param vcard
 	 *            Información del contacto
@@ -59,7 +59,31 @@ public class SearchAlgorithmByAll extends SearchAlgorithm {
 	 * @return Si valida la búsqueda
 	 */
 	private boolean searchName(VCard vcard, String text) {
-		return vcard.getFormattedName() != null && vcard.getFormattedName().getValue() != null && normalizeContains(vcard.getFormattedName().getValue(), text);
+		// Nombre completo
+		if (vcard.getFormattedName() != null && vcard.getFormattedName().getValue() != null && normalizeContains(vcard.getFormattedName().getValue(), text)) {
+			return true;
+		}
+
+		// Solo nombre
+		if (vcard.getStructuredName() != null && vcard.getStructuredName().getGiven() != null && normalizeContains(vcard.getStructuredName().getGiven(), text)) {
+			return true;
+		}
+
+		// Solo apellido
+		if (vcard.getStructuredName() != null && vcard.getStructuredName().getFamily() != null && normalizeContains(vcard.getStructuredName().getFamily(), text)) {
+			return true;
+		}
+
+		// Apodo
+		if (vcard.getNickname() != null && vcard.getNickname().getValues() != null) {
+			for (String nickname : vcard.getNickname().getValues()) {
+				if (normalizeContains(nickname, text)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**

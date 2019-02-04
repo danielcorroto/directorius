@@ -13,6 +13,7 @@ import ezvcard.VCardVersion;
 import ezvcard.property.Address;
 import ezvcard.property.Categories;
 import ezvcard.property.Email;
+import ezvcard.property.Nickname;
 import ezvcard.property.Note;
 import ezvcard.property.Telephone;
 import ezvcard.property.Uid;
@@ -190,7 +191,50 @@ public class TestUtil {
 		}
 		return vcard;
 	}
-	
+
+	/**
+	 * Construye una VCard v 4.0 con el nombre y otros datos
+	 * 
+	 * @param name
+	 *            Nombre asignado
+	 * @param nickname
+	 *            Apodo asignado
+	 * @param note
+	 *            Nota asignada
+	 * @param categs
+	 *            Lista de categorías
+	 * @param phones
+	 *            Lista de teléfonos
+	 * @param phoneTags
+	 *            Lista de tags de teléfonos
+	 * @param mails
+	 *            Lista de correos
+	 * @param mailTags
+	 *            Lista de tags de correos
+	 * @param addresses
+	 *            Lista de direcciones: "Calle|Ciudad|Región|CP|País"
+	 * @return Objeto VCard con el nombre y resto de información indicada
+	 */
+	public static VCard createVCardAll(String name, String nickname, String note, String[] categs, String[] phones, String[] phoneTags, String[] mails, String[] mailTags,
+			String[] addresses) {
+		VCard result = createVCardAll(name, note, categs, phones, phoneTags, mails, mailTags, addresses);
+		if (nickname != null && !nickname.isEmpty()) {
+			Nickname nick = new Nickname();
+			nick.getValues().add(nickname);
+			result.addNickname(nick);
+		}
+		return result;
+	}
+
+	/**
+	 * Construye un filtro para la búsqueda
+	 * 
+	 * @param text
+	 *            Texto a buscar
+	 * @param category
+	 *            Categoría a buscar
+	 * @return Filtro de búsqueda
+	 */
 	public static SearchFilter buildFilter(String text, String category) {
 		SearchFilter filter = new SearchFilter(category, text, null);
 		return filter;

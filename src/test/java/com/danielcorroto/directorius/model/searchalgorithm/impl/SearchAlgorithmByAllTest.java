@@ -66,13 +66,13 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		cards.add(TestUtil.createVCardAll("jk", null, null, null, null, null, null, new String[] { "ca|ci|qwer|cp|pa" }));
 		cards.add(TestUtil.createVCardAll("zx", null, null, null, null, null, null, new String[] { "ca|ci|re|tqwer|pa" }));
 		cards.add(TestUtil.createVCardAll("cv", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|tqwer" }));
-		cards.add(TestUtil.createVCardAll("bn", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
+		cards.add(TestUtil.createVCardAll("bn", " aqwer", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
 		SearchAlgorithm search = new SearchAlgorithmByAll();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwe", null));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
-		assertEquals(11, result.size());
+		assertEquals(12, result.size());
 		assertTrue(names.contains("qwe"));
 		assertTrue(names.contains("uio"));
 		assertTrue(names.contains("fgh"));
@@ -84,6 +84,7 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		assertTrue(names.contains("jk"));
 		assertTrue(names.contains("zx"));
 		assertTrue(names.contains("cv"));
+		assertTrue(names.contains("bn"));
 	}
 
 	/**
@@ -110,13 +111,13 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		cards.add(TestUtil.createVCardAll("jk", null, null, null, null, null, null, new String[] { "ca|ci|qwËr|cp|pa" }));
 		cards.add(TestUtil.createVCardAll("zx", null, null, null, null, null, null, new String[] { "ca|ci|re|tqwér|pa" }));
 		cards.add(TestUtil.createVCardAll("cv", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|tqwer" }));
-		cards.add(TestUtil.createVCardAll("bn", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
+		cards.add(TestUtil.createVCardAll("bn", "a qwe", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
 		SearchAlgorithm search = new SearchAlgorithmByAll();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwé", null));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
-		assertEquals(11, result.size());
+		assertEquals(12, result.size());
 		assertTrue(names.contains("qwè"));
 		assertTrue(names.contains("uio"));
 		assertTrue(names.contains("fgh"));
@@ -128,6 +129,7 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		assertTrue(names.contains("jk"));
 		assertTrue(names.contains("zx"));
 		assertTrue(names.contains("cv"));
+		assertTrue(names.contains("bn"));
 	}
 
 	/**
@@ -154,19 +156,20 @@ public class SearchAlgorithmByAllTest extends TestCase {
 		cards.add(TestUtil.createVCardAll("jk", null, new String[] { "fdsr rtds" }, null, null, null, null, new String[] { "ca|ci|qwer|cp|pa" }));
 		cards.add(TestUtil.createVCardAll("zx", null, null, null, null, null, null, new String[] { "ca|ci|re|tqwer|pa" }));
 		cards.add(TestUtil.createVCardAll("cv", null, new String[] { "r rtds" }, null, null, null, null, new String[] { "ca|ci|re|cp|tqwer" }));
-		cards.add(TestUtil.createVCardAll("bn", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
+		cards.add(TestUtil.createVCardAll("bn", " aqwer rt ", null, null, null, null, null, null, new String[] { "ca|ci|re|cp|pa" }));
 		SearchAlgorithm search = new SearchAlgorithmByAll();
 		Set<SimpleVCard> result = search.search(cards, TestUtil.buildFilter("qwe \"r rt\"", null));
 
 		Set<String> names = TestUtil.getNamesFromSimpleVCard(result);
 
-		assertEquals(6, result.size());
+		assertEquals(7, result.size());
 		assertTrue(names.contains("qwe"));
 		assertTrue(names.contains("fgh"));
 		assertTrue(names.contains("ty"));
 		assertTrue(names.contains("df"));
 		assertTrue(names.contains("jk"));
 		assertTrue(names.contains("cv"));
+		assertTrue(names.contains("bn"));
 	}
 
 	public void testSearchWithEmptyCategory() {
