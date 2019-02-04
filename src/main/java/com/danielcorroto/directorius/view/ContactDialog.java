@@ -74,6 +74,10 @@ public class ContactDialog extends Dialog<VCard> {
 	 */
 	private TextField surnameTextField;
 	/**
+	 * Caja de texto para informar del apodo
+	 */
+	private TextField nicknameTextField;
+	/**
 	 * Caja de texto para informar del nombre completo
 	 */
 	private TextField fullNameTextField;
@@ -249,18 +253,22 @@ public class ContactDialog extends Dialog<VCard> {
 		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_SURNAME), 1);
 		surnameTextField = new TextField();
 		gridPane.add(surnameTextField, 1, 1);
-
+		
 		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_FULLNAME), 2);
 		fullNameTextField = new TextField();
 		gridPane.add(fullNameTextField, 1, 2);
 
-		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_BIRTHDAY), 3);
-		gridPane.add(buildBirthdayForm(), 1, 3);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_NICKNAME), 3);
+		nicknameTextField = new TextField();
+		gridPane.add(nicknameTextField, 1, 3);
 
-		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_NOTES), 4);
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_BIRTHDAY), 4);
+		gridPane.add(buildBirthdayForm(), 1, 4);
+
+		setLabel(gridPane, rb.getString(Text.I18N_CONTACT_NOTES), 5);
 		notesTextArea = new TextArea();
 		notesTextArea.setMaxHeight(100);
-		gridPane.add(notesTextArea, 1, 4);
+		gridPane.add(notesTextArea, 1, 5);
 
 		// Fotografía
 		imageView = new ImageView(new Image(MainWindow.class.getResourceAsStream(ResourcePath.IMG_LOGO)));
@@ -285,7 +293,7 @@ public class ContactDialog extends Dialog<VCard> {
 		removeCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_CATEGORY_REMOVE);
 		upCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
 		downCategory = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
-		buildMultiElement(gridPane, 5, Text.I18N_CONTACT_CATEGORY, listViewCategory, addCategory, editCategory, removeCategory, upCategory, downCategory);
+		buildMultiElement(gridPane, 6, Text.I18N_CONTACT_CATEGORY, listViewCategory, addCategory, editCategory, removeCategory, upCategory, downCategory);
 
 		// Teléfono
 		addPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_PHONE_ADD, Text.I18N_CONTACT_PHONE_ADD);
@@ -295,7 +303,7 @@ public class ContactDialog extends Dialog<VCard> {
 		removePhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_PHONE_REMOVE);
 		upPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
 		downPhone = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
-		buildMultiElement(gridPane, 6, Text.I18N_CONTACT_PHONE, listViewPhone, addPhone, editPhone, removePhone, upPhone, downPhone);
+		buildMultiElement(gridPane, 7, Text.I18N_CONTACT_PHONE, listViewPhone, addPhone, editPhone, removePhone, upPhone, downPhone);
 
 		// Email
 		addEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_EMAIL_ADD, Text.I18N_CONTACT_EMAIL_ADD);
@@ -305,7 +313,7 @@ public class ContactDialog extends Dialog<VCard> {
 		removeEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_EMAIL_REMOVE);
 		upEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
 		downEmail = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
-		buildMultiElement(gridPane, 7, Text.I18N_CONTACT_EMAIL, listViewEmail, addEmail, editEmail, removeEmail, upEmail, downEmail);
+		buildMultiElement(gridPane, 8, Text.I18N_CONTACT_EMAIL, listViewEmail, addEmail, editEmail, removeEmail, upEmail, downEmail);
 
 		// Dirección
 		addAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ADDRESS_ADD, Text.I18N_CONTACT_ADDRESS_ADD);
@@ -315,7 +323,7 @@ public class ContactDialog extends Dialog<VCard> {
 		removeAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_REMOVE, Text.I18N_CONTACT_ADDRESS_REMOVE);
 		upAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_UP, Text.I18N_CONTACT_ELEMENT_UP);
 		downAddress = buildElementButton(ResourcePath.IMG_EDIT_CONTACT_ARROW_DOWN, Text.I18N_CONTACT_ELEMENT_DOWN);
-		buildMultiElement(gridPane, 8, Text.I18N_CONTACT_ADDRESS, listViewAddress, addAddress, editAddress, removeAddress, upAddress, downAddress);
+		buildMultiElement(gridPane, 9, Text.I18N_CONTACT_ADDRESS, listViewAddress, addAddress, editAddress, removeAddress, upAddress, downAddress);
 
 		// Botones de mostrar/cerrar
 		saveButtonType = new ButtonType(rb.getString(Text.I18N_CONTACT_SAVE), ButtonData.OK_DONE);
@@ -652,6 +660,15 @@ public class ContactDialog extends Dialog<VCard> {
 	 */
 	public TextField getSurnameTextField() {
 		return surnameTextField;
+	}
+
+	/**
+	 * Obtiene el componente TextField con el apodo del contacto
+	 * 
+	 * @return Componente con el apodo
+	 */
+	public TextField getNicknameTextField() {
+		return nicknameTextField;
 	}
 
 	/**

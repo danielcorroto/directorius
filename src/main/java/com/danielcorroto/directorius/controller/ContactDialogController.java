@@ -43,6 +43,7 @@ import ezvcard.property.Address;
 import ezvcard.property.Birthday;
 import ezvcard.property.Categories;
 import ezvcard.property.Email;
+import ezvcard.property.Nickname;
 import ezvcard.property.Note;
 import ezvcard.property.Photo;
 import ezvcard.property.StructuredName;
@@ -168,7 +169,7 @@ public class ContactDialogController {
 	}
 
 	/**
-	 * Carga la información del nombre del contacto en el formulario
+	 * Carga la información del nombre y apodo del contacto en el formulario
 	 * 
 	 * @return Nombre completo del contacto
 	 */
@@ -181,6 +182,9 @@ public class ContactDialogController {
 			if (vcard.getStructuredName().getFamily() != null) {
 				window.getSurnameTextField().setText(vcard.getStructuredName().getFamily());
 			}
+		}
+		if (vcard.getNickname() != null && vcard.getNickname().getValues() != null) {
+			window.getNicknameTextField().setText(vcard.getNickname().getValues().get(0));
 		}
 		String fullName = "";
 		if (vcard.getFormattedName() != null) {
@@ -823,6 +827,12 @@ public class ContactDialogController {
 		StructuredName sn = new StructuredName();
 		sn.setGiven(window.getNameTextField().getText().trim());
 		sn.setFamily(window.getSurnameTextField().getText().trim());
+		Nickname nicknames = null;
+		if (! window.getNicknameTextField().getText().trim().isEmpty()) {
+			nicknames = new Nickname();
+			nicknames.getValues().add(window.getNicknameTextField().getText());
+		}
+		vcard.setNickname(nicknames);
 		vcard.setStructuredName(sn);
 	}
 
