@@ -71,6 +71,11 @@ public class HtmlTemplate {
 	 * Nombre completo del contacto
 	 */
 	public static final String FULL_NAME = "##FULL_NAME##";
+	
+	/**
+	 * Apodo del contacto
+	 */
+	public static final String NICKNAME = "##NICKNAME##";
 
 	/**
 	 * Nombre del contacto

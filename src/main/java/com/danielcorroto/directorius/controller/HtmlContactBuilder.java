@@ -22,6 +22,7 @@ import ezvcard.parameter.EmailType;
 import ezvcard.parameter.TelephoneType;
 import ezvcard.property.Address;
 import ezvcard.property.Email;
+import ezvcard.property.Nickname;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 
@@ -67,6 +68,7 @@ public class HtmlContactBuilder {
 
 		// Personal
 		html = html.replace(HtmlTemplate.FULL_NAME, vcard.getFormattedName().getValue());
+		html = html.replace(HtmlTemplate.NICKNAME, buildNickname(vcard.getNickname(), rb));
 		html = html.replace(HtmlTemplate.NAME, buildName(vcard.getStructuredName(), rb));
 		html = html.replace(HtmlTemplate.SURNAME, buildSurname(vcard.getStructuredName(), rb));
 		html = html.replace(HtmlTemplate.BIRTHDAY, DisplayUtil.buildBirthday(vcard, false, rb));
@@ -125,6 +127,24 @@ public class HtmlContactBuilder {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Genera el apodo del contacto
+	 * 
+	 * @param nickname
+	 *            Apodo del contacto
+	 * @param rb
+	 *            Recurso para i18n
+	 * @return Cadena vacía o "Apodo: &lt;alias_del_contacto&gt;"
+	 */
+	private static String buildNickname(Nickname nickname, ResourceBundle rb) {
+		if (nickname == null || nickname.getValues() == null || nickname.getValues().isEmpty()) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder(rb.getString(Text.I18N_CONTACT_NICKNAME));
+		sb.append(": ").append(nickname.getValues().get(0));
+		return sb.toString();
 	}
 
 	/**

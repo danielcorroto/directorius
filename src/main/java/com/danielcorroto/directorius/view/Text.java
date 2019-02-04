@@ -70,6 +70,8 @@ public class Text {
 	
 	public static final String I18N_FILE_OPEN_VCF = "file.open.vcf";
 
+	public static final String I18N_CONTACT_NICKNAME = "contact.nickname";
+
 	public static final String I18N_CONTACT_NAME = "contact.name";
 
 	public static final String I18N_CONTACT_SURNAME = "contact.surname";
