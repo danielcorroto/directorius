@@ -633,7 +633,7 @@ public class ContactDialog extends Dialog<VCard> {
 
 	public void setPhoto(Image image) {
 		imageView.setImage(image);
-		double size = gridPane.getMaxWidth() * PERSONALPANE_PERCENTAGE[2] / 100 - INSET_PADDING;
+		double size = gridPane.getMaxWidth() * PERSONALPANE_PERCENTAGE[2] / 100 - INSET_PADDING * 3;
 		imageView.maxHeight(size - 10);
 		double yoursize = size;
 		if (imageView.maxHeight(size - 10) > yoursize) {
