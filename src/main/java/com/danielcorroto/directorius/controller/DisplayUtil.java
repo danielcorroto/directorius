@@ -22,6 +22,12 @@ import ezvcard.VCard;
  */
 public class DisplayUtil {
 	/**
+	 * Año sobre el que se calcula el dia del año. Por ejemplo, 1 de marzo es
+	 * 61, siempre se toma como bisiesto
+	 */
+	public static final int BASE_YEAR = 1986;
+
+	/**
 	 * Milisegundos de medio año (366 * 86400 * 1000 / 2)
 	 */
 	private static final long HALF_YEAR_MILLIS = 15811200000L;
@@ -263,7 +269,7 @@ public class DisplayUtil {
 	 *            Día de nacimiento (1-31)
 	 * @return Fecha en formato texto
 	 */
-	private static String formatDate(String datePattern, Integer year, Integer month, Integer day) {
+	public static String formatDate(String datePattern, Integer year, Integer month, Integer day) {
 		String syear = year != null ? year.toString() : UNKNOWN_DATE_DATA;
 		String smonth = month != null ? DateFormatSymbols.getInstance().getMonths()[month - 1] : UNKNOWN_DATE_DATA;
 		String sday = day != null ? day.toString() : UNKNOWN_DATE_DATA;

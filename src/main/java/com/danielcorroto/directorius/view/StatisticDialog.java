@@ -2,10 +2,12 @@ package com.danielcorroto.directorius.view;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
+import com.danielcorroto.directorius.controller.DisplayUtil;
 import com.danielcorroto.directorius.controller.data.Statistics;
 import com.danielcorroto.directorius.model.Utils;
 
@@ -63,16 +65,21 @@ public class StatisticDialog extends Dialog<Void> {
 		// Tabla nombre
 		TableView<Statistic> tableName = buildTableName(stat);
 		Tab tabName = buildTab(rb.getString(Text.I18N_STATISTICS_TAB_NAME), tableName);
-		
+
 		// Tabla Año de nacimiento
 		TableView<Statistic> tableBirthYear = buildTableBirthYear(stat);
 		Tab tabBirthYear = buildTab(rb.getString(Text.I18N_STATISTICS_TAB_BIRTH_YEAR), tableBirthYear);
+
+		// Tabla Día de nacimiento
+		TableView<Statistic> tableBirthDay = buildTableBirthDay(stat);
+		Tab tabBirthDay = buildTab(rb.getString(Text.I18N_STATISTICS_TAB_BIRTH_DAY), tableBirthDay);
 
 		// Pestañas
 		TabPane tabPane = new TabPane();
 		tabPane.getTabs().add(tabGeneral);
 		tabPane.getTabs().add(tabName);
 		tabPane.getTabs().add(tabBirthYear);
+		tabPane.getTabs().add(tabBirthDay);
 		this.getDialogPane().setContent(tabPane);
 
 		// Botones de guardar/cancelar
@@ -156,7 +163,7 @@ public class StatisticDialog extends Dialog<Void> {
 		
 		return tableName;
 	}
-	
+
 	/**
 	 * Crea la tabla de estadísticas de año de nacimiento
 	 * 
@@ -171,6 +178,32 @@ public class StatisticDialog extends Dialog<Void> {
 		ObservableList<Statistic> data = FXCollections.observableArrayList();
 		for (Entry<Integer, Integer> entry : stat.getBirthYearMap().entrySet()) {
 			data.add(new Statistic(entry.getKey().toString(), entry.getValue(), stat.getAllContacts()));
+		}
+		
+		tableName.setItems(data);
+		
+		return tableName;
+	}
+
+	/**
+	 * Crea la tabla de estadísticas de día de nacimiento
+	 * 
+	 * @param stat
+	 *            Datos estadísticos
+	 * @return Tabla con las estadísticas
+	 */
+	private TableView<Statistic> buildTableBirthDay(Statistics stat) {
+		TableView<Statistic> tableName = buildTable();
+		
+		// Rellenar la tabla
+		ObservableList<Statistic> data = FXCollections.observableArrayList();
+		String datePattern = rb.getString(Text.I18N_STATISTICS_ITEM_MONTH_DAY_FORMAT);
+		for (Entry<Integer, Integer> entry : stat.getBirthDayMap().entrySet()) {
+			Calendar c = Calendar.getInstance();
+			c.set(Calendar.YEAR, DisplayUtil.BASE_YEAR);
+			c.set(Calendar.DAY_OF_YEAR, entry.getKey());
+			String title = DisplayUtil.formatDate(datePattern, 0, c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
+			data.add(new Statistic(title, entry.getValue(), stat.getAllContacts()));
 		}
 		
 		tableName.setItems(data);

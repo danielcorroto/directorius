@@ -189,6 +189,8 @@ public class Text {
 	public static final String I18N_STATISTICS_TAB_NAME = "statistics.tab.name";
 	
 	public static final String I18N_STATISTICS_TAB_BIRTH_YEAR = "statistics.tab.birthyear";
+	
+	public static final String I18N_STATISTICS_TAB_BIRTH_DAY = "statistics.tab.birthday";
 
 	public static final String I18N_STATISTICS_TITLE_TEXT = "statistics.title.text";
 
@@ -215,6 +217,8 @@ public class Text {
 	public static final String I18N_STATISTICS_ITEM_UNIQUEEMAIL = "statistics.item.uniqueemail";
 
 	public static final String I18N_STATISTICS_ITEM_UNIQUEADDRES = "statistics.item.uniqueaddress";
+
+	public static final String I18N_STATISTICS_ITEM_MONTH_DAY_FORMAT = "statistics.item.month.day.format";
 
 	public static final String I18N_BIRTHDAY_SHOW = "birthday.show";
 	

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.danielcorroto.directorius.controller.DisplayUtil;
 import com.danielcorroto.directorius.model.Utils;
 import com.danielcorroto.directorius.model.comparator.StringLocaleComparator;
 
@@ -46,7 +47,8 @@ public class Statistics {
 	 */
 	private int allContactsAddress = 0;
 	/**
-	 * Cuenta de todos los contactos por categoría
+	 * Cuenta de todos los contactos por categoría. Key: categoría. Value:
+	 * cantidad
 	 */
 	private Map<String, Integer> categoryMap = new TreeMap<>();
 	/**
@@ -62,13 +64,19 @@ public class Statistics {
 	 */
 	private Set<Address> addressSet = new HashSet<>();
 	/**
-	 * Mapeado de la cantidad de nombres iguales
+	 * Mapeado de la cantidad de nombres iguales. Key: nombre. Value: cantidad
 	 */
 	private Map<String, Integer> nameMap = new TreeMap<>(new StringLocaleComparator());
 	/**
-	 * Mapeado del año de nacimiento
+	 * Mapeado del año de nacimiento. Key: año. Value: cantidad
 	 */
 	private Map<Integer, Integer> birthYearMap = new TreeMap<>();
+
+	/**
+	 * Mapeado del día y mes de nacimiento. Key: día del año (suponiendo
+	 * bisiesto). Value: cantidad
+	 */
+	private Map<Integer, Integer> birthDayMap = new TreeMap<>();
 
 	/**
 	 * Crea las estadísticas con la información del contacto
@@ -119,23 +127,48 @@ public class Statistics {
 			int quantity = nameMap.get(name);
 			nameMap.put(name, quantity + 1);
 		}
-		// Año de nacimiento
+		// Año / día+mes de nacimiento
 		if (vcard.getBirthday() != null) {
-			Integer year = null;
+			Integer year = null; // YYYY
+			Integer month = null; // 1-12
+			Integer day = null; // 1-31
 			if (vcard.getBirthday().getPartialDate() != null) {
 				year = vcard.getBirthday().getPartialDate().getYear();
+				month = vcard.getBirthday().getPartialDate().getMonth();
+				if (month != null) {
+					month -= 1;
+				}
+				day = vcard.getBirthday().getPartialDate().getDate();
 			} else if (vcard.getBirthday().getDate() != null) {
 				Calendar c = Calendar.getInstance();
 				c.setTime(vcard.getBirthday().getDate());
 				year = c.get(Calendar.YEAR);
+				month = c.get(Calendar.MONTH);
+				day = c.get(Calendar.DAY_OF_MONTH);
 			}
 
+			// Año
 			if (year != null) {
 				int total = 0;
 				if (birthYearMap.containsKey(year)) {
 					total = birthYearMap.get(year);
 				}
 				birthYearMap.put(year, total + 1);
+			}
+
+			// Día + mes
+			if (day != null && month != null) {
+				Calendar c = Calendar.getInstance();
+				c.set(Calendar.DAY_OF_MONTH, day);
+				c.set(Calendar.MONTH, month);
+				// Un año bisiesto cualquiera (por el 29-2)
+				c.set(Calendar.YEAR, DisplayUtil.BASE_YEAR);
+				Integer dayOfYear = c.get(Calendar.DAY_OF_YEAR);
+				int total = 0;
+				if (birthDayMap.containsKey(dayOfYear)) {
+					total = birthDayMap.get(dayOfYear);
+				}
+				birthDayMap.put(dayOfYear, total + 1);
 			}
 		}
 	}
@@ -263,6 +296,16 @@ public class Statistics {
 	 */
 	public Map<Integer, Integer> getBirthYearMap() {
 		return birthYearMap;
+	}
+
+	/**
+	 * Obtiene un mapa con el día-del año de nacimiento (suponiendo que fuera
+	 * bisiesto) y su cantidad
+	 * 
+	 * @return Mapa de día del año de nacimiento y su cantidad
+	 */
+	public Map<Integer, Integer> getBirthDayMap() {
+		return birthDayMap;
 	}
 
 }
